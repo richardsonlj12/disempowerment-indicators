@@ -1,0 +1,104 @@
+"""Indicator registry, scorecard grid and readings, loaded from YAML."""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import date
+from pathlib import Path
+
+import yaml
+
+STATE_LABELS: dict[str, str] = {
+    "low": "Low",
+    "rising": "Rising",
+    "pervasive": "Pervasive",
+    "within": "Within baseline",
+    "above": "Above baseline",
+    "below": "Below baseline",
+    "far_above": "Far above baseline",
+    "far_below": "Far below baseline",
+    "no_signal": "No signal / insufficient data",
+    "not_yet_reviewed": "Not yet reviewed",
+}
+
+SCALE_STATES: dict[str, set[str]] = {
+    "exposure": {"low", "rising", "pervasive", "no_signal", "not_yet_reviewed"},
+    "baseline": {"within", "above", "below", "far_above", "far_below",
+                 "no_signal", "not_yet_reviewed"},
+}
+
+
+@dataclass(frozen=True)
+class Indicator:
+    id: str
+    release: int
+    domain: str
+    layer: str
+    scale: str
+    name: str
+    takeaway: str
+    specificity: str
+    specificity_criteria: dict
+    timing: str
+    direction_assumption: str
+    rival_reading: str
+    comparison: str
+    tier: int
+    series: list[str]
+    primary_series: str | None = None
+    chart_title: str | None = None
+    headline_caveat: str | None = None
+    disclosure: str | None = None
+    sources: list[dict] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class GridCell:
+    layer: str
+    domain: str
+    indicator_ids: list[str]
+    empty_label: str
+
+
+@dataclass(frozen=True)
+class Reading:
+    indicator_id: str
+    state: str
+    date: date
+    magnitude: str | None = None
+    interpretation: str | None = None
+    rationale: str | None = None
+    kind: str = "current"
+
+
+def load_registry(path) -> tuple[list[Indicator], list[GridCell], dict]:
+    data = yaml.safe_load(Path(path).read_text())
+    indicators = [Indicator(**row) for row in data["indicators"]]
+    grid = [GridCell(**row) for row in data["grid"]]
+    return indicators, grid, data["oversight"]
+
+
+def load_readings(path, indicators: list[Indicator] | None = None) -> dict[str, list[Reading]]:
+    """Load readings; when indicators are given, each state must fit its indicator's scale."""
+    data = yaml.safe_load(Path(path).read_text())
+    scales = {i.id: i.scale for i in indicators} if indicators is not None else None
+    out: dict[str, list[Reading]] = {}
+    for row in data["readings"] or []:
+        reading = Reading(**row)
+        if reading.state not in STATE_LABELS:
+            raise ValueError(f"unknown state {reading.state!r} for {reading.indicator_id}")
+        if scales is not None:
+            if reading.indicator_id not in scales:
+                raise ValueError(f"reading for unknown indicator {reading.indicator_id}")
+            if reading.state not in SCALE_STATES[scales[reading.indicator_id]]:
+                raise ValueError(
+                    f"state {reading.state!r} is not on the "
+                    f"{scales[reading.indicator_id]} scale for {reading.indicator_id}")
+        out.setdefault(reading.indicator_id, []).append(reading)
+    return out
+
+
+def current_reading(readings: dict[str, list[Reading]], indicator_id: str) -> Reading:
+    current = [r for r in readings.get(indicator_id, []) if r.kind == "current"]
+    if current:
+        return max(current, key=lambda r: r.date)
+    return Reading(indicator_id=indicator_id, state="not_yet_reviewed", date=date.today())

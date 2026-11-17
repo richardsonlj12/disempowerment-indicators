@@ -1,0 +1,158 @@
+# Release 1 indicator registry. Takeaways state no numbers (figures are verified and added later).
+indicators:
+  - id: E1
+    release: 1
+    domain: economic
+    layer: erosion
+    scale: baseline
+    name: Labor share of income, nonfarm business
+    takeaway: The share of business income paid to workers, shown over its full history with the profit share alongside for context.
+    specificity: weak
+    specificity_criteria:  # DRAFT — owner review in Stage 2
+      directness: A broad outcome that AI is one possible cause of, not a measure of AI itself.
+      comparison_group: No AI-exposed versus less-exposed contrast in this series.
+      timing: The decline began decades before generative AI spread in late 2022.
+      confounders: Many documented non-AI causes, including globalization, market concentration and the sector mix of the economy.
+    timing: lagging
+    direction_assumption: A falling labor share would be consistent with eroding human leverage in the economy.
+    rival_reading: Labor share could hold steady while work shifts into low-leverage sectors (the relational-sector argument), so a flat line is not proof that leverage is intact.
+    comparison: structural
+    tier: 1
+    series: [labor_share_nfb, profit_share]
+    primary_series: labor_share_nfb
+    chart_title: Labor share of income, nonfarm business sector
+    headline_caveat: null
+    disclosure: null
+    sources:
+      - name: BLS Productivity and Costs, via FRED
+        url: https://www.bls.gov/lpc/
+        license: US government work, public domain
+  - id: E2
+    release: 1
+    domain: economic
+    layer: exposure
+    scale: exposure
+    name: Firm AI adoption
+    takeaway: The share of US firms reporting that they use AI, measured firm-weighted; exposure only, not evidence of lost leverage.
+    specificity: strong
+    specificity_criteria:  # DRAFT — owner review in Stage 2
+      directness: Measures AI use by firms directly.
+      comparison_group: Not applicable; the series is about AI itself.
+      timing: Question wording changed in November 2025, so the series has a break that must be annotated.
+      confounders: Strong here means only that AI is measured directly; it does not show disempowerment.
+    timing: leading
+    direction_assumption: Rising adoption would be consistent with growing AI exposure in firms; by itself it does not show lost human leverage.
+    rival_reading: Adoption may be shallow or experimental, and augmenting workers rather than displacing them.
+    comparison: ai_native
+    tier: 1
+    series: [btos_ai_use]
+    primary_series: btos_ai_use
+    chart_title: Share of firms using AI (firm-weighted)
+    headline_caveat: null
+    disclosure: null
+    sources:
+      - name: Census Business Trends and Outlook Survey (BTOS)
+        url: https://www.census.gov/hfp/btos
+        license: US government work, public domain
+  - id: E3
+    release: 1
+    domain: economic
+    layer: exposure
+    scale: exposure
+    name: How AI is used, automation versus augmentation
+    takeaway: The share of tasks handed over to AI entirely versus done together with a person, the nearest free public proxy for depth of AI exposure.
+    specificity: strong
+    specificity_criteria:  # DRAFT — owner review in Stage 2
+      directness: Measures how AI is used, directly, but only for one vendor's product.
+      comparison_group: No comparison group; there is no pre-AI baseline.
+      timing: Begins after generative AI was available, so timing is not a test here.
+      confounders: Changes in the vendor's products (for example agentic tools) can move the series without any change in society.
+    timing: leading
+    direction_assumption: A rising automation share would be consistent with decisions and tasks moving from people to AI.
+    rival_reading: A rising automation share may reflect the vendor's own product changes rather than society delegating more.
+    comparison: ai_native
+    tier: 2
+    series: [aei_automation_share, aei_augmentation_share]
+    primary_series: aei_automation_share
+    chart_title: Automation and augmentation share of Claude usage
+    headline_caveat: "One vendor, one product: Claude usage only"
+    disclosure: This data is published by Anthropic, and this site is built with assistance from Claude.
+    sources:
+      - name: Anthropic Economic Index (Hugging Face)
+        url: https://huggingface.co/datasets/Anthropic/EconomicIndex
+        license: Check the dataset card for the license  # VERIFY URL
+  - id: G1
+    release: 1
+    domain: government
+    layer: erosion
+    scale: baseline
+    name: Labor-based share of tax revenue
+    takeaway: The share of tax revenue that comes from taxes on workers (personal income tax and social contributions); the cleanest test of the state-dependence argument.
+    specificity: weak
+    specificity_criteria:  # DRAFT — owner review in Stage 2
+      directness: A broad fiscal outcome, not a measure of AI.
+      comparison_group: No AI-exposed versus less-exposed contrast.
+      timing: Not yet established that any change followed generative AI.
+      confounders: Tax policy, the business cycle and demographics all move this share.
+    timing: lagging
+    direction_assumption: A falling labor-based share would be consistent with the state depending less on taxing workers; a rising share points away from disempowerment.
+    rival_reading: A state can co-opt citizens through transfers (the rentier pattern), so this is the cleanest test of state dependence, not a guarantee.
+    comparison: structural
+    tier: 1
+    series: [us_labor_tax_share, oecd_labor_tax_share_usa, oecd_labor_tax_share_avg]
+    primary_series: us_labor_tax_share
+    chart_title: Labor-based share of tax revenue
+    headline_caveat: null
+    disclosure: null
+    sources:
+      - name: BEA National Income and Product Accounts, via FRED
+        url: https://www.bea.gov/data/gdp/gross-domestic-product  # VERIFY URL
+        license: US government work, public domain
+      - name: OECD Revenue Statistics
+        url: https://www.oecd.org/en/topics/sub-issues/global-tax-revenues.html  # VERIFY URL
+        license: OECD terms and conditions  # VERIFY URL
+  - id: C1
+    release: 1
+    domain: cultural
+    layer: erosion
+    scale: baseline
+    name: Human knowledge-commons activity
+    takeaway: Monthly Stack Overflow questions against a fixed set of non-programming Stack Exchange sites, with Wikipedia human pageviews and editors alongside.
+    specificity: moderate
+    specificity_criteria:  # DRAFT — owner review in Stage 2
+      directness: Measures activity on public knowledge sites, not AI use or human capacity.
+      comparison_group: Non-programming Stack Exchange sites chosen in advance give a contrast, though AI affects them too.
+      timing: Stack Overflow declined from about 2020, before generative AI, so timing only partly fits.
+      confounders: Site policy, community changes and the pre-ChatGPT decline are partly addressed by the contrast.
+    timing: leading
+    direction_assumption: Stack Overflow falling faster than comparison sites would be consistent with people turning from human knowledge communities to AI.
+    rival_reading: Falling Wikipedia pageviews may reflect AI intermediation (people still consume its content through chatbots) rather than human disengagement.
+    comparison: structural
+    tier: 1
+    series: [so_questions_monthly, se_comparison_questions_monthly, so_vs_comparison_yoy, wiki_user_pageviews_en, wiki_active_editors_en]
+    primary_series: so_vs_comparison_yoy
+    chart_title: Stack Overflow versus comparison sites, year over year
+    headline_caveat: null
+    disclosure: null
+    sources:
+      - name: Stack Exchange API
+        url: https://api.stackexchange.com/  # VERIFY URL
+        license: CC BY-SA
+      - name: Wikimedia Analytics API
+        url: https://wikimedia.org/api/rest_v1/  # VERIFY URL
+        license: CC0
+
+grid:
+  - {layer: exposure, domain: economic, indicator_ids: [E2, E3], empty_label: No public measure yet}
+  - {layer: exposure, domain: government, indicator_ids: [], empty_label: No public measure yet}
+  - {layer: exposure, domain: cultural, indicator_ids: [], empty_label: No public measure yet}
+  - {layer: erosion, domain: economic, indicator_ids: [E1], empty_label: No public measure yet}
+  - {layer: erosion, domain: government, indicator_ids: [G1], empty_label: No public measure yet}
+  - {layer: erosion, domain: cultural, indicator_ids: [C1], empty_label: No public measure yet}
+  - {layer: lockin, domain: economic, indicator_ids: [], empty_label: No public measure yet}
+  - {layer: lockin, domain: government, indicator_ids: [], empty_label: No public measure yet}
+  - {layer: lockin, domain: cultural, indicator_ids: [], empty_label: No public measure yet}
+
+oversight:
+  label: No public measure yet
+  citation_ref: herdagdelen2026
