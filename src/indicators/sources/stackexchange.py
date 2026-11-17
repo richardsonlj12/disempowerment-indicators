@@ -23,8 +23,11 @@ comparison site. The floor keeps a young site's fast early growth from being rej
 Every accepted fetch is also appended to `[data_dir]/_archive/stackexchange/[YYYY-MM-DD].csv`
 (site, month, count, fetched_at) so that deletions accruing after the fact can be measured later.
 
-Four series are returned: Stack Overflow and comparison-site counts, the relative-activity index
-with its leave-one-out band, the change since ChatGPT's release, and the year-over-year contrast.
+Seven series are returned: the Stack Overflow and comparison-site counts; the relative-activity
+index (2019 = 100) with its leave-one-out minimum and maximum (the band); the percent change since
+ChatGPT's release (November 2022); and the year-over-year contrast, kept as an alternative view.
+The index series need the full history (2019 base year, November 2022 reference) and are left out
+of a short smoke run started with `start_month` after those months.
 """
 
 from __future__ import annotations
@@ -44,7 +47,14 @@ from indicators import http
 from indicators.http import SourceError
 from indicators.sources import utc_now_iso
 from indicators.store import SeriesMeta
-from indicators.trend import relative_yoy
+from indicators.trend import (
+    change_since,
+    index_to_base_year,
+    leave_one_out_band,
+    relative_log_level,
+    relative_yoy,
+    rolling_total,
+)
 
 API = "https://api.stackexchange.com/2.3/questions"
 DOCS_URL = "https://api.stackexchange.com/docs/questions"
@@ -211,6 +221,26 @@ def _archive(data_dir: Path, today: date, fetched_at: str, site: str, ym: tuple[
         f.write(f"{site},{_key(ym)},{total},{fetched_at}\n")
 
 
+INDEX_BASE_YEAR = 2019
+CHATGPT_MONTH = "2022-11-01"
+
+
+def _index_series(so_df, comparison, partial):
+    """(index, loo_min, loo_max, change_since_chatgpt) from 12-month rolling totals, or {} when a
+    short smoke run does not span the base year and reference month."""
+    so_total, comparison_total = rolling_total(so_df), rolling_total(comparison)
+    try:
+        R = relative_log_level(so_total, comparison_total)
+        index = index_to_base_year(R, INDEX_BASE_YEAR)
+        change = change_since(R, CHATGPT_MONTH)
+        lo, hi = leave_one_out_band(so_total, comparison_total, INDEX_BASE_YEAR)
+    except ValueError:
+        if partial:
+            return {}
+        raise
+    return {"index": index, "loo_min": lo, "loo_max": hi, "change": change}
+
+
 def _frame(rows: list[tuple[str, tuple[int, int], int]], grouped: bool) -> pd.DataFrame:
     df = pd.DataFrame(
         {
@@ -289,6 +319,8 @@ def fetch(
     yoy = relative_yoy(so_df, comparison, 12)
     yoy = yoy[yoy["date"] >= yoy_start].reset_index(drop=True)
 
+    index_frames = _index_series(so_df, comparison, partial=start_month is not None)
+
     fetched_at = utc_now_iso()
     through = _key(last_complete) + "-01"
     common = dict(
@@ -309,7 +341,75 @@ def fetch(
     names = {s["api_site_name"]: s["name"] for s in config["sites"]}
     primary_text = ", ".join(f"{names[s]} ({s})" for s in primary)
 
-    return [
+    index_note = (
+        "Relative-activity index, not a causal estimate. Computed from 12-month rolling totals of "
+        "so_questions_monthly and se_comparison_questions_monthly, labelled by the last month of each "
+        "window: R = ln(Stack Overflow total) minus the mean of ln(total) across the four primary comparison "
+        "sites, only for months where all four sites have a full 12 months. Values are expressed relative "
+        f"to the {INDEX_BASE_YEAR} average (index {INDEX_BASE_YEAR} = 100), so the pre-AI level is the reference. "
+        "AI also affects the comparison sites, so this is Stack Overflow's activity relative to them, "
+        "not the absolute AI effect."
+    )
+    extra = []
+    if index_frames:
+        band_note = (
+            " The leave-one-out band is the lowest and highest index obtained by dropping each comparison "
+            "site in turn and using the other three; it is written as two series, "
+            "so_relative_index_loo_min and so_relative_index_loo_max."
+        )
+        extra = [
+            (
+                index_frames["index"],
+                SeriesMeta(
+                    series_id="so_relative_index",
+                    title=f"Stack Overflow activity relative to comparison sites (index, {INDEX_BASE_YEAR} = 100)",
+                    units=f"index ({INDEX_BASE_YEAR} = 100)",
+                    role="primary",
+                    notes=index_note + band_note,
+                    **common,
+                ),
+            ),
+            (
+                index_frames["loo_min"],
+                SeriesMeta(
+                    series_id="so_relative_index_loo_min",
+                    title="Relative-activity index, leave-one-out minimum",
+                    units=f"index ({INDEX_BASE_YEAR} = 100)",
+                    role="context",
+                    notes="Lower edge of the leave-one-out band around so_relative_index. " + index_note,
+                    **common,
+                ),
+            ),
+            (
+                index_frames["loo_max"],
+                SeriesMeta(
+                    series_id="so_relative_index_loo_max",
+                    title="Relative-activity index, leave-one-out maximum",
+                    units=f"index ({INDEX_BASE_YEAR} = 100)",
+                    role="context",
+                    notes="Upper edge of the leave-one-out band around so_relative_index. " + index_note,
+                    **common,
+                ),
+            ),
+            (
+                index_frames["change"],
+                SeriesMeta(
+                    series_id="so_change_since_chatgpt",
+                    title="Stack Overflow activity relative to comparison sites, change since November 2022",
+                    units="percent",
+                    role="context",
+                    notes=(
+                        "Percent change in the same relative-activity measure since the 12-month window "
+                        "ending November 2022 (ChatGPT was released on 30 November 2022, so that window is almost entirely before it): "
+                        "100 x (exp(R(m) - R(2022-11)) - 1). Relative-activity index, not a causal estimate. "
+                        + index_note
+                    ),
+                    **common,
+                ),
+            ),
+        ]
+
+    return extra + [
         (
             so_df,
             SeriesMeta(
@@ -341,9 +441,9 @@ def fetch(
                 series_id="so_vs_comparison_yoy",
                 title="Stack Overflow year-over-year change minus comparison-site year-over-year change",
                 units="percentage points",
-                role="primary",
+                role="context",
                 notes=(
-                    "Stack Overflow's year-over-year percent change in monthly new questions minus the mean "
+                    "Alternative view to the relative-activity index. Stack Overflow's year-over-year percent change in monthly new questions minus the mean "
                     "year-over-year percent change across the primary comparison sites (each site first, "
                     "then the mean). Computed from so_questions_monthly and se_comparison_questions_monthly. "
                     f"The series starts {yoy_start:%Y-%m}, the first month in which all four primary sites have "

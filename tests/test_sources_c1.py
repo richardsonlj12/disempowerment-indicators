@@ -172,12 +172,56 @@ def test_relative_yoy_written(tmp_path):
     }
     yoy, meta = results["so_vs_comparison_yoy"]
     validate_frame(yoy)
-    assert meta.indicator_id == "C1" and meta.role == "primary"
+    assert meta.indicator_id == "C1" and meta.role == "context"
     assert meta.frequency == "monthly" and meta.units == "percentage points"
     # SO is +10% year over year, the comparison sites are flat, so the difference is 10.
     assert yoy["date"].min() == pd.Timestamp("2024-01-01") and yoy["date"].max() == pd.Timestamp("2024-05-01")
     assert yoy["value"].tolist() == pytest.approx([10.0] * 5)
     assert (tmp_path / "data" / "_cache" / "stackexchange").is_dir()
+
+
+def _halving_counts(site, year, month):
+    if site == "stackoverflow":
+        return 1000 if year < 2020 else 500  # Stack Overflow halves from 2020; the others stay flat
+    return 100
+
+
+@responses.activate
+def test_relative_index_series_from_full_history():
+    _mock_se(_halving_counts, quota_start=10_000)
+    results = _by_id(stackexchange.fetch(start_month="2010-06", today=date(2023, 1, 15)))
+    assert {"so_relative_index", "so_relative_index_loo_min", "so_relative_index_loo_max",
+            "so_change_since_chatgpt", "so_vs_comparison_yoy"} <= set(results)
+    idx, meta = results["so_relative_index"]
+    validate_frame(idx)
+    assert meta.role == "primary" and meta.units == "index (2019 = 100)" and meta.indicator_id == "C1"
+    assert "not a causal estimate" in meta.notes and "2019 = 100" in meta.notes
+    by_date = idx.set_index("date")["value"]
+    assert idx["date"].min() == pd.Timestamp("2012-06-01")  # travel starts 2011-07; +11 months
+    assert by_date[pd.Timestamp("2019-12-01")] == pytest.approx(100.0)
+    assert by_date[pd.Timestamp("2020-12-01")] == pytest.approx(50.0)  # twelve halved months
+    assert by_date[pd.Timestamp("2022-12-01")] == pytest.approx(50.0)
+    # Comparison sites are identical, so dropping any one changes nothing: the band has zero width.
+    lo, lo_meta = results["so_relative_index_loo_min"]
+    hi, _ = results["so_relative_index_loo_max"]
+    assert lo["date"].tolist() == idx["date"].tolist() == hi["date"].tolist()
+    assert lo["value"].tolist() == pytest.approx(idx["value"].tolist())
+    assert hi["value"].tolist() == pytest.approx(idx["value"].tolist())
+    assert lo_meta.role == "context"
+    change, change_meta = results["so_change_since_chatgpt"]
+    validate_frame(change)
+    assert change["date"].min() == pd.Timestamp("2022-11-01")
+    assert change["value"].tolist() == pytest.approx([0.0, 0.0])  # R is flat after 2020-12
+    assert change_meta.units == "percent" and "November 2022" in change_meta.title
+    yoy, yoy_meta = results["so_vs_comparison_yoy"]
+    assert yoy_meta.role == "context" and "Alternative view" in yoy_meta.notes
+
+
+@responses.activate
+def test_short_run_omits_index_series_that_need_the_full_history():
+    _mock_se()
+    results = _by_id(stackexchange.fetch(start_month=START, today=TODAY))
+    assert "so_relative_index" not in results and "so_change_since_chatgpt" not in results
 
 
 @responses.activate

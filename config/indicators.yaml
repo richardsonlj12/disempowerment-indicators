@@ -120,7 +120,7 @@ indicators:
     layer: erosion
     scale: baseline
     name: Human knowledge-commons activity
-    takeaway: Monthly Stack Overflow questions against a fixed set of non-programming Stack Exchange sites, with Wikipedia human pageviews and editors alongside.
+    takeaway: Stack Overflow question activity relative to a fixed set of non-programming Stack Exchange sites (a relative-activity index, 2019 = 100), with Wikipedia human pageviews and editors alongside.
     specificity: moderate
     specificity_criteria:  # DRAFT — owner review in Stage 2
       directness: Measures activity on public knowledge sites, not AI use or human capacity.
@@ -132,9 +132,9 @@ indicators:
     rival_reading: Falling Wikipedia pageviews may reflect AI intermediation (people still consume its content through chatbots) rather than human disengagement.
     comparison: structural
     tier: 1
-    series: [so_questions_monthly, se_comparison_questions_monthly, so_vs_comparison_yoy, wiki_user_pageviews_en, wiki_active_editors_en]
-    primary_series: so_vs_comparison_yoy
-    chart_title: Stack Overflow versus comparison sites, year over year
+    series: [so_relative_index, so_relative_index_loo_min, so_relative_index_loo_max, so_change_since_chatgpt, so_vs_comparison_yoy, so_questions_monthly, se_comparison_questions_monthly, wiki_user_pageviews_en, wiki_active_editors_en]
+    primary_series: so_relative_index
+    chart_title: Stack Overflow activity relative to comparison sites (index, 2019 = 100)
     headline_caveat: null
     disclosure: null
     sources:
