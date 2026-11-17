@@ -1,0 +1,268 @@
+"""C1: monthly new-question counts on Stack Overflow and owner-approved comparison sites.
+
+Keyless Stack Exchange API (anonymous quota: 300 requests a day per IP). The API has no
+aggregate-by-month route, so each site-month costs one `/2.3/questions` call with
+`fromdate`/`todate` set to the calendar month in UTC and a filter that returns only `total`
+(plus `quota_remaining`, `backoff`, `has_more`). `/2.3/info` gives only the all-time total.
+
+Full history is about 1,500 calls, so the first fetch spans several days. Every completed month
+is cached in `[data_dir]/_cache/stackexchange/[site].json` as it arrives. A run stops with a
+`SourceError` as soon as the quota reaches zero with work left; the next run resumes from the
+cache. The current month is never requested or cached. Each run refetches the last two complete
+months (questions are deleted after the fact) and any month not yet cached.
+"""
+
+from __future__ import annotations
+
+import calendar
+import json
+import os
+import tempfile
+import time
+from datetime import date, datetime, timezone
+from pathlib import Path
+
+import pandas as pd
+import yaml
+
+from indicators import http
+from indicators.http import SourceError
+from indicators.sources import utc_now_iso
+from indicators.store import SeriesMeta
+from indicators.trend import relative_yoy
+
+API = "https://api.stackexchange.com/2.3/questions"
+DOCS_URL = "https://api.stackexchange.com/docs/questions"
+# Created with /2.3/filters/create?base=none&include=.total;.quota_remaining;.backoff;.has_more
+TOTAL_FILTER = "!-0ttWpIkt-bj4Nx"
+SO_SITE = "stackoverflow"
+SO_START = (2008, 9)  # Stack Overflow public launch month
+REFRESH_MONTHS = 2
+LICENSE = "CC BY-SA"
+DEFAULT_SITES_PATH = Path(__file__).resolve().parents[3] / "config" / "c1_comparison_sites.yaml"
+
+_sleep = time.sleep  # patched in tests
+
+
+def month_bounds(year: int, month: int) -> tuple[int, int]:
+    """Unix times of the first and last second of a calendar month, UTC."""
+    last_day = calendar.monthrange(year, month)[1]
+    start = datetime(year, month, 1, tzinfo=timezone.utc)
+    end = datetime(year, month, last_day, 23, 59, 59, tzinfo=timezone.utc)
+    return int(start.timestamp()), int(end.timestamp())
+
+
+def _ym(value) -> tuple[int, int]:
+    if isinstance(value, (date, datetime)):
+        return value.year, value.month
+    year, month = str(value)[:7].split("-")
+    return int(year), int(month)
+
+
+def _key(ym: tuple[int, int]) -> str:
+    return f"{ym[0]:04d}-{ym[1]:02d}"
+
+
+def _months(first: tuple[int, int], last: tuple[int, int]) -> list[tuple[int, int]]:
+    out, (y, m) = [], first
+    while (y, m) <= last:
+        out.append((y, m))
+        y, m = (y + 1, 1) if m == 12 else (y, m + 1)
+    return out
+
+
+def _previous(ym: tuple[int, int]) -> tuple[int, int]:
+    return (ym[0] - 1, 12) if ym[1] == 1 else (ym[0], ym[1] - 1)
+
+
+def load_sites(path: Path | str | None = None) -> dict:
+    """Read the comparison-site config; refuse to proceed unless the owner approved it."""
+    config = yaml.safe_load(Path(path or DEFAULT_SITES_PATH).read_text(encoding="utf-8"))
+    if config.get("approved_by_owner") is not True or not config.get("approved_on"):
+        raise SourceError("C1 comparison sites are not owner-approved (approved_by_owner and approved_on); nothing fetched")
+    return config
+
+
+def _atomic_write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=path.name + ".", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
+            f.write(text)
+        os.replace(tmp, path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
+
+
+def _read_cache(path: Path) -> dict[str, int]:
+    return {k: int(v) for k, v in json.loads(path.read_text()).items()} if path.exists() else {}
+
+
+def _write_cache(path: Path, cache: dict[str, int]) -> None:
+    _atomic_write(path, json.dumps(dict(sorted(cache.items())), indent=0) + "\n")
+
+
+def _month_total(site: str, ym: tuple[int, int]) -> tuple[int, int | None]:
+    """One API call: (question count, quota_remaining or None)."""
+    from_ts, to_ts = month_bounds(*ym)
+    response = http.get(
+        API,
+        params={"site": site, "fromdate": from_ts, "todate": to_ts, "filter": TOTAL_FILTER},
+        expect="json",
+    )
+    body = response.json()
+    if "error_id" in body:
+        raise SourceError(f"Stack Exchange {site} {_key(ym)}: {body.get('error_name')} {body.get('error_message')}")
+    if "total" not in body:
+        raise SourceError(f"Stack Exchange {site} {_key(ym)}: response has no total")
+    if body.get("backoff"):
+        _sleep(float(body["backoff"]))
+    return int(body["total"]), body.get("quota_remaining")
+
+
+def _frame(rows: list[tuple[str, tuple[int, int], int]], grouped: bool) -> pd.DataFrame:
+    df = pd.DataFrame(
+        {
+            "date": pd.to_datetime([f"{y:04d}-{m:02d}-01" for _, (y, m), _ in rows]),
+            "value": [float(v) for _, _, v in rows],
+        }
+    )
+    if grouped:
+        df.insert(1, "group", [site for site, _, _ in rows])
+    return df
+
+
+def fetch(
+    data_dir: Path | str = "data",
+    sites_path: Path | str | None = None,
+    start_month: str | None = None,
+    today: date | None = None,
+) -> list[tuple[pd.DataFrame, SeriesMeta]]:
+    """Fetch (resuming from cache) and return the four C1 Stack Exchange series.
+
+    `start_month` ("YYYY-MM") limits how far back to fetch, for smoke tests. `today` is for tests.
+    """
+    config = load_sites(sites_path)  # owner gate, before any request
+    today = today or datetime.now(timezone.utc).date()
+    last_complete = _previous((today.year, today.month))
+    refresh = {last_complete, _previous(last_complete)}
+    floor = _ym(start_month) if start_month else (1, 1)
+    cache_dir = Path(data_dir) / "_cache" / "stackexchange"
+
+    plan = [(SO_SITE, SO_START)]
+    plan += [(s["api_site_name"], _ym(s["open_beta_date"])) for s in config["sites"]]
+    plan += [(s["api_site_name"], _ym(s["open_beta_date"])) for s in config["robustness_sites"]]
+
+    caches, todo = {}, []
+    for site, beta in plan:
+        caches[site] = _read_cache(cache_dir / f"{site}.json")
+        for ym in _months(max(beta, floor), last_complete):
+            if _key(ym) not in caches[site] or ym in refresh:
+                todo.append((site, ym))
+
+    for index, (site, ym) in enumerate(todo):
+        total, quota = _month_total(site, ym)
+        caches[site][_key(ym)] = total
+        _write_cache(cache_dir / f"{site}.json", caches[site])
+        remaining = len(todo) - index - 1
+        if quota is not None and quota <= 0 and remaining:
+            raise SourceError(
+                f"Stack Exchange anonymous quota exhausted with {remaining} site-months still to fetch; "
+                f"completed months are cached in {cache_dir}. Run again after the quota resets (daily)."
+            )
+
+    def rows(sites: list[str]) -> list[tuple[str, tuple[int, int], int]]:
+        beta = dict(plan)
+        out = []
+        for site in sites:
+            for ym in _months(max(beta[site], floor), last_complete):
+                out.append((site, ym, caches[site][_key(ym)]))
+        return out
+
+    primary = [s["api_site_name"] for s in config["sites"]]
+    robust = [s["api_site_name"] for s in config["robustness_sites"]]
+    so_df = _frame(rows([SO_SITE]), grouped=False)
+    comparison = _frame(rows(primary), grouped=True)
+    robustness = _frame(rows(robust), grouped=True)
+    yoy = relative_yoy(so_df, comparison, 12)
+
+    fetched_at = utc_now_iso()
+    through = _key(last_complete) + "-01"
+    common = dict(
+        indicator_id="C1",
+        frequency="monthly",
+        source_name="Stack Exchange API",
+        source_url=DOCS_URL,
+        license=LICENSE,
+        fetched_at=fetched_at,
+        data_through=through,
+        max_lag_days=75,
+    )
+    count_note = (
+        "Questions created in the calendar month (UTC), counted from the /2.3/questions endpoint with "
+        "filter total. Counts are as of the fetch date, so questions deleted later are not included. "
+        "The current month is excluded; the last two complete months are refetched on every run."
+    )
+    names = {s["api_site_name"]: s["name"] for s in config["sites"] + config["robustness_sites"]}
+    primary_text = ", ".join(f"{names[s]} ({s})" for s in primary)
+    robust_text = ", ".join(f"{names[s]} ({s})" for s in robust)
+
+    return [
+        (
+            so_df,
+            SeriesMeta(
+                series_id="so_questions_monthly",
+                title="Stack Overflow new questions per month",
+                units="questions per month",
+                role="context",
+                notes=count_note + " Site: stackoverflow, from September 2008.",
+                **common,
+            ),
+        ),
+        (
+            comparison,
+            SeriesMeta(
+                series_id="se_comparison_questions_monthly",
+                title="New questions per month on the comparison Stack Exchange sites",
+                units="questions per month",
+                role="comparison",
+                notes=count_note
+                + f" Owner-approved primary comparison sites (selected {config['approved_on']}): {primary_text}. "
+                "Each site starts at its open beta month. Selection record: "
+                + config["selection_record"],
+                **common,
+            ),
+        ),
+        (
+            robustness,
+            SeriesMeta(
+                series_id="se_robustness_questions_monthly",
+                title="New questions per month on the robustness-only Stack Exchange sites",
+                units="questions per month",
+                role="comparison",
+                notes=count_note
+                + f" Robustness-only sites, not part of the primary contrast: {robust_text}. "
+                "Used to check that the contrast does not depend on the choice of sites.",
+                **common,
+            ),
+        ),
+        (
+            yoy,
+            SeriesMeta(
+                series_id="so_vs_comparison_yoy",
+                title="Stack Overflow year-over-year change minus comparison-site year-over-year change",
+                units="percentage points",
+                role="primary",
+                notes=(
+                    "Stack Overflow's year-over-year percent change in monthly new questions minus the mean "
+                    "year-over-year percent change across the primary comparison sites (each site first, "
+                    "then the mean). Computed from so_questions_monthly and se_comparison_questions_monthly. "
+                    "AI also affects the comparison sites, so this shows Stack Overflow relative to them, "
+                    "not the absolute AI effect."
+                ),
+                **common,
+            ),
+        ),
+    ]

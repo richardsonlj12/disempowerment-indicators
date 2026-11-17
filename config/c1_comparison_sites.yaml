@@ -16,37 +16,44 @@ selection_record: review/c1-comparison-site-selection.md
 sites:
   - api_site_name: diy
     name: Home Improvement
+    open_beta_date: 2010-07-28
     avg_monthly_questions_2019: 702
     exposure: lower
     description: Questions about home repair, renovation and maintenance, from plumbing and wiring to carpentry.
   - api_site_name: travel
     name: Travel
+    open_beta_date: 2011-06-28
     avg_monthly_questions_2019: 543
     exposure: medium
     description: Questions about planning trips and getting around, such as visas, routes, lodging and local customs.
   - api_site_name: rpg
     name: Role-playing Games
+    open_beta_date: 2010-08-26
     avg_monthly_questions_2019: 520
     exposure: lower
     description: Questions about tabletop role-playing games, including rules, game design and running a group.
   - api_site_name: scifi
     name: Science Fiction & Fantasy
+    open_beta_date: 2011-01-18
     avg_monthly_questions_2019: 504
     exposure: lower
     description: Questions about science fiction and fantasy books, films and shows, including plot, canon and interpretation.
 robustness_sites:
   - api_site_name: gaming
     name: Arqade (Gaming)
+    open_beta_date: 2010-07-14
     avg_monthly_questions_2019: 397
     exposure: medium
     description: Questions about playing video games, including tips, bugs, mechanics and game settings.
   - api_site_name: worldbuilding
     name: Worldbuilding
+    open_beta_date: 2014-09-29
     avg_monthly_questions_2019: 365
     exposure: medium
     description: Questions about designing imaginary worlds for stories and games, including cultures, creatures and settings.
   - api_site_name: judaism
     name: Mi Yodeya
+    open_beta_date: 2011-05-10
     avg_monthly_questions_2019: 310
     exposure: medium
     description: Questions about Jewish law, texts, practice and tradition.

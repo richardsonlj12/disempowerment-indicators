@@ -132,17 +132,17 @@ indicators:
     rival_reading: Falling Wikipedia pageviews may reflect AI intermediation (people still consume its content through chatbots) rather than human disengagement.
     comparison: structural
     tier: 1
-    series: [so_questions_monthly, se_comparison_questions_monthly, so_vs_comparison_yoy, wiki_user_pageviews_en, wiki_active_editors_en]
+    series: [so_questions_monthly, se_comparison_questions_monthly, se_robustness_questions_monthly, so_vs_comparison_yoy, wiki_user_pageviews_en, wiki_active_editors_en]
     primary_series: so_vs_comparison_yoy
     chart_title: Stack Overflow versus comparison sites, year over year
     headline_caveat: null
     disclosure: null
     sources:
       - name: Stack Exchange API
-        url: https://api.stackexchange.com/  # VERIFY URL
+        url: https://api.stackexchange.com/docs/questions
         license: CC BY-SA
       - name: Wikimedia Analytics API
-        url: https://wikimedia.org/api/rest_v1/  # VERIFY URL
+        url: https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/
         license: CC0
 
 grid:

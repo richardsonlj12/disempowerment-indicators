@@ -52,3 +52,31 @@ def test_get_raises_after_exhausting_retries():
     with pytest.raises(SourceError):
         get(URL)
     assert len(responses.calls) == 4
+
+
+@responses.activate
+def test_get_raises_source_error_on_4xx_with_status_and_body_prefix():
+    # Stack Exchange signals throttling with HTTP 400 and a JSON error body.
+    body = '{"error_id":502,"error_name":"throttle_violation","error_message":"' + "x" * 400 + '"}'
+    responses.add(responses.GET, URL, status=400, body=body)
+    with pytest.raises(SourceError) as excinfo:
+        get(URL, expect="json")
+    message = str(excinfo.value)
+    assert "400" in message
+    assert "throttle_violation" in message
+    assert body[:200] in message
+    assert body[:201] not in message
+    assert len(responses.calls) == 1  # a 4xx other than 429 is not retried
+
+
+@responses.activate
+def test_get_allows_json_that_mentions_html_later_in_the_body():
+    responses.add(responses.GET, URL, body='{"note": "this field contains <html> text", "ok": true}')
+    assert get(URL, expect="json").status_code == 200
+
+
+@responses.activate
+def test_get_rejects_html_after_leading_whitespace_case_insensitive():
+    responses.add(responses.GET, URL, body="\n\t <HTML><body>blocked</body></HTML>")
+    with pytest.raises(SourceError):
+        get(URL, expect="json")

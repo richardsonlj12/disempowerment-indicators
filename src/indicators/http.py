@@ -37,9 +37,12 @@ def get(url, params=None, expect="any", timeout=60):
                 continue
             raise SourceError(f"{url} returned {response.status_code} after retries")
         break
+    if 400 <= response.status_code < 500:
+        # Stack Exchange signals throttling with HTTP 400 and a JSON error body.
+        raise SourceError(f"{url} returned {response.status_code}: {response.text[:200]}")
     response.raise_for_status()
     if expect in ("csv", "json"):
-        head = response.content[:512].lstrip().lower()
-        if b"<html" in head or b"<!doctype" in head:
+        head = response.content.lstrip()[:16].lower()  # only the START of the body counts
+        if head.startswith((b"<html", b"<!doctype")):
             raise SourceError(f"{url} returned HTML where {expect} was expected")
     return response
