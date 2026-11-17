@@ -144,7 +144,7 @@ def test_rerun_refetches_only_last_two_months_plus_uncached(tmp_path):
     stackexchange.fetch(start_month=START, today=TODAY)
     months = {(y, m) for (_, y, m) in state["calls"]}
     assert months == {(2024, 4), (2024, 5)}
-    assert len(state["calls"]) == 2 * 8  # Stack Overflow plus seven other sites
+    assert len(state["calls"]) == 2 * 5  # Stack Overflow plus the four primary sites
     # A month later: the new complete month and the one before it are refreshed.
     responses.reset()
     state = _mock_se()
@@ -159,7 +159,6 @@ def test_relative_yoy_written(tmp_path):
     assert set(results) == {
         "so_questions_monthly",
         "se_comparison_questions_monthly",
-        "se_robustness_questions_monthly",
         "so_vs_comparison_yoy",
     }
     yoy, meta = results["so_vs_comparison_yoy"]
@@ -173,25 +172,19 @@ def test_relative_yoy_written(tmp_path):
 
 
 @responses.activate
-def test_comparison_and_robustness_series_shape():
-    # The robustness-only sites are wild on purpose: the year-over-year contrast must ignore them.
-    def counts(site, year, month):
-        if site in ("gaming", "worldbuilding", "judaism"):
-            return 100 * (1 + (year - 2023) * 5)
-        return _default_count(site, year, month)
-
-    _mock_se(counts)
+def test_comparison_series_shape_and_unadopted_sites_never_requested():
+    state = _mock_se()
     results = _by_id(stackexchange.fetch(start_month=START, today=TODAY))
-    comp, comp_meta = results["se_comparison_questions_monthly"]
-    robust, robust_meta = results["se_robustness_questions_monthly"]
-    for df, meta in ((comp, comp_meta), (robust, robust_meta)):
-        validate_frame(df)
-        assert meta.indicator_id == "C1" and meta.role == "comparison"
-        assert meta.frequency in FREQUENCIES and meta.role in ROLES
-        assert meta.license == "CC BY-SA"
+    requested = {site for site, _, _ in state["calls"]}
+    assert requested == {"stackoverflow", "diy", "travel", "rpg", "scifi"}
+    assert not requested & {"gaming", "worldbuilding", "judaism"}
+    comp, meta = results["se_comparison_questions_monthly"]
+    validate_frame(comp)
+    assert meta.indicator_id == "C1" and meta.role == "comparison"
+    assert meta.frequency in FREQUENCIES and meta.role in ROLES
+    assert meta.license == "CC BY-SA"
     assert set(comp["group"]) == {"diy", "travel", "rpg", "scifi"}
-    assert set(robust["group"]) == {"gaming", "worldbuilding", "judaism"}
-    assert len(comp) == 4 * 17 and len(robust) == 3 * 17
+    assert len(comp) == 4 * 17
     yoy, _ = results["so_vs_comparison_yoy"]
     assert yoy["value"].tolist() == pytest.approx([10.0] * 5)
     so, so_meta = results["so_questions_monthly"]
@@ -208,7 +201,6 @@ def test_site_starts_at_first_full_month_after_open_beta():
         first[site] = min(first.get(site, (y, m)), (y, m))
     assert first["stackoverflow"] == (2010, 6)
     assert first["diy"] == (2010, 8)  # open beta 2010-07-28 is a partial month
-    assert first["gaming"] == (2010, 8)  # open beta 2010-07-14
     assert first["rpg"] == (2010, 9)  # open beta 2010-08-26
     assert "travel" not in first  # beta opened 2011-06
 

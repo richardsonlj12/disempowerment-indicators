@@ -2,9 +2,8 @@
 criteria: |
   1. Launched before 2015, defined as open_beta_date < 2015-01-01 (the API's launch_date is unreliable:
      it is often the graduation date or a bulk placeholder). Why: long pre-period for parallel-trends checks.
-  2. Average at least 400 new questions a month in 2019 for the primary sites, and at least 300 for the
-     robustness sites. Why: keeps monthly count noise small enough to detect a year-over-year change of
-     several percent.
+  2. Average at least 400 new questions a month in 2019. Why: keeps monthly count noise small enough to
+     detect a year-over-year change of several percent.
   3. Subject matter is not programming, software, IT, data/statistics or math-computation, and not a
      quantitative homework-style site. Why: those populations are directly exposed to coding assistants.
   4. Subject matter is mostly experiential, physical-world, creative or community-specific, so a text
@@ -39,22 +38,3 @@ sites:
     avg_monthly_questions_2019: 504
     exposure: lower
     description: Questions about science fiction and fantasy books, films and shows, including plot, canon and interpretation.
-robustness_sites:
-  - api_site_name: gaming
-    name: Arqade (Gaming)
-    open_beta_date: 2010-07-14
-    avg_monthly_questions_2019: 397
-    exposure: medium
-    description: Questions about playing video games, including tips, bugs, mechanics and game settings.
-  - api_site_name: worldbuilding
-    name: Worldbuilding
-    open_beta_date: 2014-09-29
-    avg_monthly_questions_2019: 365
-    exposure: medium
-    description: Questions about designing imaginary worlds for stories and games, including cultures, creatures and settings.
-  - api_site_name: judaism
-    name: Mi Yodeya
-    open_beta_date: 2011-05-10
-    avg_monthly_questions_2019: 310
-    exposure: medium
-    description: Questions about Jewish law, texts, practice and tradition.

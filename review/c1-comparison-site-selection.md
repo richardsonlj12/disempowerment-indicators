@@ -1,4 +1,4 @@
-Approved by the owner on 2026-11-17. Primary comparison sites: diy, travel, rpg, scifi. Robustness set: diy, travel, rpg, scifi, gaming, worldbuilding, judaism. Leave-one-out checks planned. Criterion 1 uses open_beta_date < 2015-01-01 because the API's launch_date is unreliable; criterion 4 means not a language site and not an advice/professional site.
+Approved by the owner on 2026-11-17: ONLY the four primary comparison sites (diy, travel, rpg, scifi). A seven-site robustness set (adding gaming, worldbuilding and judaism at 300 or more questions a month) was considered and not adopted, partly to limit API cost. The screen tables below are kept as history. Leave-one-out checks over the four sites remain possible. Criterion 1 uses open_beta_date < 2015-01-01 because the API's launch_date is unreliable; criterion 4 means not a language site and not an advice/professional site.
 
 # C1 comparison group proposal (pre-registered selection criteria)
 

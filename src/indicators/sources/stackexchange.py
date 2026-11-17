@@ -166,7 +166,6 @@ def fetch(
     plan = [(SO_SITE, SO_START)]
     # A site's opening month is partial (beta opens mid-month); start at its first full month.
     plan += [(s["api_site_name"], _first_full_month(s["open_beta_date"])) for s in config["sites"]]
-    plan += [(s["api_site_name"], _first_full_month(s["open_beta_date"])) for s in config["robustness_sites"]]
 
     caches, todo = {}, []
     for site, beta in plan:
@@ -195,10 +194,8 @@ def fetch(
         return out
 
     primary = [s["api_site_name"] for s in config["sites"]]
-    robust = [s["api_site_name"] for s in config["robustness_sites"]]
     so_df = _frame(rows([SO_SITE]), grouped=False)
     comparison = _frame(rows(primary), grouped=True)
-    robustness = _frame(rows(robust), grouped=True)
     # Hold the comparison mean to the same four sites throughout: start the contrast once every
     # primary site has twelve months of history (latest first month plus one year).
     beta = dict(plan)
@@ -224,9 +221,8 @@ def fetch(
         "filter total. Counts are as of the fetch date, so questions deleted later are not included. "
         "The current month is excluded; the last two complete months are refetched on every run."
     )
-    names = {s["api_site_name"]: s["name"] for s in config["sites"] + config["robustness_sites"]}
+    names = {s["api_site_name"]: s["name"] for s in config["sites"]}
     primary_text = ", ".join(f"{names[s]} ({s})" for s in primary)
-    robust_text = ", ".join(f"{names[s]} ({s})" for s in robust)
 
     return [
         (
@@ -251,19 +247,6 @@ def fetch(
                 + f" Owner-approved primary comparison sites (selected {config['approved_on']}): {primary_text}. "
                 "Each site starts at its first full month after open beta (a partial opening month would distort year-over-year changes). Selection record: "
                 + config["selection_record"],
-                **common,
-            ),
-        ),
-        (
-            robustness,
-            SeriesMeta(
-                series_id="se_robustness_questions_monthly",
-                title="New questions per month on the robustness-only Stack Exchange sites",
-                units="questions per month",
-                role="comparison",
-                notes=count_note
-                + f" Robustness-only sites, not part of the primary contrast: {robust_text}. "
-                "Used to check that the contrast does not depend on the choice of sites.",
                 **common,
             ),
         ),
