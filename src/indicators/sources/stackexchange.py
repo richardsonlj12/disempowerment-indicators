@@ -10,6 +10,21 @@ is cached in `[data_dir]/_cache/stackexchange/[site].json` as it arrives. A run 
 `SourceError` as soon as the quota reaches zero with work left; the next run resumes from the
 cache. The current month is never requested or cached. Each run refetches the last two complete
 months (questions are deleted after the fact) and any month not yet cached.
+
+Throttle guard: a throttled API response can silently ignore `fromdate`/`todate` and return the
+site's ALL-TIME question total. Once per run and site the all-time total is fetched, and any
+monthly count that is at least 99 percent of it, or above the plausibility bound below, is
+rejected: it is not cached, the request is retried once after a pause, and a second rejection
+stops the run with a `SourceError` (completed months stay cached; the next run resumes).
+The bound for a site is min(ABSOLUTE_BOUND, max(3 x the largest monthly count already cached for
+that site, BOUND_FLOOR)): 400,000 (floor 50,000) for Stack Overflow and 10,000 (floor 5,000) for a
+comparison site. The floor keeps a young site's fast early growth from being rejected.
+
+Every accepted fetch is also appended to `[data_dir]/_archive/stackexchange/[YYYY-MM-DD].csv`
+(site, month, count, fetched_at) so that deletions accruing after the fact can be measured later.
+
+Four series are returned: Stack Overflow and comparison-site counts, the relative-activity index
+with its leave-one-out band, the change since ChatGPT's release, and the year-over-year contrast.
 """
 
 from __future__ import annotations
@@ -38,6 +53,13 @@ TOTAL_FILTER = "!-0ttWpIkt-bj4Nx"
 SO_SITE = "stackoverflow"
 SO_START = (2008, 9)  # Stack Overflow public launch month
 REFRESH_MONTHS = 2
+ABSOLUTE_BOUND = {SO_SITE: 400_000}
+DEFAULT_ABSOLUTE_BOUND = 10_000
+BOUND_FLOOR = {SO_SITE: 50_000}
+DEFAULT_BOUND_FLOOR = 5_000
+RELATIVE_BOUND = 3
+ALL_TIME_SHARE = 0.99
+RETRY_PAUSE_SECONDS = 30
 LICENSE = "CC BY-SA"
 DEFAULT_SITES_PATH = Path(__file__).resolve().parents[3] / "config" / "c1_comparison_sites.yaml"
 
@@ -134,6 +156,61 @@ def _month_total(site: str, ym: tuple[int, int]) -> tuple[int, int | None]:
     return int(body["total"]), body.get("quota_remaining")
 
 
+def _all_time_total(site: str) -> tuple[int, int | None]:
+    """One API call without dates: the site's all-time question total (and quota_remaining)."""
+    response = http.get(API, params={"site": site, "filter": TOTAL_FILTER}, expect="json")
+    body = response.json()
+    if "error_id" in body or "total" not in body:
+        raise SourceError(f"Stack Exchange {site} all-time total: {body.get('error_name') or 'response has no total'}")
+    if body.get("backoff"):
+        _sleep(float(body["backoff"]))
+    return int(body["total"]), body.get("quota_remaining")
+
+
+def plausibility_bound(site: str, cache: dict[str, int], key: str) -> int:
+    """Largest monthly count accepted for `site` (see the module docstring)."""
+    seen = max((v for k, v in cache.items() if k != key), default=0)
+    absolute = ABSOLUTE_BOUND.get(site, DEFAULT_ABSOLUTE_BOUND)
+    floor = BOUND_FLOOR.get(site, DEFAULT_BOUND_FLOOR)
+    return min(absolute, max(RELATIVE_BOUND * seen, floor))
+
+
+def _rejection(site: str, ym: tuple[int, int], total: int, all_time: int, bound: int) -> str | None:
+    if all_time > 0 and total >= ALL_TIME_SHARE * all_time:
+        return f"count {total} matches the site's all-time total {all_time} (throttled response ignoring the month)"
+    if total > bound:
+        return f"count {total} exceeds the plausibility bound {bound}"
+    return None
+
+
+def _validated_month(site, ym, all_time, cache):
+    """Fetch one month; reject an implausible count, retry once after a pause, then raise."""
+    key = _key(ym)
+    bound = plausibility_bound(site, cache, key)
+    for attempt in (0, 1):
+        total, quota = _month_total(site, ym)
+        problem = _rejection(site, ym, total, all_time, bound)
+        if problem is None:
+            return total, quota
+        if attempt == 0:
+            _sleep(RETRY_PAUSE_SECONDS)
+    raise SourceError(
+        f"Stack Exchange {site} {key}: {problem}; rejected twice and not cached. "
+        "Completed months are cached; run again later."
+    )
+
+
+def _archive(data_dir: Path, today: date, fetched_at: str, site: str, ym: tuple[int, int], total: int) -> None:
+    """Append one accepted fetch to the day's append-only archive (site, month, count, fetched_at)."""
+    path = Path(data_dir) / "_archive" / "stackexchange" / f"{today.isoformat()}.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    new = not path.exists()
+    with path.open("a", encoding="utf-8", newline="") as f:
+        if new:
+            f.write("site,month,count,fetched_at\n")
+        f.write(f"{site},{_key(ym)},{total},{fetched_at}\n")
+
+
 def _frame(rows: list[tuple[str, tuple[int, int], int]], grouped: bool) -> pd.DataFrame:
     df = pd.DataFrame(
         {
@@ -174,11 +251,19 @@ def fetch(
             if _key(ym) not in caches[site] or ym in refresh:
                 todo.append((site, ym))
 
+    all_time: dict[str, int] = {}
     for index, (site, ym) in enumerate(todo):
-        total, quota = _month_total(site, ym)
-        caches[site][_key(ym)] = total
-        _write_cache(cache_dir / f"{site}.json", caches[site])
-        remaining = len(todo) - index - 1
+        quota = None
+        if site not in all_time:
+            all_time[site], quota = _all_time_total(site)
+        if quota is None or quota > 0:
+            total, quota = _validated_month(site, ym, all_time[site], caches[site])
+            caches[site][_key(ym)] = total
+            _write_cache(cache_dir / f"{site}.json", caches[site])
+            _archive(Path(data_dir), today, utc_now_iso(), site, ym, total)
+            remaining = len(todo) - index - 1
+        else:  # the all-time call used the last of the quota; this month is still to fetch
+            remaining = len(todo) - index
         if quota is not None and quota <= 0 and remaining:
             raise SourceError(
                 f"Stack Exchange anonymous quota exhausted with {remaining} site-months still to fetch; "

@@ -48,15 +48,24 @@ def _default_count(site, year, month):
     return 100  # flat everywhere else
 
 
-def _mock_se(count=_default_count, quota_start=300, backoff=None):
-    state = {"quota": quota_start, "calls": []}
+ALL_TIME = {"stackoverflow": 24_000_000}  # all-time question totals; comparison sites default to 60,000
+
+
+def _mock_se(count=_default_count, quota_start=300, backoff=None, all_time=None):
+    state = {"quota": quota_start, "calls": [], "all_time_calls": []}
+    totals = {**ALL_TIME, **(all_time or {})}
 
     def callback(request):
         qs = parse_qs(urlparse(request.url).query)
         site = qs["site"][0]
+        state["quota"] -= 1
+        if "fromdate" not in qs:  # the all-time total used by the throttle guard
+            state["all_time_calls"].append(site)
+            body = {"total": totals.get(site, 60_000), "has_more": False,
+                    "quota_remaining": max(state["quota"], 0)}
+            return (200, {}, json.dumps(body))
         start = datetime.fromtimestamp(int(qs["fromdate"][0]), tz=timezone.utc)
         state["calls"].append((site, start.year, start.month))
-        state["quota"] -= 1
         body = {"total": count(site, start.year, start.month), "has_more": False,
                 "quota_remaining": max(state["quota"], 0)}
         if backoff:
@@ -80,7 +89,7 @@ def test_so_month_bounds():
 def test_request_uses_month_bounds_total_filter_and_user_agent():
     _mock_se()
     stackexchange.fetch(start_month="2024-03", today=date(2024, 4, 20))
-    request = responses.calls[0].request
+    request = next(c.request for c in responses.calls if "fromdate" in c.request.url)
     qs = parse_qs(urlparse(request.url).query)
     assert (int(qs["fromdate"][0]), int(qs["todate"][0])) == stackexchange.month_bounds(2024, 3)
     assert qs["filter"][0] == stackexchange.TOTAL_FILTER
@@ -104,7 +113,7 @@ def test_comparison_requires_owner_approval(tmp_path):
 
 @responses.activate
 def test_stackexchange_partial_quota_not_written(tmp_path):
-    state = _mock_se(quota_start=12)  # the 12th response reports quota_remaining 0
+    state = _mock_se(quota_start=13)  # all-time call + 12 months; the 13th response reports quota_remaining 0
     with pytest.raises(SourceError, match="quota"):
         stackexchange.fetch(start_month=START, today=TODAY)
     assert len(state["calls"]) == 12  # stopped at the call that exhausted the quota
@@ -252,10 +261,103 @@ def test_backoff_field_is_honoured(monkeypatch):
 
 @responses.activate
 def test_throttle_error_from_api_raises_source_error():
+    # (the all-time call is the first request and fails the same way)
     body = {"error_id": 502, "error_name": "throttle_violation", "error_message": "too many requests"}
     responses.add(responses.GET, SE_URL, status=400, json=body)
     with pytest.raises(SourceError, match="throttle_violation"):
         stackexchange.fetch(start_month=START, today=TODAY)
+
+
+def _flaky(bad_month, bad_value, bad_times):
+    """Counts that return `bad_value` for `bad_month` of Stack Overflow the first `bad_times` requests."""
+    seen = {"n": 0}
+
+    def count(site, year, month):
+        if site == "stackoverflow" and (year, month) == bad_month and seen["n"] < bad_times:
+            seen["n"] += 1
+            return bad_value
+        return _default_count(site, year, month)
+
+    return count
+
+
+@responses.activate
+def test_throttled_all_time_total_rejected_not_cached(tmp_path):
+    # Throttled: the API ignores fromdate/todate on every request and returns the all-time total.
+    state = _mock_se(_flaky((2024, 4), 24_000_000, bad_times=99))
+    with pytest.raises(SourceError, match="all-time"):
+        stackexchange.fetch(start_month="2024-03", today=date(2024, 5, 20))
+    cached = json.loads((tmp_path / "data" / "_cache" / "stackexchange" / "stackoverflow.json").read_text())
+    assert cached == {"2024-03": 1100}  # the bad month is not cached; the good one is kept
+    assert len([c for c in state["calls"] if c[:3] == ("stackoverflow", 2024, 4)]) == 2  # one retry only
+    archive = (tmp_path / "data" / "_archive" / "stackexchange" / "2024-05-20.csv").read_text()
+    assert "24000000" not in archive
+
+
+@responses.activate
+def test_throttled_month_recovers_on_retry(tmp_path, monkeypatch):
+    slept = []
+    monkeypatch.setattr(stackexchange, "_sleep", slept.append)
+    _mock_se(_flaky((2024, 3), 24_000_000, bad_times=1))
+    stackexchange.fetch(start_month="2024-03", today=date(2024, 4, 20))
+    cached = json.loads((tmp_path / "data" / "_cache" / "stackexchange" / "stackoverflow.json").read_text())
+    assert cached == {"2024-03": 1100}
+    assert stackexchange.RETRY_PAUSE_SECONDS in slept
+
+
+@responses.activate
+def test_implausible_month_rejected(tmp_path):
+    # Not equal to the all-time total, but far above anything a month can hold.
+    _mock_se(_flaky((2024, 4), 900_000, bad_times=99))
+    with pytest.raises(SourceError, match="plausibility bound"):
+        stackexchange.fetch(start_month="2024-03", today=date(2024, 5, 20))
+    cached = json.loads((tmp_path / "data" / "_cache" / "stackexchange" / "stackoverflow.json").read_text())
+    assert "2024-04" not in cached
+
+
+@responses.activate
+def test_comparison_site_bound_is_tighter(tmp_path):
+    def count(site, year, month):
+        return 20_000 if (site == "diy" and month == 4) else _default_count(site, year, month)
+
+    _mock_se(count)
+    with pytest.raises(SourceError, match="plausibility bound 5000"):
+        stackexchange.fetch(start_month="2024-03", today=date(2024, 5, 20))
+
+
+def test_plausibility_bound_scales_with_history_but_respects_cap():
+    assert stackexchange.plausibility_bound("diy", {}, "2020-01") == 5_000
+    assert stackexchange.plausibility_bound("diy", {"2019-01": 700}, "2020-01") == 5_000
+    assert stackexchange.plausibility_bound("diy", {"2019-01": 2_500}, "2020-01") == 7_500
+    assert stackexchange.plausibility_bound("diy", {"2019-01": 9_000}, "2020-01") == 10_000
+    assert stackexchange.plausibility_bound("stackoverflow", {"2014-01": 200_000}, "2020-01") == 400_000
+    assert stackexchange.plausibility_bound("stackoverflow", {"2020-01": 200_000}, "2020-01") == 50_000
+
+
+@responses.activate
+def test_all_time_total_fetched_once_per_site_per_run():
+    state = _mock_se()
+    stackexchange.fetch(start_month=START, today=TODAY)
+    assert sorted(state["all_time_calls"]) == sorted(["stackoverflow", "diy", "travel", "rpg", "scifi"])
+
+
+@responses.activate
+def test_archive_appends_every_fetch(tmp_path):
+    _mock_se()
+    stackexchange.fetch(start_month="2024-03", today=date(2024, 5, 20))
+    path = tmp_path / "data" / "_archive" / "stackexchange" / "2024-05-20.csv"
+    lines = path.read_text().splitlines()
+    assert lines[0] == "site,month,count,fetched_at"
+    rows = [line.split(",") for line in lines[1:]]
+    assert len(rows) == 5 * 2  # March and April for five sites
+    assert ["stackoverflow", "2024-03", "1100"] == rows[0][:3] and rows[0][3].endswith("Z")
+    # A second run the same day appends; nothing is overwritten and the header is not repeated.
+    responses.reset()
+    _mock_se()
+    stackexchange.fetch(start_month="2024-03", today=date(2024, 5, 20))
+    lines2 = path.read_text().splitlines()
+    assert lines2[: len(lines)] == lines and len(lines2) > len(lines)
+    assert lines2.count("site,month,count,fetched_at") == 1
 
 
 # ---------------------------------------------------------------- Wikimedia
