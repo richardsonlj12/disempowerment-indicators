@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "disempowerment-indicators"
+version = "0.1.0"
+description = "Indicators of AI-driven gradual disempowerment from free public data"
+requires-python = ">=3.12"
+dependencies = ["pandas", "requests", "pyyaml"]
+
+[project.optional-dependencies]
+dev = ["pytest", "responses"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: hits the network"]
+addopts = "-m 'not live'"

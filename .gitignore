@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.egg-info/
+site/_site/
+site/.quarto/
+site/data/
+site/config/
+site/indicators/
+.DS_Store
+.claude/
+.superpowers/
