@@ -7,7 +7,7 @@
   "source_name": "Census Business Trends and Outlook Survey (BTOS), national",
   "source_url": "https://www.census.gov/hfp/btos",
   "license": "US government work, public domain",
-  "fetched_at": "2026-11-17T20:00:17Z",
+  "fetched_at": "2026-11-17T23:37:58Z",
   "data_through": "2026-11-01",
   "max_lag_days": 45,
   "breaks": [
@@ -16,6 +16,16 @@
       "note": "Question changed from AI use 'in producing goods or services' to 'in any business function'"
     }
   ],
-  "notes": "National, all-sector, firm-weighted share answering Yes (question 7), with Census standard errors (column se, percentage points). Each estimate is dated by the end of its two-week collection period (Census sample date in parentheses). Periods 202319 to 202520 (AI Core Questions.xlsx): In the last two weeks, did this business use Artificial Intelligence (AI) in producing goods or services? (Examples of AI: machine learning, natural language processing, virtual agents, voice recognition, etc.) Periods 202524 to 202622 (National.xlsx): In the last two weeks, did this business use Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI) in any of its business functions? (Examples of SI use include: SI-powered data analysis; generative SI for marketing, product design, or coding; virtual SI agents for customer service; SI-powered forecasting or pricing; SI-driven computer vision for quality control, etc.) Census published no estimate for sample dates 202521 to 202523 (collections 2025-10-06 to 2025-11-16), so the series has a gap before the wording change. The two wordings are not directly comparable; the break date is the first collection of the new wording.",
+  "annotations": [
+    {
+      "date": "2022-11-30",
+      "label": "ChatGPT released to the public"
+    },
+    {
+      "date": "2026-10-19",
+      "label": "Census question wording changed: term 'AI' replaced by 'Super Intelligence or SI (formerly AI)' (from the collection starting 19 October 2026)"
+    }
+  ],
+  "notes": "National, all-sector, firm-weighted share answering Yes (question 7), with Census standard errors (column se, percentage points). Each estimate is dated by the end of its two-week collection period (Census sample date in parentheses). Periods 202319 to 202520 (AI Core Questions.xlsx): In the last two weeks, did this business use Artificial Intelligence (AI) in producing goods or services? (Examples of AI: machine learning, natural language processing, virtual agents, voice recognition, etc.) Periods 202524 to 202622 (National.xlsx): In the last two weeks, did this business use Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI) in any of its business functions? (Examples of SI use include: SI-powered data analysis; generative SI for marketing, product design, or coding; virtual SI agents for customer service; SI-powered forecasting or pricing; SI-driven computer vision for quality control, etc.) Census published no estimate for sample dates 202521 to 202523 (collections 2025-10-06 to 2025-11-16), so the series has a gap before the wording change. The two wordings are not directly comparable; the break date is the first collection of the new wording. The workbook prints the question with the Super Intelligence (SI) label for every period; Census's wording notice of 3 December 2025 shows the question as 'Artificial Intelligence (AI) ... in any of its business functions' from 2025-11-17, and the Content V5 instrument (fielded from 2026-10-19) is the first to use 'Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)'. That relabel is shown as a chart marker, not a break.",
   "role": "primary"
 }
