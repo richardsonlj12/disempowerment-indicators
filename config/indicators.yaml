@@ -24,8 +24,11 @@ indicators:
     headline_caveat: null
     disclosure: null
     sources:
-      - name: BLS Productivity and Costs, via FRED
+      - name: BLS Productivity and Costs
         url: https://www.bls.gov/lpc/
+        license: US government work, public domain
+      - name: BEA National Income and Product Accounts (corporate profits, GDP), via FRED
+        url: https://fred.stlouisfed.org/series/CPATAX
         license: US government work, public domain
   - id: E2
     release: 1
@@ -106,11 +109,11 @@ indicators:
     disclosure: null
     sources:
       - name: BEA National Income and Product Accounts, via FRED
-        url: https://www.bea.gov/data/gdp/gross-domestic-product  # VERIFY URL
+        url: https://fred.stlouisfed.org/series/W055RC1Q027SBEA
         license: US government work, public domain
       - name: OECD Revenue Statistics
-        url: https://www.oecd.org/en/topics/sub-issues/global-tax-revenues.html  # VERIFY URL
-        license: OECD terms and conditions  # VERIFY URL
+        url: https://data-explorer.oecd.org/?df[ds]=DisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS
+        license: OECD terms and conditions
   - id: C1
     release: 1
     domain: cultural
