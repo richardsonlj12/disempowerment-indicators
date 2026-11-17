@@ -57,12 +57,31 @@ def test_counter_evidence_has_inclusion_criteria():
     header, items = load_curated(COUNTER)
     assert header["inclusion_criteria"].strip()
     assert items
-    assert all(i["kind"] in {"policy", "welfare", "data_signal"} for i in items)
+    assert all(i["kind"] in {"policy", "data_signal"} for i in items)
 
 
-def test_counter_evidence_includes_welfare_kind():
+def test_counter_evidence_has_no_welfare_kind():
+    header, items = load_curated(COUNTER)
+    assert not any(i["kind"] == "welfare" for i in items)
+    assert "welfare-improving" not in header["inclusion_criteria"]
+    assert "us_real_median_household_income" not in {i["id"] for i in items}
+
+
+def test_ai_legislation_counts_verified_from_chapter_pdf():
     _, items = load_curated(COUNTER)
-    assert any(i["kind"] == "welfare" for i in items)
+    item = next(i for i in items if i["id"] == "ai_legislation_counts")
+    assert item["verified"] is True and item["verified_on"]
+    assert item["value"] == {"us_federal_bills_2016_2025": 25, "us_state_bills_enacted_2025": 150}
+    assert item["source_url"].endswith("ai_index_report_2026_chapter_8_policy_and_governance.pdf")
+
+
+def test_oversight_note_is_in_plain_words():
+    _, items = load_curated(OVERSIGHT)
+    note = items[0]["note"]
+    assert "17-percentage-point shift" in note and "not statistically significant" in note
+    for jargon in ("CI ", "one-sided", "p 0."):
+        assert jargon not in note
+    assert items[0]["value"] == 86 and "50 analysts" in items[0]["metric"]
 
 
 def test_oversight_cites_herdagdelen():

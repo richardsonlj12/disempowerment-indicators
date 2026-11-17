@@ -7,7 +7,7 @@ import yaml
 
 REQUIRED = ("id", "label", "domain", "metric", "value", "unit", "date",
             "source_name", "source_url", "verified", "verified_on", "note")
-KINDS = ("policy", "welfare", "data_signal")
+KINDS = ("policy", "data_signal")
 
 
 def _validate(item: dict, index: int, require_kind: bool) -> None:
