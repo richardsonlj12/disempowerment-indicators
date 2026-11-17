@@ -12,8 +12,13 @@ items:
     verified: true
     verified_on: 2026-11-17
     note: >-
-      Read from the Anthropic Research page on 2026-11-17: 50 professional analysts (61
-      recruited, 11 declined the agent), four analytical choices, followed the agent's lean 86
-      percent of the time; 54 percent recommended rollout when the agent leaned toward it versus
-      36 percent when it leaned away. Full paper: https://assets.claude.com/519c17a5d23a794e8b6d50a854048d0b61e0d73a.pdf
-      (not text-checked). A single experiment, authored by Anthropic, not a time series.
+      Checked against the full paper on 2026-11-17 ("Who's Aligned to Whom? How AI Agents Shape
+      Experts' Research Judgment Calls", https://assets.claude.com/519c17a5d23a794e8b6d50a854048d0b61e0d73a.pdf):
+      61 participants completed the task, 11 of them without using the agent (a self-selected no-AI
+      group), leaving 50 in the sample; on four analytical decisions they went with the agent's
+      randomly assigned lean 86 percent of the time (50 percent by chance). The rollout figures on
+      the Anthropic page (54 percent versus 36 percent) do not appear in the paper; the paper's
+      registered estimate of the lean's effect on the final recommendation is a 17 percent shift
+      (95 percent CI minus 6 to 40, one-sided p 0.069), not statistically significant, so the site
+      does not cite the 54 versus 36 contrast. A single pre-registered experiment in one task with
+      one pinned agent, authored at Anthropic, not a time series.
