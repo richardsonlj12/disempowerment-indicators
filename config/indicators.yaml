@@ -25,7 +25,7 @@ indicators:
     disclosure: null
     sources:
       - name: BLS Productivity and Costs
-        url: https://www.bls.gov/lpc/
+        url: https://www.bls.gov/productivity/home.htm
         license: US government work, public domain
       - name: BEA National Income and Product Accounts (corporate profits, GDP), via FRED
         url: https://fred.stlouisfed.org/series/CPATAX
