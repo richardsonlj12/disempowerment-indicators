@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import io
 from datetime import date
+from pathlib import Path
 
 import pandas as pd
 
@@ -43,9 +44,9 @@ def _fred_series(series_id: str) -> pd.Series:
     return out.dropna().sort_index()
 
 
-def _bls_labor_share() -> pd.Series:
+def _bls_labor_share(starts: list[int]) -> pd.Series:
     rows: dict[pd.Timestamp, float] = {}
-    for start in range(BLS_FIRST_YEAR, date.today().year + 1, BLS_CHUNK_YEARS):
+    for start in starts:
         response = http.get(
             BLS_API + BLS_LABOR_SHARE,
             params={"startyear": start, "endyear": min(start + BLS_CHUNK_YEARS - 1, date.today().year)},
@@ -83,10 +84,26 @@ def _meta(df: pd.DataFrame, fetched_at: str, **fields) -> SeriesMeta:
     )
 
 
-def fetch() -> list[tuple[pd.DataFrame, SeriesMeta]]:
+def _labor_share_history(data_dir: Path, full: bool) -> pd.Series:
+    """BLS API v1 allows 25 requests/day without a key, and full history needs 8.
+
+    With a committed CSV, fetch only the latest 10-year chunk and merge it over the
+    committed history (fetched quarters win, so BLS revisions are picked up).
+    """
+    this_year = date.today().year
+    existing_path = Path(data_dir) / "labor_share_nfb.csv"
+    if full or not existing_path.exists():
+        return _bls_labor_share(list(range(BLS_FIRST_YEAR, this_year + 1, BLS_CHUNK_YEARS)))
+    old = pd.read_csv(existing_path, parse_dates=["date"])
+    old_series = pd.Series(old["value"].to_numpy(dtype=float), index=pd.DatetimeIndex(old["date"]))
+    recent = _bls_labor_share([this_year - BLS_CHUNK_YEARS + 1])
+    return pd.concat([old_series[~old_series.index.isin(recent.index)], recent]).sort_index()
+
+
+def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.DataFrame, SeriesMeta]]:
     fetched_at = utc_now_iso()
 
-    labor = _frame(_bls_labor_share())
+    labor = _frame(_labor_share_history(Path(data_dir), full))
     labor_meta = _meta(
         labor,
         fetched_at,

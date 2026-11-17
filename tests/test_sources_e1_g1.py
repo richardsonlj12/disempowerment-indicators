@@ -1,6 +1,7 @@
 """Tests for the FRED/BLS (E1, G1) and OECD (G1) source modules."""
 
 import re
+from datetime import date
 from dataclasses import asdict
 from pathlib import Path
 
@@ -42,6 +43,16 @@ def _mock_oecd():
         body=_fixture("oecd", "revenue_statistics.csv"),
         content_type="application/vnd.sdmx.data+csv",
     )
+
+
+@pytest.fixture(autouse=True)
+def isolated_cwd(tmp_path, monkeypatch):
+    """Default data dir is relative; keep offline tests away from any committed data/."""
+    monkeypatch.chdir(tmp_path)
+
+
+def _bls_calls():
+    return [c for c in responses.calls if "api.bls.gov" in c.request.url]
 
 
 def _by_id(results):
@@ -149,6 +160,37 @@ def test_meta_fields_complete():
     assert ids["oecd_labor_tax_share_avg"].role == "context"
     assert ids["labor_share_nfb"].role == "primary"
     assert ids["us_labor_tax_share"].role == "primary"
+
+
+@responses.activate
+def test_labor_share_full_when_no_existing_file(tmp_path):
+    _mock_fred()
+    fred.fetch(data_dir=tmp_path)
+    expected = len(range(fred.BLS_FIRST_YEAR, date.today().year + 1, fred.BLS_CHUNK_YEARS))
+    assert len(_bls_calls()) == expected > 1
+
+
+@responses.activate
+def test_labor_share_incremental_uses_one_request_and_merges(tmp_path):
+    _mock_fred()
+    pd.DataFrame(
+        {"date": pd.to_datetime(["1950-01-01", "2026-04-01"]), "value": [60.0, 99.9]}
+    ).to_csv(tmp_path / "labor_share_nfb.csv", index=False)
+    df, _ = _by_id(fred.fetch(data_dir=tmp_path))["labor_share_nfb"]
+    assert len(_bls_calls()) == 1
+    assert df[df["date"] == "1950-01-01"]["value"].iloc[0] == 60.0  # kept from history
+    assert df[df["date"] == "2026-04-01"]["value"].iloc[0] == pytest.approx(53.3)  # revised
+    assert df["date"].is_unique and df["date"].is_monotonic_increasing
+
+
+@responses.activate
+def test_labor_share_full_flag_refetches_history(tmp_path):
+    _mock_fred()
+    pd.DataFrame({"date": pd.to_datetime(["1950-01-01"]), "value": [60.0]}).to_csv(
+        tmp_path / "labor_share_nfb.csv", index=False
+    )
+    fred.fetch(data_dir=tmp_path, full=True)
+    assert len(_bls_calls()) > 1
 
 
 @pytest.mark.live
