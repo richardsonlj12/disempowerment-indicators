@@ -196,6 +196,8 @@ def test_relative_index_series_from_full_history():
     validate_frame(idx)
     assert meta.role == "primary" and meta.units == "index (2019 = 100)" and meta.indicator_id == "C1"
     assert "not a causal estimate" in meta.notes and "2019 = 100" in meta.notes
+    for sid in ("so_relative_index", "so_relative_index_loo_min", "so_relative_index_loo_max"):
+        assert "November 2022" in results[sid][1].notes  # the reference of so_change_since_chatgpt
     by_date = idx.set_index("date")["value"]
     assert idx["date"].min() == pd.Timestamp("2012-06-01")  # travel starts 2011-07; +11 months
     assert by_date[pd.Timestamp("2019-12-01")] == pytest.approx(100.0)
@@ -402,6 +404,22 @@ def test_archive_appends_every_fetch(tmp_path):
     lines2 = path.read_text().splitlines()
     assert lines2[: len(lines)] == lines and len(lines2) > len(lines)
     assert lines2.count("site,month,count,fetched_at") == 1
+
+
+def test_scan_archive_for_jumps(tmp_path):
+    d = tmp_path / "arch"
+    d.mkdir()
+    (d / "2024-05-20.csv").write_text(
+        "site,month,count,fetched_at\n"
+        "diy,2023-11,100,t\ndiy,2023-12,110,t\ndiy,2024-01,400,t\ndiy,2024-02,105,t\n"
+        "travel,2023-12,100,t\ntravel,2024-01,150,t\n"
+    )
+    (d / "2024-05-21.csv").write_text("site,month,count,fetched_at\ndiy,2023-11,95,t\n")
+    flags = stackexchange.scan_archive_for_jumps(d)
+    assert len(flags) == 2 and all("diy 2024-01" in f for f in flags)  # vs 2023-12 and vs 2024-02
+    assert stackexchange.scan_archive_for_jumps(d, factor=5.0) == []  # travel's 1.5x and diy's 3.6x are under 5
+    (d / "2024-05-22.csv").write_text("site,month,count,fetched_at\ndiy,2024-01,115,t\n")  # later fetch wins
+    assert stackexchange.scan_archive_for_jumps(d) == []
 
 
 # ---------------------------------------------------------------- Wikimedia

@@ -7,7 +7,7 @@
   "source_name": "Census Business Trends and Outlook Survey (BTOS), national",
   "source_url": "https://www.census.gov/hfp/btos",
   "license": "US government work, public domain",
-  "fetched_at": "2026-11-17T23:37:58Z",
+  "fetched_at": "2026-11-17T23:41:49Z",
   "data_through": "2026-11-01",
   "max_lag_days": 45,
   "breaks": [

@@ -81,6 +81,7 @@ def test_btos_by_size_class_series():
     assert large.loc["2026-11-01", "value"] == 44.1
     assert (df["se"] >= 0).all() and len(small) == 25
     assert meta.data_through == "2026-11-01"
+    assert "202524 to 202622" in meta.notes and "202319" not in meta.notes
     assert "Firm-weighted" in meta.notes and "Employment Size Class.xlsx" in meta.notes
 
 

@@ -155,7 +155,7 @@ def _by_size(wb: openpyxl.Workbook, fetched_at: str) -> tuple[pd.DataFrame, Seri
         raise SourceError(f"{SIZE_URL}: estimate and standard-error sheets list different periods")
     est, se = _size_rows(est_rows, SIZE_URL), _size_rows(se_rows, SIZE_URL)
     periods = [str(h) for h in est_rows[0][5:]]
-    records = []
+    records, kept = [], set()
     for code, label in SIZE_CLASSES.items():
         for i, period in enumerate(periods):
             value = _percent(est[code][5 + i])
@@ -164,6 +164,7 @@ def _by_size(wb: openpyxl.Workbook, fetched_at: str) -> tuple[pd.DataFrame, Seri
             if period not in ends:
                 raise SourceError(f"{SIZE_URL}: period {period} has no collection dates")
             records.append((label, ends[period], value, _percent(se[code][5 + i])))
+            kept.add(period)
     if not records:
         raise SourceError(f"{SIZE_URL}: no estimates for question {QUESTION_ID}")
     df = pd.DataFrame(records, columns=["group", "date", "value", "se"])
@@ -192,7 +193,7 @@ def _by_size(wb: openpyxl.Workbook, fetched_at: str) -> tuple[pd.DataFrame, Seri
             "standard errors (column se, percentage points), from Employment Size Class.xlsx (sheets Response "
             "Estimates and Response Standard Errors). Size classes: " + "; ".join(SIZE_CLASSES.values()) + ". "
             "Each estimate is dated by the end of its two-week collection period. The file holds only the "
-            f"new-wording series, from the 2025-11-17 collection (sample dates {periods[-1]} onward). Question: {question} "
+            f"new-wording series, from the 2025-11-17 collection (sample dates {min(kept)} to {max(kept)}). Question: {question} "
             "Census published no estimate for sample dates 202521 to 202523. The workbook prints the SI label "
             "for every period; the relabel from 'AI' to 'Super Intelligence or SI' began with the collection "
             "fielded from 2026-10-19 (shown as a chart marker, not a break)."

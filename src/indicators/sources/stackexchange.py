@@ -5,7 +5,7 @@ aggregate-by-month route, so each site-month costs one `/2.3/questions` call wit
 `fromdate`/`todate` set to the calendar month in UTC and a filter that returns only `total`
 (plus `quota_remaining`, `backoff`, `has_more`). `/2.3/info` gives only the all-time total.
 
-Full history is about 1,500 calls, so the first fetch spans several days. Every completed month
+Full history is about 1,000 calls (about 980 month calls plus one all-time call per site per run), so the first fetch spans several days. Every completed month
 is cached in `[data_dir]/_cache/stackexchange/[site].json` as it arrives. A run stops with a
 `SourceError` as soon as the quota reaches zero with work left; the next run resumes from the
 cache. The current month is never requested or cached. Each run refetches the last two complete
@@ -179,6 +179,7 @@ def _all_time_total(site: str) -> tuple[int, int | None]:
 
 def plausibility_bound(site: str, cache: dict[str, int], key: str) -> int:
     """Largest monthly count accepted for `site` (see the module docstring)."""
+    # Exclude the month being (re)fetched: its own cached value must not widen the bound for the new value.
     seen = max((v for k, v in cache.items() if k != key), default=0)
     absolute = ABSOLUTE_BOUND.get(site, DEFAULT_ABSOLUTE_BOUND)
     floor = BOUND_FLOOR.get(site, DEFAULT_BOUND_FLOOR)
@@ -193,7 +194,7 @@ def _rejection(site: str, ym: tuple[int, int], total: int, all_time: int, bound:
     return None
 
 
-def _validated_month(site, ym, all_time, cache):
+def _validated_month(site: str, ym: tuple[int, int], all_time: int, cache: dict[str, int]) -> tuple[int, int | None]:
     """Fetch one month; reject an implausible count, retry once after a pause, then raise."""
     key = _key(ym)
     bound = plausibility_bound(site, cache, key)
@@ -259,7 +260,7 @@ def fetch(
     start_month: str | None = None,
     today: date | None = None,
 ) -> list[tuple[pd.DataFrame, SeriesMeta]]:
-    """Fetch (resuming from cache) and return the four C1 Stack Exchange series.
+    """Fetch (resuming from cache) and return the C1 Stack Exchange series (seven, or three on a short run).
 
     `start_month` ("YYYY-MM") limits how far back to fetch, for smoke tests. `today` is for tests.
     """
@@ -347,6 +348,7 @@ def fetch(
         "window: R = ln(Stack Overflow total) minus the mean of ln(total) across the four primary comparison "
         "sites, only for months where all four sites have a full 12 months. Values are expressed relative "
         f"to the {INDEX_BASE_YEAR} average (index {INDEX_BASE_YEAR} = 100), so the pre-AI level is the reference. "
+        f"The companion series so_change_since_chatgpt is measured from the November 2022 window ({CHATGPT_MONTH[:7]}). "
         "AI also affects the comparison sites, so this is Stack Overflow's activity relative to them, "
         "not the absolute AI effect."
     )
@@ -455,3 +457,26 @@ def fetch(
             ),
         ),
     ]
+
+
+def scan_archive_for_jumps(archive_dir: Path | str, factor: float = 2.0) -> list[str]:
+    """Flag site-months whose count is more than `factor` x the previous or next month's count.
+
+    Reads every day's archive CSV under `archive_dir` (later fetches of a month win), as a check
+    against partially throttled responses. Returns human-readable lines; empty when clean."""
+    latest: dict[tuple[str, str], int] = {}
+    for path in sorted(Path(archive_dir).glob("*.csv")):
+        frame = pd.read_csv(path, dtype={"site": str, "month": str})
+        for site, month, count in zip(frame["site"], frame["month"], frame["count"]):
+            latest[(site, month)] = int(count)
+    flags = []
+    for site in sorted({s for s, _ in latest}):
+        months = sorted(m for s, m in latest if s == site)
+        for m in months:
+            ym = _ym(m)
+            prev, nxt = _key(_previous(ym)), _key((ym[0] + 1, 1) if ym[1] == 12 else (ym[0], ym[1] + 1))
+            for other in (prev, nxt):
+                neighbour = latest.get((site, other))
+                if neighbour and latest[(site, m)] > factor * neighbour:
+                    flags.append(f"{site} {m}: {latest[(site, m)]} is more than {factor}x {other} ({neighbour})")
+    return flags
