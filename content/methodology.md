@@ -34,7 +34,7 @@ Concentrated wealth or political influence is not by itself evidence that reduce
 - **Persistence:** a departure from baseline that does not revert after shocks over a stated number of periods.
 - **Rising switching costs:** a growing capacity of AI-interest actors to block a return to human decision making.
 
-Both echo examples Chooi, Lee and Li give. If no test is adopted, the row will be renamed (for example, "concentration of influence") rather than overclaim. Until then, every lock-in cell reads "No public measure yet."
+Rising switching costs is one of the lock-in signs Chooi, Lee and Li list. Persistence is the site's own proposal. If no test is adopted, the row will be renamed (for example, "concentration of influence") rather than overclaim. Until then, every lock-in cell reads "No public measure yet."
 
 ### The oversight row
 
@@ -42,11 +42,15 @@ The mechanism at the center of the gradual disempowerment argument is decisions 
 
 **The study.** Professional analysts worked on a data analysis with an AI coding agent. On four analytical decisions, a coin flip set which way the agent leaned. Across those decisions, the 50 analysts in the study went with the agent's lean 86 percent of the time, against 50 percent by chance. Many repeated the agent's arguments when explaining their choices without crediting it.
 
-**Its limits.** It is one experiment, in one task, with one agent, and the authors list these limits themselves. It is authored at Anthropic, which also publishes the data behind E3. It is not a time series and cannot fill the row.
+**Its limits.** It is one experiment, in one task, with one agent, and the authors list these limits themselves. The agent in the study was Claude. The study is authored at Anthropic, which also publishes the data behind E3 and makes Claude. It is not a time series and cannot fill the row.
 
 Moon and Boudreaux (2026, RAND) propose a formal way to track the same mechanism: the number and makeup of the groups whose agreement decides an outcome, and whether AI is entering those groups or shaping the options they see. If a public, repeatable measure of deferral appears, it will fill this row.
 
 ## Readings
+
+### Leading and lagging
+
+Each indicator is labeled **leading** or **lagging**. A leading indicator is likely to move early, before any effect is entrenched; adoption and activity measures are examples. A lagging indicator is likely to move only after a change is well under way; income and tax shares are examples. Most structural series lag.
 
 ### Two scales
 
@@ -75,7 +79,9 @@ Readings describe what the data is doing, and the third line interprets it, so a
 *Illustrative example only. No such reading has been made, and the bracketed values are placeholders:*
 
 > **E1 Labor share: Below baseline**
+>
 > [x] points below its 2010 to 2019 pattern, over the latest [n] quarters
+>
 > *If AI-driven, consistent with eroding human leverage · AI-specificity: weak*
 
 ### Readings are dated human judgments
@@ -116,7 +122,7 @@ The rule of thumb:
 
 **Slow structural indicators** (E1, G1, C1) have decades of history and many causes. Their baseline is the series' own **pattern in 2010 to 2019**, after the 2008 to 2009 recession and before COVID. The question is whether the series is departing from that pattern, and how fast.
 
-**AI-native indicators** (E2, E3) began recently, near zero, and change month to month. Their baseline is their **own recent path**: level, rate of change and whether that rate is speeding up, over rolling 3-, 6- and 12-month windows, or at the native frequency where data are less frequent.
+**AI-native indicators** (E2, E3) measure AI directly, have only a few years of history and no pre-AI period, and can change quickly. E2 began near zero. E3 is a share of AI conversations, so it has no zero point to start from. Their baseline is their **own recent path**: level, rate of change and whether that rate is speeding up, over rolling 3-, 6- and 12-month windows, or at the native frequency where data are less frequent.
 
 ### Comparison groups
 
@@ -188,7 +194,7 @@ The summary page carries a panel of signals pointing away from disempowerment, h
 Every indicator page states two things:
 
 - **Its direction assumption:** which way a movement would be consistent with eroding human leverage.
-- **Its main rival reading:** the most plausible way the same data could arise without disempowerment.
+- **Its main rival reading:** the most plausible other reading of the same data. That includes a reassuring movement that hides erosion, and an alarming one that has a cause other than AI.
 
 Each indicator shows conditions under which the hypothesized mechanism would operate. None of them is proof that disempowerment is happening.
 
@@ -216,7 +222,7 @@ The next candidate is survey data on AI as an intermediary for information and r
 
 **Beren Millidge (2025)** argues that gradual disempowerment might not be so bad. Most people already have little individual influence over large systems. AI governance could be better than human governance. Capital income and transfers could sustain living standards. He calls the outcome highly uncertain. His argument is why every economic page separates welfare from influence, and why the counter-evidence panel includes welfare signals.
 
-**P. O. Jedlicka (2026)** argues that gradual disempowerment scenarios are under-specified sociologically and lean on technological determinism. In his view they underrate collective agency and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason the site shows signals pointing the other way with equal prominence, including policy pushback.
+**P. O. Jedlicka (2026)** argues that gradual disempowerment scenarios are under-specified sociologically and lean on technological determinism. Jedlicka argues that such scenarios underrate collective agency and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason for the site's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
 
 **The authors' own caveats.**
 
@@ -243,11 +249,11 @@ Later versions are planned under four headings:
   - The E1 industry comparison.
   - A US-states test of the rentier logic for G1.
   - A measure of deferral for the oversight row, if one becomes available.
-- **Harder indicators from the recommended ten.**
+- **Harder indicators of AI's effect on work and research.**
   - Young workers in AI-exposed jobs.
   - Job postings weighted by AI exposure.
   - The AI-written share of scientific papers and peer reviews.
-- **Remaining indicators from the owner's earlier labor-dashboard draft.**
+- **More labor-market indicators.**
   - Recent-graduate unemployment.
   - Participation in AI-exposed occupations.
   - Real wages in exposed versus less-exposed occupations.
@@ -261,7 +267,7 @@ Later versions are planned under four headings:
 
 ## Sources and disclosure
 
-The full papers behind the framework were read before this page was written:
+The framework comes from Kulveit et al. (2025). These four sources were read in full before this page was written (RAND's mathematical appendix skimmed):
 
 - Chooi, Lee and Li (2026)
 - Moon and Boudreaux (2026)
