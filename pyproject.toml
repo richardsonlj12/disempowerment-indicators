@@ -7,7 +7,7 @@ name = "disempowerment-indicators"
 version = "0.1.0"
 description = "Indicators of AI-driven gradual disempowerment from free public data"
 requires-python = ">=3.12"
-dependencies = ["pandas", "requests", "pyyaml"]
+dependencies = ["pandas", "requests", "pyyaml", "openpyxl"]
 
 [project.optional-dependencies]
 dev = ["pytest", "responses"]

@@ -83,7 +83,7 @@ indicators:
     sources:
       - name: Anthropic Economic Index (Hugging Face)
         url: https://huggingface.co/datasets/Anthropic/EconomicIndex
-        license: Check the dataset card for the license  # VERIFY URL
+        license: "Data released under CC-BY, code released under MIT License (dataset README, License section)"
   - id: G1
     release: 1
     domain: government

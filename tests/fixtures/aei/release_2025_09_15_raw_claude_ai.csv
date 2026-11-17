@@ -1,0 +1,18 @@
+geo_id,geography,date_start,date_end,platform_and_product,facet,level,variable,cluster_name,value
+AD,country,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,not_classified,25.0
+AD,country,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,not_classified,62.5
+AD,country,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,task iteration,15.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,directive,374029.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,directive,38.779816152303695
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,feedback loop,99518.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,feedback loop,10.318156463389093
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,learning,196160.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,learning,20.338125483414103
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,none,37238.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,none,3.860884567451949
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,not_classified,1.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,not_classified,0.00010368130854105883
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,task iteration,214342.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,task iteration,22.22325903530763
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_count,validation,43206.0
+GLOBAL,global,2025-08-04,2025-08-11,Claude AI (Free and Pro),collaboration,0,collaboration_pct,validation,4.479654616824988

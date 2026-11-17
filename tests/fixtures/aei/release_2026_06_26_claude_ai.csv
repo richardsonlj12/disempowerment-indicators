@@ -1,0 +1,20 @@
+date_start,date_end,geo_id,geo_level,category_name,hierarchy_level,metric_id,value,node_name,node_external_id
+2026-05-01,2026-06-01,ZA-WC,subregion,onet,2,pct,0.25,"Prepare financial documents, reports, or budgets.",4.A.3.b.6.I01
+2026-05-01,2026-06-01,ZA-WC,subregion,onet,0,pct,0.4,Locate unusual or unique information in response to specific requests.,22420
+2026-05-01,2026-06-01,ZA-WC,subregion,onet,0,pct,0.68,"Answer customers' questions, and provide information on procedures or policies.",2408
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_bucket_automation_pct,48.62,Overall,-
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_bucket_augmentation_pct,51.38,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_learning_pct,16.75,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_bucket_augmentation_pct,51.02,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_directive_pct,31.72,Overall,-
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_feedback_loop_pct,15.97,Overall,-
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_directive_pct,31.38,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_feedback_loop_pct,16.0,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_validation_pct,3.08,Overall,-
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_task_iteration_pct,30.41,Overall,-
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_none_pct,2.61,Overall,-
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_learning_pct,16.55,Overall,-
+2026-05-01,2026-06-01,GLOBAL,global,overall,0,collaboration_validation_pct,3.08,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_bucket_automation_pct,48.98,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_none_pct,2.58,Overall,-
+2026-04-01,2026-05-01,GLOBAL,global,overall,0,collaboration_task_iteration_pct,29.88,Overall,-

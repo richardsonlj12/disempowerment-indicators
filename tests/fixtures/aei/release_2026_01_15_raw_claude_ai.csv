@@ -1,0 +1,16 @@
+geo_id,geography,date_start,date_end,platform_and_product,facet,level,variable,cluster_name,value
+AD,country,2025-11-13,2025-11-20,Claude AI (Free and Pro),ai_autonomy,0,ai_autonomy_count,,70.0
+AD,country,2025-11-13,2025-11-20,Claude AI (Free and Pro),ai_autonomy,0,ai_autonomy_mean,,3.299999952316284
+AD,country,2025-11-13,2025-11-20,Claude AI (Free and Pro),ai_autonomy,0,ai_autonomy_mean_ci_lower,,3.114285707473755
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_count,directive,317227.0
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_pct,directive,31.726665833229156
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_count,feedback loop,136270.0
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_pct,feedback loop,13.628703587948493
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_count,learning,197133.0
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_pct,learning,19.71576447055882
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_count,none,29608.0
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_pct,none,2.9611701462682833
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_count,task iteration,271926.0
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_pct,task iteration,27.19599949993749
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_count,validation,47711.0
+GLOBAL,global,2025-11-13,2025-11-20,Claude AI (Free and Pro),collaboration,0,collaboration_pct,validation,4.771696462057757
