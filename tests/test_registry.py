@@ -4,7 +4,7 @@ import pytest
 
 from indicators.registry import (
     STATE_LABELS, SCALE_STATES, current_reading, load_chart_markers, load_readings, load_registry,
-    markers_for,
+    markers_for, LAYER_LABELS, layer_label, content_summary,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -47,10 +47,10 @@ def test_current_reading_defaults_when_missing():
     assert current_reading({}, "E1").state == "not_yet_reviewed"
 
 
-def test_every_indicator_has_direction_and_rival_reading(registry):
+def test_every_indicator_has_warning_sign_and_alternative_explanations(registry):
     for i in registry[0]:
-        assert i.direction_assumption.strip() and i.rival_reading.strip()
-        assert set(i.specificity_criteria) == {
+        assert i.warning_sign.strip() and i.alternative_explanations.strip()
+        assert set(i.ai_link_criteria) == {
             "directness", "comparison_group", "timing", "confounders"}
 
 
@@ -119,3 +119,26 @@ def test_unverified_markers_are_dropped(tmp_path):
     p = tmp_path / "m.yaml"
     p.write_text("markers:\n  all:\n    - {date: 2020-01-01, label: x, source_url: https://e.org, verified: false}\n")
     assert markers_for(load_chart_markers(p), "E1") == []
+
+
+def test_ai_link_values_and_summary_present(registry):
+    for i in registry[0]:
+        assert i.ai_link in {"strong", "moderate", "weak"} and i.summary.strip()
+
+
+def test_layer_display_names():
+    assert LAYER_LABELS == {"exposure": "Adoption", "erosion": "Displacement", "lockin": "Lock-in"}
+    assert layer_label("exposure") == "Adoption"
+    assert STATE_LABELS["low"] == "Low"  # the exposure scale's own labels are unchanged
+
+
+def test_registry_text_uses_replacement_not_displacement_wording():
+    text = IND.read_text(encoding="utf-8")
+    assert "augmentation versus displacement" not in text and "AI-specificity" not in text
+
+
+def test_content_summary_prefers_summary_and_accepts_takeaway():
+    assert content_summary({"summary": "new", "takeaway": "old"}) == "new"
+    assert content_summary({"takeaway": "old"}) == "old"
+    with pytest.raises(ValueError):
+        content_summary({})

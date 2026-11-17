@@ -20,6 +20,13 @@ STATE_LABELS: dict[str, str] = {
     "not_yet_reviewed": "Not yet reviewed",
 }
 
+# Display names for the layer keys used internally in the registry and grid.
+LAYER_LABELS: dict[str, str] = {
+    "exposure": "Adoption",
+    "erosion": "Displacement",
+    "lockin": "Lock-in",
+}
+
 SCALE_STATES: dict[str, set[str]] = {
     "exposure": {"low", "rising", "pervasive", "no_signal", "not_yet_reviewed"},
     "baseline": {"within", "above", "below", "far_above", "far_below",
@@ -35,12 +42,12 @@ class Indicator:
     layer: str
     scale: str
     name: str
-    takeaway: str
-    specificity: str
-    specificity_criteria: dict
+    summary: str
+    ai_link: str  # strong | moderate | weak: how directly the series ties to AI (the "AI link" badge)
+    ai_link_criteria: dict
     timing: str
-    direction_assumption: str
-    rival_reading: str
+    warning_sign: str
+    alternative_explanations: str
     comparison: str
     tier: int
     series: list[str]
@@ -114,3 +121,17 @@ def markers_for(markers: dict[str, list[dict]], indicator_id: str) -> list[dict]
     """Verified markers for one indicator, as {"date", "label"} sorted by date (the meta `annotations`)."""
     rows = [m for key in ("all", indicator_id) for m in markers.get(key) or [] if m.get("verified") is True]
     return sorted(({"date": str(m["date"]), "label": m["label"]} for m in rows), key=lambda m: m["date"])
+
+
+def layer_label(layer: str) -> str:
+    """Display name for an internal layer key."""
+    return LAYER_LABELS[layer]
+
+
+def content_summary(front_matter: dict) -> str:
+    """Summary text from a content page's front matter. `summary:` is preferred; `takeaway:` (the old
+    key, still on the pages until the prose batch renames it) is accepted as a fallback."""
+    for key in ("summary", "takeaway"):
+        if front_matter.get(key):
+            return str(front_matter[key])
+    raise ValueError("front matter has no summary")
