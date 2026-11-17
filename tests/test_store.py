@@ -50,6 +50,21 @@ def test_write_read_roundtrip(tmp_path):
     pd.testing.assert_frame_equal(df2, df, check_dtype=False)
 
 
+def test_grouped_roundtrip_preserves_na_like_labels(tmp_path):
+    df = pd.DataFrame(
+        {
+            "date": pd.to_datetime(["2025-01-01", "2025-01-01", "2025-02-01", "2025-02-01"]),
+            "value": [1.0, 2.0, 3.0, 4.0],
+            "se": [0.1, float("nan"), 0.3, float("nan")],
+            "group": ["NA", "None", "NA", "None"],
+        }
+    )
+    write_series(df, make_meta(), tmp_path)
+    df2, _ = read_series("test_series", tmp_path)
+    assert list(df2["group"]) == ["NA", "None", "NA", "None"]
+    pd.testing.assert_frame_equal(df2, df, check_dtype=False)
+
+
 def test_validate_rejects_duplicate_dates():
     df = make_df(dates=("2025-01-01", "2025-01-01", "2025-03-01"))
     with pytest.raises(ValueError, match="unique"):

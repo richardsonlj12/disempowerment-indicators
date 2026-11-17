@@ -103,9 +103,14 @@ def write_series(df: pd.DataFrame, meta: SeriesMeta, data_dir: Path) -> None:
 
 def read_series(series_id: str, data_dir: Path) -> tuple[pd.DataFrame, SeriesMeta]:
     data_dir = Path(data_dir)
-    df = pd.read_csv(data_dir / f"{series_id}.csv", parse_dates=["date"])
-    if "group" in df.columns:
-        df["group"] = df["group"].astype(str)
+    # Only numeric columns may be NA; group labels like "NA"/"None" must stay literal.
+    df = pd.read_csv(
+        data_dir / f"{series_id}.csv",
+        parse_dates=["date"],
+        dtype={"group": str},
+        keep_default_na=False,
+        na_values={"value": [""], "se": [""]},
+    )
     meta = SeriesMeta(**json.loads((data_dir / f"{series_id}.meta.json").read_text(encoding="utf-8")))
     return df, meta
 
