@@ -2,8 +2,9 @@
 criteria: |
   1. Launched before 2015, defined as open_beta_date < 2015-01-01 (the API's launch_date is unreliable:
      it is often the graduation date or a bulk placeholder). Why: long pre-period for parallel-trends checks.
-  2. Average at least 300 new questions a month in 2019. Why: keeps monthly count noise small enough to
-     detect a year-over-year change of several percent.
+  2. Average at least 400 new questions a month in 2019 for the primary sites, and at least 300 for the
+     robustness sites. Why: keeps monthly count noise small enough to detect a year-over-year change of
+     several percent.
   3. Subject matter is not programming, software, IT, data/statistics or math-computation, and not a
      quantitative homework-style site. Why: those populations are directly exposed to coding assistants.
   4. Subject matter is mostly experiential, physical-world, creative or community-specific, so a text

@@ -63,6 +63,18 @@ def _key(ym: tuple[int, int]) -> str:
     return f"{ym[0]:04d}-{ym[1]:02d}"
 
 
+def _first_full_month(open_beta_date) -> tuple[int, int]:
+    """The opening month if the beta opened on day 1, else the next month."""
+    ym = _ym(open_beta_date)
+    if isinstance(open_beta_date, (date, datetime)):
+        day = open_beta_date.day
+    else:
+        day = int(str(open_beta_date)[8:10])
+    if day == 1:
+        return ym
+    return (ym[0] + 1, 1) if ym[1] == 12 else (ym[0], ym[1] + 1)
+
+
 def _months(first: tuple[int, int], last: tuple[int, int]) -> list[tuple[int, int]]:
     out, (y, m) = [], first
     while (y, m) <= last:
@@ -152,8 +164,9 @@ def fetch(
     cache_dir = Path(data_dir) / "_cache" / "stackexchange"
 
     plan = [(SO_SITE, SO_START)]
-    plan += [(s["api_site_name"], _ym(s["open_beta_date"])) for s in config["sites"]]
-    plan += [(s["api_site_name"], _ym(s["open_beta_date"])) for s in config["robustness_sites"]]
+    # A site's opening month is partial (beta opens mid-month); start at its first full month.
+    plan += [(s["api_site_name"], _first_full_month(s["open_beta_date"])) for s in config["sites"]]
+    plan += [(s["api_site_name"], _first_full_month(s["open_beta_date"])) for s in config["robustness_sites"]]
 
     caches, todo = {}, []
     for site, beta in plan:
@@ -186,7 +199,13 @@ def fetch(
     so_df = _frame(rows([SO_SITE]), grouped=False)
     comparison = _frame(rows(primary), grouped=True)
     robustness = _frame(rows(robust), grouped=True)
+    # Hold the comparison mean to the same four sites throughout: start the contrast once every
+    # primary site has twelve months of history (latest first month plus one year).
+    beta = dict(plan)
+    latest_start = max(max(beta[s], floor) for s in primary)
+    yoy_start = pd.Timestamp(year=latest_start[0] + 1, month=latest_start[1], day=1)
     yoy = relative_yoy(so_df, comparison, 12)
+    yoy = yoy[yoy["date"] >= yoy_start].reset_index(drop=True)
 
     fetched_at = utc_now_iso()
     through = _key(last_complete) + "-01"
@@ -230,7 +249,7 @@ def fetch(
                 role="comparison",
                 notes=count_note
                 + f" Owner-approved primary comparison sites (selected {config['approved_on']}): {primary_text}. "
-                "Each site starts at its open beta month. Selection record: "
+                "Each site starts at its first full month after open beta (a partial opening month would distort year-over-year changes). Selection record: "
                 + config["selection_record"],
                 **common,
             ),
@@ -259,6 +278,8 @@ def fetch(
                     "Stack Overflow's year-over-year percent change in monthly new questions minus the mean "
                     "year-over-year percent change across the primary comparison sites (each site first, "
                     "then the mean). Computed from so_questions_monthly and se_comparison_questions_monthly. "
+                    f"The series starts {yoy_start:%Y-%m}, the first month in which all four primary sites have "
+                    "a year-over-year change, so the comparison mean covers the same four sites throughout. "
                     "AI also affects the comparison sites, so this shows Stack Overflow relative to them, "
                     "not the absolute AI effect."
                 ),

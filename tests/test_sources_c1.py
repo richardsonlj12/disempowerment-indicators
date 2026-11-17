@@ -200,17 +200,53 @@ def test_comparison_and_robustness_series_shape():
 
 
 @responses.activate
-def test_site_starts_at_open_beta_month_and_never_earlier():
+def test_site_starts_at_first_full_month_after_open_beta():
     state = _mock_se()
-    stackexchange.fetch(start_month="2010-06", today=date(2010, 9, 20))
+    stackexchange.fetch(start_month="2010-06", today=date(2010, 10, 20))
     first = {}
     for site, y, m in state["calls"]:
         first[site] = min(first.get(site, (y, m)), (y, m))
     assert first["stackoverflow"] == (2010, 6)
-    assert first["diy"] == (2010, 7)  # open beta 2010-07-28
-    assert first["gaming"] == (2010, 7)
-    assert first["rpg"] == (2010, 8)
+    assert first["diy"] == (2010, 8)  # open beta 2010-07-28 is a partial month
+    assert first["gaming"] == (2010, 8)  # open beta 2010-07-14
+    assert first["rpg"] == (2010, 9)  # open beta 2010-08-26
     assert "travel" not in first  # beta opened 2011-06
+
+
+def test_first_full_month_helper():
+    assert stackexchange._first_full_month(date(2010, 7, 28)) == (2010, 8)
+    assert stackexchange._first_full_month(date(2010, 12, 31)) == (2011, 1)
+    assert stackexchange._first_full_month(date(2011, 3, 1)) == (2011, 3)
+
+
+@responses.activate
+def test_yoy_starts_when_all_four_primary_sites_have_a_year(tmp_path):
+    # Latest primary start is travel (beta 2011-06-28, first full month 2011-07), so the contrast
+    # starts 2012-07; the partial opening months never enter it.
+    state = _mock_se()
+    results = _by_id(stackexchange.fetch(start_month="2010-06", today=date(2013, 1, 15)))
+    assert ("travel", 2011, 6) not in state["calls"] and ("diy", 2010, 7) not in state["calls"]
+    yoy, meta = results["so_vs_comparison_yoy"]
+    assert yoy["date"].min() == pd.Timestamp("2012-07-01")
+    assert yoy["value"].tolist() == pytest.approx([0.0] * len(yoy))
+    assert "2012-07" in meta.notes and "same four sites" in meta.notes
+
+
+@responses.activate
+def test_yoy_comparison_mean_uses_four_sites_throughout():
+    # diy grows 50% a year, the others are flat; with all four in the mean the contrast is -12.5
+    # from 2012-07 on, and no earlier month (where fewer sites would be averaged) is published.
+    def counts(site, year, month):
+        if site == "diy":
+            return int(100 * 1.5 ** (year - 2010))
+        return 100
+
+    _mock_se(counts)
+    results = _by_id(stackexchange.fetch(start_month="2010-06", today=date(2013, 1, 15)))
+    yoy, _ = results["so_vs_comparison_yoy"]
+    assert yoy["date"].min() == pd.Timestamp("2012-07-01")
+    jan = yoy[yoy["date"] == "2012-12-01"]["value"].iloc[0]
+    assert jan == pytest.approx(-12.5)  # 0 - (50 + 0 + 0 + 0) / 4
 
 
 @responses.activate
