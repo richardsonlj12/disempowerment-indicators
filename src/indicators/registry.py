@@ -102,3 +102,15 @@ def current_reading(readings: dict[str, list[Reading]], indicator_id: str) -> Re
     if current:
         return max(current, key=lambda r: r.date)
     return Reading(indicator_id=indicator_id, state="not_yet_reviewed", date=date.today())
+
+
+def load_chart_markers(path) -> dict[str, list[dict]]:
+    """Chart markers by indicator id (key `all` applies to every indicator)."""
+    data = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    return data.get("markers") or {}
+
+
+def markers_for(markers: dict[str, list[dict]], indicator_id: str) -> list[dict]:
+    """Verified markers for one indicator, as {"date", "label"} sorted by date (the meta `annotations`)."""
+    rows = [m for key in ("all", indicator_id) for m in markers.get(key) or [] if m.get("verified") is True]
+    return sorted(({"date": str(m["date"]), "label": m["label"]} for m in rows), key=lambda m: m["date"])

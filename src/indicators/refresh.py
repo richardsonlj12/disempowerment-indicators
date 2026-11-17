@@ -9,6 +9,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Callable
 
+from indicators.registry import load_chart_markers, markers_for
 from indicators.sources import aei, btos, fred, oecd, stackexchange, wikimedia
 from indicators.store import validate_frame, write_series
 
@@ -20,6 +21,9 @@ MODULES = {
     "stackexchange": stackexchange,
     "wikimedia": wikimedia,
 }
+
+
+MARKERS_PATH = Path(__file__).resolve().parents[2] / "config" / "chart_markers.yaml"
 
 
 def default_data_dir() -> Path:
@@ -62,6 +66,7 @@ def run(data_dir: Path | str, sources: dict[str, Callable] | None = None,
         sources = default_sources(data_dir, full)
     health_path = data_dir / "_health.json"
     records = _load_health(health_path)
+    markers = load_chart_markers(MARKERS_PATH) if MARKERS_PATH.exists() else {}
 
     for name, fetch in sources.items():
         previous = records.get(name, {})
@@ -69,6 +74,8 @@ def run(data_dir: Path | str, sources: dict[str, Callable] | None = None,
             results = fetch()
             for df, _ in results:  # validate everything before writing anything
                 validate_frame(df)
+            for _, meta in results:  # chart markers (annotations) come from config, not from the source
+                meta.annotations = markers_for(markers, meta.indicator_id)
             for df, meta in results:
                 write_series(df, meta, data_dir)
             records[name] = {"status": "ok", "data_through": max(m.data_through for _, m in results)}

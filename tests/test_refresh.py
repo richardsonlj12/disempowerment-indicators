@@ -37,6 +37,13 @@ def test_refresh_isolates_source_failure(tmp_path):
     assert _health(tmp_path)["good"]["status"] == "ok"
 
 
+def test_refresh_attaches_chart_markers_without_splitting(tmp_path):
+    refresh.run(tmp_path, sources={"a": lambda: [(_frame(), _meta())]}, today=date(2026, 11, 17))
+    _, meta = read_series("s1", tmp_path)  # indicator E1: only the all-indicator ChatGPT marker
+    assert meta.annotations == [{"date": "2022-11-30", "label": "ChatGPT released to the public"}]
+    assert meta.breaks == []
+
+
 def test_refresh_keeps_last_good_on_invalid_payload(tmp_path):
     refresh.run(tmp_path, sources={"a": lambda: [(_frame(), _meta())]}, today=date(2026, 11, 1))
     before = (tmp_path / "s1.csv").read_text()

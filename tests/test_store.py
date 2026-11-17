@@ -1,3 +1,4 @@
+import json
 from datetime import date
 
 import pandas as pd
@@ -48,6 +49,25 @@ def test_write_read_roundtrip(tmp_path):
     assert meta2 == meta
     assert list(df2.columns) == list(df.columns)
     pd.testing.assert_frame_equal(df2, df, check_dtype=False)
+
+
+def test_annotations_roundtrip_and_do_not_split_segments(tmp_path):
+    notes = [{"date": "2022-11-30", "label": "ChatGPT released"}]
+    meta = make_meta(breaks=[], annotations=notes)
+    write_series(make_df(), meta, tmp_path)
+    _, meta2 = read_series("test_series", tmp_path)
+    assert meta2.annotations == notes and meta2.breaks == []
+    assert (assign_segments(make_df(), meta.breaks)["segment"] == 0).all()  # annotations never split lines
+
+
+def test_meta_json_without_annotations_still_reads(tmp_path):
+    write_series(make_df(), make_meta(), tmp_path)
+    path = tmp_path / "test_series.meta.json"
+    data = json.loads(path.read_text())
+    del data["annotations"]  # a file written before the field existed
+    path.write_text(json.dumps(data))
+    _, meta = read_series("test_series", tmp_path)
+    assert meta.annotations == []
 
 
 def test_grouped_roundtrip_preserves_na_like_labels(tmp_path):

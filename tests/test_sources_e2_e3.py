@@ -35,7 +35,7 @@ def _btos_bytes(name: str) -> bytes:
     return (FIXTURES / "btos" / name).read_bytes()
 
 
-def _mock_btos(national: bytes | None = None, core: bytes | None = None):
+def _mock_btos(national: bytes | None = None, core: bytes | None = None, size: bytes | None = None):
     xlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     responses.add(
         responses.GET,
@@ -49,11 +49,49 @@ def _mock_btos(national: bytes | None = None, core: bytes | None = None):
         body=core or _btos_bytes("AI_Core_Questions.xlsx"),
         content_type=xlsx,
     )
+    responses.add(
+        responses.GET,
+        "https://www.census.gov/hfp/btos/downloads/" + quote("Employment Size Class.xlsx"),
+        body=size or _btos_bytes("Employment_Size_Class.xlsx"),
+        content_type=xlsx,
+    )
 
 
 def _btos_series():
     df, meta = _by_id(btos.fetch())["btos_ai_use"]
     return df, meta
+
+
+@responses.activate
+def test_btos_by_size_class_series():
+    _mock_btos()
+    df, meta = _by_id(btos.fetch())["btos_ai_use_by_size"]
+    validate_frame(df)
+    assert meta.indicator_id == "E2" and meta.role == "context" and meta.frequency == "biweekly"
+    assert meta.units == "percent" and meta.breaks == []
+    assert set(df["group"]) == {
+        "1 to 4 employees", "5 to 9 employees", "10 to 19 employees", "20 to 49 employees",
+        "50 to 99 employees", "100 to 249 employees", "250 or more employees",
+    }
+    small = df[df["group"] == "1 to 4 employees"].set_index("date")
+    large = df[df["group"] == "250 or more employees"].set_index("date")
+    # First period 202524 (collection ends 2025-11-30) and latest 202622 (ends 2026-11-01).
+    assert small.index.min() == pd.Timestamp("2025-11-30") and small.index.max() == pd.Timestamp("2026-11-01")
+    assert small.loc["2025-11-30", "value"] == 17.0 and small.loc["2026-11-01", "value"] == 22.8
+    assert large.loc["2026-11-01", "value"] == 44.1
+    assert (df["se"] >= 0).all() and len(small) == 25
+    assert meta.data_through == "2026-11-01"
+    assert "Firm-weighted" in meta.notes and "Employment Size Class.xlsx" in meta.notes
+
+
+@responses.activate
+def test_btos_by_size_unknown_wording_raises():
+    changed = _rewrite_question(
+        _btos_bytes("Employment_Size_Class.xlsx"), "Response Estimates", "in any of its business functions", "somewhere else"
+    )
+    _mock_btos(size=changed)
+    with pytest.raises(SourceError):
+        btos.fetch()
 
 
 @responses.activate
@@ -116,8 +154,9 @@ def test_btos_meta_records_questions_and_sources():
 def _rewrite_question(data: bytes, sheet: str, old: str, new: str) -> bytes:
     wb = openpyxl.load_workbook(io.BytesIO(data))
     for row in wb[sheet].iter_rows(min_row=2):
-        if row[1].value and old in row[1].value:
-            row[1].value = row[1].value.replace(old, new)
+        for cell in row[:3]:  # the question text is in column B (national) or C (size class)
+            if isinstance(cell.value, str) and old in cell.value:
+                cell.value = cell.value.replace(old, new)
     out = io.BytesIO()
     wb.save(out)
     return out.getvalue()

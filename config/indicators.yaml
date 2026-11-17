@@ -48,7 +48,7 @@ indicators:
     rival_reading: Adoption may be shallow or experimental, and augmenting workers rather than displacing them.
     comparison: ai_native
     tier: 1
-    series: [btos_ai_use]
+    series: [btos_ai_use, btos_ai_use_by_size]
     primary_series: btos_ai_use
     chart_title: Share of firms using AI (firm-weighted)
     headline_caveat: null

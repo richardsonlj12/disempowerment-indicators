@@ -28,7 +28,8 @@ class SeriesMeta:
     fetched_at: str  # ISO UTC
     data_through: str  # ISO date
     max_lag_days: int
-    breaks: list[dict] = field(default_factory=list)  # {"date": "YYYY-MM-DD", "note": str}
+    breaks: list[dict] = field(default_factory=list)  # {"date": "YYYY-MM-DD", "note": str}; split lines
+    annotations: list[dict] = field(default_factory=list)  # {"date": "YYYY-MM-DD", "label": str}; markers only
     notes: str = ""
     role: str = "primary"  # primary|context|comparison
 

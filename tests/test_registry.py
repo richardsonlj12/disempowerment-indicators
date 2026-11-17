@@ -3,7 +3,8 @@ from pathlib import Path
 import pytest
 
 from indicators.registry import (
-    STATE_LABELS, SCALE_STATES, current_reading, load_readings, load_registry,
+    STATE_LABELS, SCALE_STATES, current_reading, load_chart_markers, load_readings, load_registry,
+    markers_for,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -90,3 +91,31 @@ def test_state_labels_cover_all_states():
     states = set().union(*SCALE_STATES.values())
     assert set(STATE_LABELS) == states
     assert STATE_LABELS["no_signal"] == "No signal / insufficient data"
+
+
+MARKERS = ROOT / "config" / "chart_markers.yaml"
+
+
+def test_chart_markers_are_verified_and_sourced():
+    markers = load_chart_markers(MARKERS)
+    assert set(markers) <= {"all", "E1", "E2", "E3", "G1", "C1"}
+    for rows in markers.values():
+        for m in rows:
+            assert m["verified"] is True and m["source_url"].startswith("https://") and m["label"]
+
+
+def test_markers_for_merges_all_and_sorts_by_date():
+    out = markers_for(load_chart_markers(MARKERS), "C1")
+    assert [m["date"] for m in out] == sorted(m["date"] for m in out)
+    assert {"date": "2022-11-30", "label": "ChatGPT released to the public"} in out
+    assert any("Copilot" in m["label"] for m in out)
+    assert all(set(m) == {"date", "label"} for m in out)
+    e2 = markers_for(load_chart_markers(MARKERS), "E2")
+    assert any(m["date"] == "2026-10-19" and "Super Intelligence" in m["label"] for m in e2)
+    assert [m["date"] for m in markers_for(load_chart_markers(MARKERS), "E1")] == ["2022-11-30"]
+
+
+def test_unverified_markers_are_dropped(tmp_path):
+    p = tmp_path / "m.yaml"
+    p.write_text("markers:\n  all:\n    - {date: 2020-01-01, label: x, source_url: https://e.org, verified: false}\n")
+    assert markers_for(load_chart_markers(p), "E1") == []
