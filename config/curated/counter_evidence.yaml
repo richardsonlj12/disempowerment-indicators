@@ -1,0 +1,65 @@
+# Counter-evidence panel: signals pointing away from disempowerment, held to the same
+# standard as the indicators (spec Sec. 4.6). Only items with verified: true are published.
+inclusion_criteria: >-
+  Written before items were added. An item is included only if (1) it comes from a
+  primary source (the statistical agency, legislature, or authors who produced the figure),
+  opened and checked by us, with a link to that source; (2) it is dated, with the period
+  it covers stated; (3) it is a measured value or a counted event, not an opinion or a
+  press paraphrase; and (4) it points away from disempowerment, either as a welfare-improving
+  signal (people materially better off), a policy pushback (governments or institutions
+  acting to retain human control), or a data signal that moves against the hypothesized
+  mechanism. Items are not removed because they are small or reverse later; a failed or
+  unverifiable check leaves the item in the file with verified: false and the reason, and
+  it is not published. Inclusion says nothing about whether the signal is caused by AI.
+items:
+  - id: oecd_labor_tax_share
+    kind: data_signal
+    label: Labor-based taxes remain about half of OECD tax revenue
+    domain: government
+    metric: Personal income tax plus social security contributions, share of total tax revenue, OECD average
+    value: 49.2
+    unit: percent
+    date: 2023-12-31
+    source_name: OECD Revenue Statistics (OECD average, dataflow DF_RSOECD)
+    source_url: https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0/OECD_REP.TAX_REV.S13.T_1100+T_2000._T.PT_OTR_SECTOR.A?startPeriod=2010&endPeriod=2023
+    verified: true
+    verified_on: 2026-11-17
+    note: >-
+      23.736 (personal income tax) + 25.463 (social contributions) = 49.20 percent in 2023,
+      against 48.53 in 2010 and a peak of 50.54 in 2020 (re-fetched from the OECD SDMX API on
+      2026-11-17). The rise since 2010 is modest (0.7 points) and uneven, so this is shown
+      as a level that has not fallen, not as a strong upward trend. No AI attribution is implied.
+  - id: us_real_median_household_income
+    kind: welfare
+    label: US real median household income is above its 2019 level
+    domain: economic
+    metric: Real median household income, United States
+    value: 87460
+    unit: 2025 C-CPI-U dollars
+    date: 2025-12-31
+    source_name: U.S. Census Bureau, Income and Poverty in the United States (via FRED series MEHOINUSA672N)
+    source_url: https://fred.stlouisfed.org/series/MEHOINUSA672N
+    verified: true
+    verified_on: 2026-11-17
+    note: >-
+      87,460 for 2025 (series last updated 2026-09-16) against 85,320 for 2019, both in 2025
+      C-CPI-U dollars (read from the FRED CSV and series page on 2026-11-17). Material welfare
+      can rise while leverage falls; this is shown as a welfare signal only. FRED republishes
+      the Census table; the Census release page was not opened (census.gov blocks scripts).
+  - id: ai_legislation_counts
+    kind: policy
+    label: AI-related laws and bills enacted (Stanford AI Index 2026)
+    domain: government
+    metric: Enacted AI-related laws and state bills, Policy and Governance chapter
+    value: null
+    unit: count
+    date: 2026-04-01
+    source_name: Stanford HAI, AI Index Report 2026, Chapter 8 Policy and Governance
+    source_url: https://hai.stanford.edu/ai-index/2026-ai-index-report/policy-and-governance
+    verified: false
+    verified_on: null
+    note: >-
+      Secondary write-ups quote state-level and G20 counts, but the chapter web page does not
+      state them and the chapter PDF could not be text-extracted in this environment, so no
+      figure was confirmed against the primary text. Not published and no value entered.
+      Check the PDF by hand (and CSET AGORA or OECD.AI as alternatives) before publishing.

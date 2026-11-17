@@ -1,0 +1,26 @@
+{
+  "updated": "2026-11-17",
+  "sources": {
+    "fred": {
+      "status": "failed",
+      "error": "SourceError: BLS PRS85006174: REQUEST_NOT_PROCESSED ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']",
+      "since": "2026-11-17"
+    },
+    "oecd": {
+      "status": "ok",
+      "data_through": "2024-01-01"
+    },
+    "btos": {
+      "status": "ok",
+      "data_through": "2026-11-01"
+    },
+    "aei": {
+      "status": "ok",
+      "data_through": "2026-05-01"
+    },
+    "wikimedia": {
+      "status": "ok",
+      "data_through": "2026-10-01"
+    }
+  }
+}

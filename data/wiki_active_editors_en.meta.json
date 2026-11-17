@@ -1,0 +1,16 @@
+{
+  "series_id": "wiki_active_editors_en",
+  "indicator_id": "C1",
+  "title": "English Wikipedia active editors per month",
+  "units": "editors",
+  "frequency": "monthly",
+  "source_name": "Wikimedia Editors API",
+  "source_url": "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/",
+  "license": "CC0",
+  "fetched_at": "2026-11-17T20:00:34Z",
+  "data_through": "2026-09-01",
+  "max_lag_days": 75,
+  "breaks": [],
+  "notes": "en.wikipedia, editor type user (registered, non-bot), all page types. Active editors are those with 5 or more edits in the month: the sum of the 5..24, 25..99 and 100.. edit activity levels.",
+  "role": "context"
+}

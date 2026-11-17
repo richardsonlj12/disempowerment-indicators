@@ -1,0 +1,19 @@
+# Human deferral / oversight row: no public time series exists. This is a dated citation only.
+items:
+  - id: herdagdelen2026
+    label: How AI agents shape experts' judgment calls
+    domain: all
+    metric: Share of four analytical choices where professional analysts went with their AI agent's lean (one study, 50 analysts)
+    value: 86
+    unit: percent
+    date: 2026-10-27
+    source_name: Herdağdelen, Joren and Tamkin (2026), Anthropic Research
+    source_url: https://www.anthropic.com/research/agents-judgment-calls
+    verified: true
+    verified_on: 2026-11-17
+    note: >-
+      Read from the Anthropic Research page on 2026-11-17: 50 professional analysts (61
+      recruited, 11 declined the agent), four analytical choices, followed the agent's lean 86
+      percent of the time; 54 percent recommended rollout when the agent leaned toward it versus
+      36 percent when it leaned away. Full paper: https://assets.claude.com/519c17a5d23a794e8b6d50a854048d0b61e0d73a.pdf
+      (not text-checked). A single experiment, authored by Anthropic, not a time series.

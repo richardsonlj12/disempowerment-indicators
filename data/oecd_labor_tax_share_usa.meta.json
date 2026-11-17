@@ -1,0 +1,16 @@
+{
+  "series_id": "oecd_labor_tax_share_usa",
+  "indicator_id": "G1",
+  "title": "Labor-based share of tax revenue, United States",
+  "units": "percent",
+  "frequency": "annual",
+  "source_name": "OECD Revenue Statistics",
+  "source_url": "https://data-explorer.oecd.org/?df[ds]=DisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS",
+  "license": "OECD terms and conditions: https://www.oecd.org/en/about/terms-conditions.html",
+  "fetched_at": "2026-11-17T20:00:17Z",
+  "data_through": "2024-01-01",
+  "max_lag_days": 730,
+  "breaks": [],
+  "notes": "Formula: (revenue category 1100 taxes on income of individuals + 2000 social security contributions) as a percentage of total tax revenue, general government, from dataflow OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0. The OECD average is the published OECD_REP aggregate (each category's percentage of total tax revenue is as published, not recomputed).",
+  "role": "context"
+}
