@@ -27,24 +27,29 @@ def _retry_delay(response, attempt):
     return BACKOFF_SECONDS * (2**attempt)
 
 
-def get(url, params=None, expect="any", timeout=60):
+def _error(message, response):
+    error = SourceError(message)
+    error.body = response.text  # lets callers read fields such as Stack Exchange's `backoff`
+    return error
+
+
+def get(url, params=None, expect="any", timeout=60, retries=RETRIES):
+    """`retries`: re-sends on 429/5xx (0 = none, for callers that pace their own retries)."""
     headers = {"User-Agent": USER_AGENT}
-    for attempt in range(RETRIES + 1):
+    for attempt in range(retries + 1):
         response = requests.get(url, params=params, headers=headers, timeout=timeout)
         if response.status_code == 429 or response.status_code >= 500:
-            if attempt < RETRIES:
+            if attempt < retries:
                 _sleep(_retry_delay(response, attempt))
                 continue
-            raise SourceError(f"{url} returned {response.status_code} after retries")
+            raise _error(f"{url} returned {response.status_code} after retries", response)
         break
     if 400 <= response.status_code < 500:
         # Stack Exchange signals throttling with HTTP 400 and a JSON error body.
-        error = SourceError(f"{url} returned {response.status_code}: {response.text[:200]}")
-        error.body = response.text  # lets callers read fields such as Stack Exchange's `backoff`
-        raise error
+        raise _error(f"{url} returned {response.status_code}: {response.text[:200]}", response)
     response.raise_for_status()
     if expect in ("csv", "json"):
         head = response.content.lstrip()[:16].lower()  # only the START of the body counts
         if head.startswith((b"<html", b"<!doctype")):
-            raise SourceError(f"{url} returned HTML where {expect} was expected")
+            raise _error(f"{url} returned HTML where {expect} was expected", response)
     return response

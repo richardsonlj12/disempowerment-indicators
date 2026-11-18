@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import calendar
 import json
+import math
 import os
 import tempfile
 import time
@@ -160,6 +161,7 @@ def _write_cache(path: Path, cache: dict[str, int]) -> None:
 
 METHOD = "questions"  # the API method both the all-time and the month calls hit
 MIN_REQUEST_INTERVAL_SECONDS = 0.2  # spacing between any two requests (API limit: 30 per second per IP)
+THROTTLE_COOLDOWN_SECONDS = 60  # persisted after error 502 when the body carries no backoff
 MAX_WAIT_SECONDS = 300  # a backoff longer than this ends the run cleanly instead of sleeping
 
 
@@ -171,8 +173,13 @@ def _throttle_path(data_dir: Path) -> Path:
 def _read_throttle_state(data_dir: Path) -> dict[str, float]:
     path = _throttle_path(data_dir)
     try:
-        return {k: float(v) for k, v in json.loads(path.read_text()).items()}
-    except (OSError, ValueError, AttributeError):
+        raw = json.loads(path.read_text())
+        state = {}
+        for k, v in raw.items():
+            if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v):
+                state[k] = float(v)
+        return state
+    except (OSError, ValueError, AttributeError, TypeError):
         return {}
 
 
@@ -192,7 +199,8 @@ class _Throttle:
         delay = max(self.allowed_at.get(method, 0.0), self.last_request + MIN_REQUEST_INTERVAL_SECONDS) - _clock()
         if delay > MAX_WAIT_SECONDS:
             raise SourceError(
-                f"Stack Exchange asked for a backoff of {delay:.0f}s on /{method}; stopping cleanly. "
+                f"Stack Exchange backoff on /{method}: next call allowed in {delay:.0f}s "
+                f"(at {datetime.fromtimestamp(_clock() + delay, tz=timezone.utc):%Y-%m-%d %H:%M:%S} UTC); stopping cleanly. "
                 "Completed months are cached; run again later."
             )
         if delay > 0:
@@ -201,6 +209,8 @@ class _Throttle:
 
     def record(self, body, method: str = METHOD) -> None:
         backoff = body.get("backoff") if isinstance(body, dict) else None
+        if not backoff and isinstance(body, dict) and body.get("error_id") == 502:
+            backoff = THROTTLE_COOLDOWN_SECONDS
         if backoff:
             self.allowed_at[method] = max(self.allowed_at.get(method, 0.0), _clock() + float(backoff))
             _write_throttle_state(self.data_dir, self.allowed_at)
@@ -216,7 +226,7 @@ def _api_get(params: dict, what: str) -> dict:
     (throttle_violation) is never retried: it raises straight away."""
     _throttle.wait()
     try:
-        body = http.get(API, params=params, expect="json").json()
+        body = http.get(API, params=params, expect="json", retries=0).json()  # retries go through _throttle
     except SourceError as error:
         try:
             _throttle.record(json.loads(getattr(error, "body", "")))

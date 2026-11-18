@@ -371,21 +371,59 @@ def test_backoff_on_rejected_month_is_honoured_before_retry(monkeypatch):
 @responses.activate
 def test_persisted_backoff_from_previous_run_is_honoured(tmp_path, monkeypatch):
     clock = _Clock(monkeypatch)
-    state = _mock_se_timed(clock, {0: 20})
-    stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
-    # 'later process': backoff recorded on the last call (index 1: none) -> make last call carry one
-    responses.reset()
-    clock.sleeps.clear()
-    state2 = _mock_se_timed(clock, {})
-    path = tmp_path / "data" / "_cache"
-    (path).mkdir(parents=True, exist_ok=True)
+    state = _mock_se_timed(clock, {})
     start = clock.now
-    # a previous run left a backoff for the questions method 15 s into the future
-    for f in path.glob("*throttle*"):
-        f.unlink()
     stackexchange._write_throttle_state(tmp_path / "data", {"questions": start + 15})
     stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
-    assert state2["times"][0] - start >= 15
+    assert state["times"][0] - start >= 15
+
+
+def test_throttle_state_ignores_null_and_non_finite_values(tmp_path):
+    path = stackexchange._throttle_path(tmp_path)
+    path.parent.mkdir(parents=True)
+    path.write_text('{"questions": null, "a": NaN, "b": Infinity, "c": "x", "d": 5}')
+    assert stackexchange._read_throttle_state(tmp_path) == {"d": 5.0}
+    path.write_text("[1, 2]")
+    assert stackexchange._read_throttle_state(tmp_path) == {}
+
+
+@responses.activate
+def test_429_with_backoff_is_not_resent_inside_http_and_next_call_waits(tmp_path, monkeypatch):
+    clock = _Clock(monkeypatch)
+    times = []
+
+    def callback(request):
+        qs = parse_qs(urlparse(request.url).query)
+        times.append(clock.now)
+        if len(times) == 1:
+            return (429, {}, json.dumps({"error_id": 500, "error_name": "x", "error_message": "slow", "backoff": 50}))
+        return (200, {}, json.dumps({"total": 24_000_000 if "fromdate" not in qs else 1000, "quota_remaining": 200}))
+
+    responses.add_callback(responses.GET, SE_URL, callback=callback)
+    with pytest.raises(SourceError):
+        stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    assert len(times) == 1  # http.get did not re-send on its own
+    assert stackexchange._read_throttle_state(tmp_path / "data")["questions"] >= times[0] + 49
+    stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    assert times[1] - times[0] >= 50
+
+
+@responses.activate
+def test_throttle_violation_without_backoff_persists_cooldown(tmp_path, monkeypatch):
+    clock = _Clock(monkeypatch)
+    body = {"error_id": 502, "error_name": "throttle_violation", "error_message": "x"}
+    responses.add(responses.GET, SE_URL, status=400, json=body)
+    with pytest.raises(SourceError, match="throttle_violation"):
+        stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    saved = stackexchange._read_throttle_state(tmp_path / "data")
+    assert saved["questions"] >= clock.now + stackexchange.THROTTLE_COOLDOWN_SECONDS - 1
+
+
+def test_wait_too_long_message_names_the_time(tmp_path, monkeypatch):
+    clock = _Clock(monkeypatch)
+    stackexchange._write_throttle_state(tmp_path / "data", {"questions": clock.now + 3600})
+    with pytest.raises(SourceError, match=r"UTC"):
+        stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
 
 
 @responses.activate
