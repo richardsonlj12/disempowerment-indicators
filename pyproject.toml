@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "disempowerment-indicators"
+name = "keel-indicators"
 version = "0.1.0"
 description = "Indicators of AI-driven gradual disempowerment from free public data"
 requires-python = ">=3.12"

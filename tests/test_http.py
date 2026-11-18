@@ -19,7 +19,7 @@ def test_get_sets_user_agent():
     responses.add(responses.GET, URL, body="a,b\n1,2\n")
     get(URL, expect="csv")
     ua = responses.calls[0].request.headers["User-Agent"]
-    assert ua == "disempowerment-indicators/0.1 (+https://github.com/richardsonlj12/disempowerment-indicators)"
+    assert ua == "keel-indicators/0.1 (+https://github.com/richardsonlj12/keel)"
 
 
 @responses.activate

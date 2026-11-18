@@ -1,6 +1,9 @@
-# Disempowerment Indicators
+# KEEL: Indicators of gradual disempowerment
 
-A public static website that tracks indicators of AI-driven "gradual disempowerment" (after Kulveit et al. 2025), built entirely from free public data. A Python package (`indicators`) fetches and processes the data, and a Quarto site renders it.
+KEEL is a public static website that tracks indicators of AI-driven "gradual disempowerment" (after Kulveit et al. 2025), built entirely from free public data. A Python package (`indicators`) fetches and processes the data, and a Quarto site renders it.
+
+- Repository: [richardsonlj12/keel](https://github.com/richardsonlj12/keel)
+- Website: https://richardsonlj12.github.io/keel/
 
 ## Setup
 

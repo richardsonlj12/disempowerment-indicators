@@ -47,7 +47,7 @@ Every page therefore leads with the finding and keeps full method one click/scro
 
 ## 3. Constraints
 
-- **$0 budget.** Free tools and free data only. Public GitHub repo (`richardsonlj12/disempowerment-indicators`), hosted on **GitHub Pages**, refreshed by **GitHub Actions**.
+- **$0 budget.** Free tools and free data only. Public GitHub repo (`richardsonlj12/keel`), hosted on **GitHub Pages**, refreshed by **GitHub Actions**.
 - **Public data only**, with licenses that permit republication. Avoid: OpenSecrets API (closed to new users), EIU, Gallup microdata, ADP, Lightcast, S&P.
 - **Secrets** (e.g., FRED API key, Stack Exchange key if used) live only in GitHub Actions Secrets, never in code or commits.
 - The owner is learning the workflow; keep the stack small and explain choices.
@@ -249,7 +249,7 @@ Public sources ──► Python fetch scripts ──► data/ (tidy CSV + metada
 - **Readings:** a human-edited, version-controlled file of dated readings and rationales. Scripts may write *proposed* readings; only owner-confirmed ones are published as current.
 - **Automation:** a scheduled GitHub Actions workflow runs the fetch scripts, commits changed data, rebuilds and deploys. Scheduled workflows in public repos stop after 60 days without repo activity — data commits keep it alive; the builder should confirm.
 - **Health checks:** each source has a check that fails loudly in CI and shows a "stale since [date]" badge on the affected page instead of silently serving old data.
-- **GitHub Pages base path:** project site at `richardsonlj12.github.io/disempowerment-indicators/`; configure links accordingly.
+- **GitHub Pages base path:** project site at `https://richardsonlj12.github.io/keel/`; configure links accordingly.
 - **Local preview:** the owner can preview the site locally before pushing (GitHub Pages has no per-change previews).
 
 ## 7a. Releases and stages

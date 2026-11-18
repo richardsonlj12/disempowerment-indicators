@@ -93,7 +93,7 @@ def test_request_uses_month_bounds_total_filter_and_user_agent():
     qs = parse_qs(urlparse(request.url).query)
     assert (int(qs["fromdate"][0]), int(qs["todate"][0])) == stackexchange.month_bounds(2024, 3)
     assert qs["filter"][0] == stackexchange.TOTAL_FILTER
-    assert request.headers["User-Agent"].startswith("disempowerment-indicators/0.1 (+https://github.com/")
+    assert request.headers["User-Agent"].startswith("keel-indicators/0.1 (+https://github.com/richardsonlj12/keel)")
 
 
 def _write_sites(tmp_path, approved):
@@ -636,7 +636,7 @@ def test_wikimedia_user_agent_set():
     assert len(responses.calls) == 4  # pageviews plus three editor activity levels
     for call in responses.calls:
         assert call.request.headers["User-Agent"] == (
-            "disempowerment-indicators/0.1 (+https://github.com/richardsonlj12/disempowerment-indicators)"
+            "keel-indicators/0.1 (+https://github.com/richardsonlj12/keel)"
         )
 
 

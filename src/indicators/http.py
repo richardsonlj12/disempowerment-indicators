@@ -5,8 +5,8 @@ import time
 import requests
 
 USER_AGENT = (
-    "disempowerment-indicators/0.1 "
-    "(+https://github.com/richardsonlj12/disempowerment-indicators)"
+    "keel-indicators/0.1 "
+    "(+https://github.com/richardsonlj12/keel)"
 )
 RETRIES = 3
 BACKOFF_SECONDS = 2.0
