@@ -1,6 +1,6 @@
 ---
-title: KEEL
-subtitle: Indicators of gradual disempowerment
+title: Key Evidence on Eroding Leverage (KEEL)
+subtitle: Indicators of Gradual Human Disempowerment
 pagetitle: Summary · KEEL
 toc: false
 ---

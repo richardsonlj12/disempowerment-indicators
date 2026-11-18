@@ -15,7 +15,7 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## How to cite
 
-Richardson, J. (2026). *KEEL: Indicators of gradual disempowerment*. https://richardsonlj12.github.io/keel/ (accessed [date]).
+Richardson, J. (2026). *KEEL: Indicators of Gradual Human Disempowerment*. https://richardsonlj12.github.io/keel/ (accessed [date]).
 
 Each indicator page links to its data as CSV files. Please cite the original source of any series as well; each page lists sources and licenses under "Method".
 

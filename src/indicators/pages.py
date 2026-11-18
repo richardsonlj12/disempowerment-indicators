@@ -197,6 +197,16 @@ def latest_value_text(ind: reg.Indicator, series: dict) -> str:
     return f"{meta.title}, latest value: {fmt_value(latest[0], meta.units)} ({fmt_period(latest[1], meta.frequency)})"
 
 
+def latest_value_parts(ind: reg.Indicator, series: dict) -> list[str]:
+    """[series title, value, period] for the summary grid (one per line), or [NO_VALUE]."""
+    primary = series.get(ind.primary_series)
+    latest = _latest(primary[0]) if primary else None
+    if latest is None:
+        return [NO_VALUE]
+    meta = primary[1]
+    return [meta.title, fmt_value(latest[0], meta.units), fmt_period(latest[1], meta.frequency)]
+
+
 def reading_lines(ind: reg.Indicator, reading: reg.Reading, series: dict) -> list[str]:
     """The three-line reading: state label; magnitude naming the baseline (no baseline clause while
     there is no value); interpretation with the AI link."""
@@ -439,7 +449,7 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
            "::: {.callout-note title=\"What the data is telling us\"}",
            "Readings begin after the threshold rule is reviewed and frozen (Stages 2 and 3). "
            "Until then every indicator shows Not yet reviewed, with its latest data.",
-           ":::", "", "## The grid", "", ":::: {.keel-grid}", "::: {.keel-corner}", "&nbsp;", ":::"]
+           ":::", "", "## Indicators", "", ":::: {.keel-grid}", "::: {.keel-corner}", "&nbsp;", ":::"]
     for d in DOMAINS:
         out += [f"::: {{.keel-colhead}}\n**{d.capitalize()}**\n:::"]
     for layer in LAYERS:
@@ -454,9 +464,10 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
                 for ind_id in ids:
                     ind = by_id[ind_id]
                     state = reg.STATE_LABELS[reg.current_reading(readings, ind_id).state]
-                    parts.append(f"[{ind.id} · {ind.name}](indicators/{ind.id}.qmd)\\\n{state}\\\n"
-                                 f"{latest_text[ind_id]}\\\n"
-                                 f"[AI link: {ind.ai_link.capitalize()}]{{.keel-badge .keel-badge-{ind.ai_link}}}")
+                    lines = [f"[{ind.id} · {ind.name}](indicators/{ind.id}.qmd)", f"**{state}**",
+                             *latest_text[ind_id],
+                             f"[AI link: {ind.ai_link.capitalize()}]{{.keel-badge .keel-badge-{ind.ai_link}}}"]
+                    parts.append("\\\n".join(lines))
                 body = "\n\n".join(parts)
             out.append(_cell_div(layer, d, body))
     cite = []
@@ -549,7 +560,7 @@ def build(repo_root: Path, today: date | None = None) -> None:
         page = indicator_page(template, ind, front, sections, reg.current_reading(readings, ind.id),
                               readings.get(ind.id, []), views, series, markers, group_labels, trend_files, today)
         (site / "indicators" / f"{ind.id}.qmd").write_text(page, encoding="utf-8")
-        latest_text[ind.id] = latest_value_text(ind, series)
+        latest_text[ind.id] = latest_value_parts(ind, series)
 
     summary = summary_page(indicators, grid, oversight, readings, latest_text,
                            [i for i in published(oversight_items) if i["id"] == oversight.get("citation_ref")],

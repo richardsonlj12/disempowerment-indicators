@@ -11,7 +11,7 @@ project:
 website:
   # No website title: Quarto would append " – KEEL" to every browser title. Each page sets
   # pagetitle "[Page] · KEEL", and the navbar carries the name.
-  description: Indicators of gradual disempowerment
+  description: Indicators of Gradual Human Disempowerment
   site-url: https://richardsonlj12.github.io/keel/
   navbar:
     title: KEEL
