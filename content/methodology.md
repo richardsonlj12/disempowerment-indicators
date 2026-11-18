@@ -31,7 +31,7 @@ The scorecard is a grid. Its columns are three **domains**: economic, government
 - **Displacement:** is the system's dependence on human participation falling, and by how much?
 - **Lock-in:** is that dependence becoming hard to restore, and how entrenched is it?
 
-A fourth row, **human oversight**, runs across all three domains. It asks whether people are deferring to AI's judgment.
+A fourth row, **human deferral and oversight**, runs across all three domains. It asks whether people are deferring to AI's judgment.
 
 **The rows are inspired by Chooi, Lee and Li (2026).** Their paper, ["Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics"](https://aclanthology.org/2026.evaleval-1.36/), proposes three layers that they call exposure, erosion and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two. The table shows how they line up.
 
