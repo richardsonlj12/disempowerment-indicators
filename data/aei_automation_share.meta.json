@@ -1,13 +1,13 @@
 {
   "series_id": "aei_automation_share",
   "indicator_id": "E3",
-  "title": "Automation share of classified Claude.ai conversations",
+  "title": "Automation share of categorized Claude.ai conversations",
   "units": "percent",
   "frequency": "irregular",
   "source_name": "Anthropic Economic Index (Hugging Face)",
   "source_url": "https://huggingface.co/datasets/Anthropic/EconomicIndex",
   "license": "Data released under CC-BY, code released under MIT License (dataset README, License section; the dataset card front matter says license: mit)",
-  "fetched_at": "2026-11-17T20:00:20Z",
+  "fetched_at": "2026-11-18T00:46:28Z",
   "data_through": "2026-05-01",
   "max_lag_days": 200,
   "breaks": [
@@ -24,6 +24,12 @@
       "note": "Release layout changed to calendar-month aggregates with published automation and augmentation buckets; Claude.ai source now includes Cowork (per the release data documentation)."
     }
   ],
-  "notes": "Percent of classifiable Claude.ai conversations (patterns none and not_classified excluded, so the two shares sum to 100), global, one row per release date; the April and May 2026 monthly aggregates of the 2026-06-26 release are dated by month start. Mapping (Anthropic's categorisation in the 2025-09-15 enrichment code and the 2026-06-26 data documentation): automation = directive + feedback loop; augmentation = validation + task iteration + learning. Release mappings: release_2025_02_10 and release_2025_03_27 read automation_vs_augmentation.csv and automation_vs_augmentation_v2.csv (columns interaction_type, pct); release_2025_09_15, release_2026_01_15 and release_2026_03_24 read the raw claude_ai file, rows geo_id=GLOBAL, facet=collaboration, level=0, variable=collaboration_pct, cluster_name = the pattern; release_2026_06_26 reads the claude_ai file, rows geo_id=GLOBAL, category_name=overall, hierarchy_level=0, metric_id collaboration_bucket_automation_pct and collaboration_bucket_augmentation_pct. Only the Claude.ai source is used; the first-party API files are a different population and are excluded. Shares including none and not_classified in the denominator are lower (for example 49.10 percent automation for the 2025-08 sample, against 51.07 here). Releases without a conversation-level automation and augmentation split (labor_market_impacts, robot_exposure) are excluded. Data windows: release_2025_02_10 first report sample, Claude.ai Free and Pro; Anthropic's chart caption prints 'Dec 25 - Jan 25', read here as December 2024 to January 2025; release_2025_03_27 second report sample (Claude 3.7 Sonnet), Claude.ai Free and Pro, Feb-Mar 2025; release_2025_09_15 2025-08-04 to 2025-08-11; release_2026_01_15 2025-11-13 to 2025-11-20; release_2026_03_24 2026-02-05 to 2026-02-12; release_2026_06_26 April and May 2026.",
+  "annotations": [
+    {
+      "date": "2022-11-30",
+      "label": "ChatGPT released to the public"
+    }
+  ],
+  "notes": "Percent of categorized Claude.ai conversations, those that fit one of the five patterns (Anthropic's labels \"none\" and \"not classified\" excluded, so the two shares sum to 100), global, one row per release date; the April and May 2026 monthly aggregates of the 2026-06-26 release are dated by month start. Mapping (Anthropic's categorisation in the 2025-09-15 enrichment code and the 2026-06-26 data documentation): automation = directive + feedback loop; augmentation = validation + task iteration + learning. Release mappings: release_2025_02_10 and release_2025_03_27 read automation_vs_augmentation.csv and automation_vs_augmentation_v2.csv (columns interaction_type, pct); release_2025_09_15, release_2026_01_15 and release_2026_03_24 read the raw claude_ai file, rows geo_id=GLOBAL, facet=collaboration, level=0, variable=collaboration_pct, cluster_name = the pattern; release_2026_06_26 reads the claude_ai file, rows geo_id=GLOBAL, category_name=overall, hierarchy_level=0, metric_id collaboration_bucket_automation_pct and collaboration_bucket_augmentation_pct. Only the Claude.ai source is used; the first-party API files are a different population and are excluded. Shares including none and not_classified in the denominator are lower (for example 49.10 percent automation for the 2025-08 sample, against 51.07 here). Releases without a conversation-level automation and augmentation split (labor_market_impacts, robot_exposure) are excluded. Data windows: release_2025_02_10 first report sample, Claude.ai Free and Pro; Anthropic's chart caption prints 'Dec 25 - Jan 25', read here as December 2024 to January 2025; release_2025_03_27 second report sample (Claude 3.7 Sonnet), Claude.ai Free and Pro, Feb-Mar 2025; release_2025_09_15 2025-08-04 to 2025-08-11; release_2026_01_15 2025-11-13 to 2025-11-20; release_2026_03_24 2026-02-05 to 2026-02-12; release_2026_06_26 April and May 2026.",
   "role": "primary"
 }

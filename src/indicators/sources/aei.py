@@ -125,7 +125,7 @@ BREAKS = [
 ]
 
 NOTES = (
-    "Percent of classifiable Claude.ai conversations (patterns none and not_classified excluded, so the two "
+    "Percent of categorized Claude.ai conversations, those that fit one of the five patterns (Anthropic's labels \"none\" and \"not classified\" excluded, so the two "
     "shares sum to 100), global, one row per release date; the April and May 2026 monthly aggregates of the "
     "2026-06-26 release are dated by month start. Mapping (Anthropic's categorisation in the 2025-09-15 "
     "enrichment code and the 2026-06-26 data documentation): automation = directive + feedback loop; "
@@ -325,6 +325,6 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
 
     auto_df, aug_df = frame(auto_rows), frame(aug_rows)
     return [
-        (auto_df, meta("aei_automation_share", "Automation share of classified Claude.ai conversations", "primary", auto_df)),
-        (aug_df, meta("aei_augmentation_share", "Augmentation share of classified Claude.ai conversations", "context", aug_df)),
+        (auto_df, meta("aei_automation_share", "Automation share of categorized Claude.ai conversations", "primary", auto_df)),
+        (aug_df, meta("aei_augmentation_share", "Augmentation share of categorized Claude.ai conversations", "context", aug_df)),
     ]

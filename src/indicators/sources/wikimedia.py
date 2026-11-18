@@ -110,7 +110,8 @@ def fetch(data_dir: Path | str = "data", today: date | None = None) -> list[tupl
             "and, since the 2025 reclassification, detected automated traffic are excluded). Available "
             "from July 2015. Wikimedia cautions that comparisons across the March 2025 break need care "
             f"because bot detection rules changed; see {ANNOUNCEMENT_URL}. Falling human pageviews may "
-            "reflect AI intermediation rather than less interest in the content."
+            "reflect AI intermediation (people reading Wikipedia content through AI tools such as chatbots and "
+            "search summaries rather than visiting the site) rather than less interest in the content."
         ),
     )
 

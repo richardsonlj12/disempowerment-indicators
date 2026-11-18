@@ -12,6 +12,14 @@ ROOT = Path(__file__).resolve().parent.parent
 IND = ROOT / "config" / "indicators.yaml"
 READ = ROOT / "config" / "readings.yaml"
 CONTENT = ROOT / "content" / "indicators"
+PAGE_H2 = [
+    "## Why this matters for gradual disempowerment",
+    "## What it shows",
+    "## What it doesn't show",
+    "## What would change our reading",
+    "## Data and calculation",
+    "## Caveats",
+]
 
 
 @pytest.fixture
@@ -68,7 +76,14 @@ def test_every_content_page_has_summary_warning_sign_and_subheadings(registry):
         assert str(fm.get("summary") or "").strip(), i.id
         assert str(fm.get("warning_sign") or "").strip(), i.id
         assert content_summary(fm) == fm["summary"]
+        for key in ("calculation", "coverage"):
+            assert str(fm.get(key) or "").strip(), (i.id, key)
+        sources = fm.get("data_sources")
+        assert isinstance(sources, list) and sources, i.id
+        for src in sources:
+            assert str(src.get("name") or "").strip() and str(src.get("url") or "").startswith("https://"), i.id
         lines = body.splitlines()
+        assert [ln for ln in lines if ln.startswith("## ")] == PAGE_H2, i.id
         assert "### Warning sign" in lines, i.id
         assert "### Alternative explanations" in lines, i.id
 
