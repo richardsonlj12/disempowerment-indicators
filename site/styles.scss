@@ -153,14 +153,37 @@ body.quarto-dark {
   // Hidden visually but still exposed to assistive tech via aria-describedby.
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
 }
 
-.keel-rowhead:hover .keel-tipbody,
-.keel-tip:focus + .keel-tipbody,
-.keel-tip:focus-visible + .keel-tipbody {
+// Shown on hover (the body is inside the row header, so the pointer can move onto it: WCAG 1.4.13
+// hoverable) and on focus; Escape (js/summary.js) adds .keel-tip-dismissed to hide it.
+.keel-rowhead:not(.keel-tip-dismissed):hover .keel-tipbody,
+.keel-rowhead:not(.keel-tip-dismissed) .keel-tip:focus + .keel-tipbody,
+.keel-rowhead:not(.keel-tip-dismissed) .keel-tip:focus-visible + .keel-tipbody {
   opacity: 1;
   visibility: visible;
+}
+
+// "Indicators" heading with the small link to the About box beside it (not inside the heading).
+.keel-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 1rem;
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.keel-about-link {
+  font-size: 0.85rem;
+}
+
+// Tables inside the About callout scroll within their own box, never the page.
+#about-the-indicators .callout-body-container table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .keel-cell-caption {

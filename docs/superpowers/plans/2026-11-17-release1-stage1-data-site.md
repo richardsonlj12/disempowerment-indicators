@@ -276,6 +276,8 @@ Page requirements:
 - [ ] **Step 2: Owner gate:** the owner edits the front-matter fields in content/indicators/[ID].md (or comments in ALL CAPS for Claude to apply).
 - [ ] **Step 3:** Apply comments; re-run the page tests and the figure check for any new numbers; commit `docs: owner revisions to page summary tables`.
 
+*(Added 2026-11-18.)* The summary page no longer carries a "What the data are telling us" box in Stage 1; in Stage 3 it gets back a dated "What the data are telling us" statement once readings exist.
+
 ---
 
 ### Task 11: CI, scheduled refresh and GitHub Pages deploy

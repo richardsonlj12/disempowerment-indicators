@@ -6,3 +6,5 @@ toc: false
 ---
 
 {{< include _generated/summary.md >}}
+
+<script src="js/summary.js"></script>

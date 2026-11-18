@@ -441,34 +441,21 @@ def _cell_div(layer, domain, body) -> str:
 
 
 def summary_page(indicators, grid, oversight, readings, latest_text, oversight_items, counter_header,
-                 counter_items) -> str:
+                 counter_items, about) -> str:
     by_id = {i.id: i for i in indicators}
     cells = {(c.layer, c.domain): c for c in grid}
     out = ["These indicators show whether the conditions for disempowerment are present. "
-           "They do not show whether it is happening. [How the indicators work](methodology.qmd).", "",
-           "::: {.callout-note title=\"What the data are telling us\"}",
-           "Readings begin after the threshold rule is reviewed and frozen (Stages 2 and 3). "
-           "Until then every indicator shows Not yet reviewed, with its latest data.",
-           ":::", ""]
+           "They do not show whether it is happening. [How the indicators work](methodology.qmd).", ""]
 
-    exposure = [i.id for i in indicators if i.scale == "exposure"]
-    baselines = "; ".join(f"{i.id}: {baseline_text(i)}" for i in indicators if i.scale == "baseline")
-    baseline = [i.id for i in indicators if i.scale == "baseline"]
-    labels = reg.STATE_LABELS
-    out += ["## Indicators[^1^[ About the labels]{.visually-hidden}](#about-the-labels)", "",
-            "::: {#about-the-labels .callout-note collapse=\"true\" title=\"About the labels\"}",
-            "**Two sets of labels.** "
-            f"Adoption indicators ({_and(exposure)}) will be read as {labels['low']}, {labels['rising']} or "
-            f"{labels['pervasive']}. Indicators read against a baseline ({_and(baseline)}) will be read as "
-            f"{labels['within']}, {labels['above']}, {labels['below']}, {labels['far_above']} or "
-            f"{labels['far_below']}, each against its own baseline ({baselines}). Either can also read "
-            f"{labels['no_signal']}. The AI link badge (Strong, Moderate or Weak) says how clearly a movement in a "
-            "series can be connected to AI rather than to other causes. See the [methodology](methodology.qmd).",
+    about = about.strip()
+    out += ["::: {.keel-heading-row}", "## Indicators {#indicators}", "",
+            "[About the indicators](#about-the-indicators){.keel-about-link}", ":::", "",
+            "::: {#about-the-indicators .callout-note collapse=\"true\" title=\"About the indicators\"}", about,
             ":::", "", "::::: {.keel-grid}", "::: {.keel-corner}", "&nbsp;", ":::"]
     for d in DOMAINS:
         out += [f"::: {{.keel-colhead}}\n**{d.capitalize()}**\n:::"]
     for layer in LAYERS:
-        out += [_rowhead(reg.layer_label(layer), reg.LAYER_DEFINITIONS[layer], "tip-" + reg.layer_label(layer).lower().replace(" ", "-"))]
+        out += [_rowhead(reg.layer_label(layer), reg.LAYER_DEFINITIONS[layer])]
         for d in DOMAINS:
             cell = cells.get((layer, d))
             ids = [i for i in (cell.indicator_ids if cell else []) if i in by_id]
@@ -490,7 +477,7 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
         cite.append(f"Nearest evidence: [{item['label']}]({_url(item['source_url'])}), {item['source_name']}, "
                     f"{fmt_date(item['date'])}. {item['metric']}: {item['value']} {item['unit']}. "
                     "One study, not a time series.")
-    out += [_rowhead(reg.CROSS_CUTTING_LABEL, reg.CROSS_CUTTING_DEFINITION, "tip-cross"),
+    out += [_rowhead(reg.CROSS_CUTTING_LABEL, reg.CROSS_CUTTING_DEFINITION),
             "::: {.keel-oversight}",
             f"**{oversight['row_label']}**", "", oversight["label"], "", *cite, ":::"]
 
@@ -508,8 +495,13 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
     return "\n".join(out)
 
 
-def _rowhead(label: str, definition: str, tip_id: str) -> str:
+def _tip_id(label: str) -> str:
+    return "tip-" + re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
+
+
+def _rowhead(label: str, definition: str) -> str:
     """Row header with a hover/focus tooltip: a focusable label plus a described-by tooltip span."""
+    tip_id = _tip_id(label)
     return (f"::: {{.keel-rowhead}}\n[**{label}**]{{.keel-tip tabindex=\"0\" aria-describedby=\"{tip_id}\"}}"
             f"[{definition}]{{#{tip_id} .keel-tipbody role=\"tooltip\"}}\n:::")
 
@@ -574,7 +566,8 @@ def build(repo_root: Path, today: date | None = None) -> None:
 
     summary = summary_page(indicators, grid, oversight, readings, latest_text,
                            [i for i in published(oversight_items) if i["id"] == oversight.get("citation_ref")],
-                           counter_header, published(counter_items))
+                           counter_header, published(counter_items),
+                           (root / "content" / "summary-about-indicators.md").read_text(encoding="utf-8"))
     (site / "_generated" / "summary.md").write_text(summary, encoding="utf-8")
 
 

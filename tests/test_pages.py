@@ -222,8 +222,7 @@ def test_index_has_oversight_row_with_citation(repo):
 def test_index_has_scales_note_placeholder_counter_evidence_and_archive(repo):
     pages.build(repo, today=TODAY)
     text = _index(repo)
-    assert "Low, Rising" in text and "Within baseline" in text
-    assert "Readings begin after the threshold rule is reviewed and frozen" in text
+    assert "**Rising**" in text and "**Within baseline**" in text
     assert "Labor-based taxes remain about half of OECD tax revenue" in text
     assert "Written before items were added." in text
     assert "archive.qmd" in text
@@ -350,9 +349,6 @@ def test_c1_baseline_is_its_2012_to_2019_history(repo):
     text = _page(repo, "CD1")
     method = text[text.index("## Method"):text.index("## Caveats")]
     assert "its 2012 to 2019 history" in method and "2010" not in method
-    summary = _index(repo)
-    assert "CD1: its 2012 to 2019 history" in summary
-    assert "ED1: its 2010 to 2019 trend" in summary
 
 
 def test_no_baseline_clause_without_a_value(repo):
@@ -502,17 +498,40 @@ def test_counter_evidence_directly_after_oversight_inside_grid(repo):
     assert "Two sets of labels" not in text[ov:text.index("archive.qmd")]
 
 
-def test_data_are_telling_us_title(repo):
+def test_no_data_are_telling_us_on_summary(repo):
     pages.build(repo, today=TODAY)
     text = _index(repo)
-    assert 'title="What the data are telling us"' in text
-    assert "data is telling" not in text
+    assert "What the data are telling us" not in text
+    assert "telling us" not in text
 
 
-def test_about_the_labels_callout_under_indicators_heading(repo):
+def test_about_the_indicators_callout_after_heading(repo):
     pages.build(repo, today=TODAY)
     text = _index(repo)
-    m = re.search(r'^## Indicators\[\^1\^\[ About the labels\]\{\.visually-hidden\}\]\(#about-the-labels\)\n\n'
-                  r'::: \{#about-the-labels \.callout-note collapse="true" title="About the labels"\}\n'
-                  r'\*\*Two sets of labels\.\*\*', text, re.M)
-    assert m
+    m = re.search(r'^## Indicators \{#indicators\}\n\n\[About the indicators\]\(#about-the-indicators\)\{[^}]*\}\n:::\n\n'
+                  r'::: \{#about-the-indicators \.callout-note collapse="true" title="About the indicators"\}\n', text, re.M)
+    assert m, text[:1500]
+    assert "About the labels" not in text
+    box = text[m.end():text.index("\n:::\n", m.end())]
+    assert box.startswith((repo / "content" / "summary-about-indicators.md").read_text(encoding="utf-8").strip()[:60])
+    assert box.count("| Reading | Meaning |") == 3
+    for name in ("Low", "Rising", "Pervasive", "Within baseline", "Above baseline", "Far below baseline",
+                 "No signal / insufficient data", "Not yet reviewed"):
+        assert f"**{name}**" in box
+
+
+def test_about_box_text_comes_from_content_file(repo):
+    (repo / "content" / "summary-about-indicators.md").write_text("Owner-edited box text.\n", encoding="utf-8")
+    pages.build(repo, today=TODAY)
+    assert 'title="About the indicators"}\nOwner-edited box text.\n:::' in _index(repo)
+
+
+def test_indicators_heading_accessible_text_is_plain(repo):
+    pages.build(repo, today=TODAY)
+    heading = next(l for l in _index(repo).splitlines() if l.startswith("## Indicators"))
+    assert heading == "## Indicators {#indicators}"
+
+
+def test_tooltip_ids_generated_by_rowhead():
+    html = pages._rowhead("Lock-in", "Def.")
+    assert 'aria-describedby="tip-lock-in"' in html and '#tip-lock-in .keel-tipbody role="tooltip"' in html

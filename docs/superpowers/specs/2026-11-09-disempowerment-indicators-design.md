@@ -439,3 +439,7 @@ Owner decision: indicator codes now carry the grid position. Scheme: domain lett
 | C2 | CD2 | Production vs. consumption (Release 2) |
 
 Sections 4.x, 5, 7a, 8 and 11 above now use the new codes throughout; earlier revision notes were updated to the new codes without changing their meaning. Site pages are at `indicators/EA1`, `EA2`, `ED1`, `GD1` and `CD1`.
+
+### Revision 6 (2026-11-18): summary page boxes
+
+The summary page drops its "What the data are telling us" box (it only described the path forward); its collapsible label box becomes "About the indicators" with owner-approved text kept in `content/summary-about-indicators.md`. In Stage 3 the summary page gets back a dated "What the data are telling us" statement once readings exist.
