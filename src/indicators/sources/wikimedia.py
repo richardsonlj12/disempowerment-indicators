@@ -4,8 +4,9 @@
   which excludes spiders and automated traffic), available from 2015-07.
 - Active editors: `/metrics/editors/aggregate/en.wikipedia/user/all-page-types/[level]/monthly/...`
   for editor type `user`, which Wikistats defines as "logged in users that are not considered a bot
-  by name or group" (not in the bot user group and no "bot" in the user name). Wikimedia defines an active editor as one with 5 or
-  more edits in the month, so the levels 5..24, 25..99 and 100.. are summed.
+  by name or group" (not in the bot user group and no "bot" in the user name). Wikimedia defines
+  an active editor as one with 5 or more edits in the month, so the levels 5..24, 25..99 and 100..
+  are summed.
 
 Wikimedia states that it changed its bot detection in 2025 and reclassified March to August 2025
 traffic, so the human pageview series has a break at 2025-03-01.
