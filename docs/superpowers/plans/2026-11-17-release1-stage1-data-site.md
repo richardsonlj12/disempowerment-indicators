@@ -266,6 +266,16 @@ Page requirements:
 
 ---
 
+### Task 10b: Owner revises the page summary tables (owner gate)
+
+*(Added 2026-11-17 at the owner's request.)* Once Task 10 renders the pages locally, the owner revises the text of each indicator page's top summary table (summary, warning sign, data sources, calculation, coverage) before anything is published.
+
+- [ ] **Step 1:** Render the site locally (`quarto preview site`) and give the owner the list of pages to review.
+- [ ] **Step 2: Owner gate:** the owner edits the front-matter fields in content/indicators/[ID].md (or comments in ALL CAPS for Claude to apply).
+- [ ] **Step 3:** Apply comments; re-run the page tests and the figure check for any new numbers; commit `docs: owner revisions to page summary tables`.
+
+---
+
 ### Task 11: CI, scheduled refresh and GitHub Pages deploy
 
 **Files:** Create `.github/workflows/ci.yml`, `.github/workflows/refresh-deploy.yml`, `scripts/link_check.py`, `tests/test_link_check.py`
