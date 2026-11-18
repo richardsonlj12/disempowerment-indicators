@@ -2,9 +2,8 @@
   "updated": "2026-11-18",
   "sources": {
     "fred": {
-      "status": "failed",
-      "error": "SourceError: BLS PRS85006174: REQUEST_NOT_PROCESSED ['Request could not be serviced, as the daily threshold for total number of requests allocated to the user with registration key  has been reached.']",
-      "since": "2026-11-17"
+      "status": "ok",
+      "data_through": "2026-07-01"
     },
     "oecd": {
       "status": "ok",
@@ -21,6 +20,11 @@
     "wikimedia": {
       "status": "ok",
       "data_through": "2026-10-01"
+    },
+    "stackexchange": {
+      "status": "failed",
+      "error": "SourceError: https://api.stackexchange.com/2.3/questions returned 400: {\"error_id\":502,\"error_message\":\"Violation of backoff parameter\",\"error_name\":\"throttle_violation\"}",
+      "since": "2026-11-18"
     }
   }
 }

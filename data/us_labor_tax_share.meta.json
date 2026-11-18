@@ -1,0 +1,22 @@
+{
+  "series_id": "us_labor_tax_share",
+  "indicator_id": "G1",
+  "title": "US labor-based share of tax revenue",
+  "units": "percent",
+  "frequency": "quarterly",
+  "source_name": "BEA National Income and Product Accounts, via FRED",
+  "source_url": "https://fred.stlouisfed.org/series/W055RC1Q027SBEA",
+  "license": "US government work, public domain",
+  "fetched_at": "2026-11-18T18:07:26Z",
+  "data_through": "2026-04-01",
+  "max_lag_days": 150,
+  "breaks": [],
+  "annotations": [
+    {
+      "date": "2022-11-30",
+      "label": "ChatGPT released to the public"
+    }
+  ],
+  "notes": "Formula: (W055RC1Q027SBEA personal current taxes + W782RC1Q027SBEA contributions for government social insurance) / (W054RC1Q027SBEA government current tax receipts + W782RC1Q027SBEA) x 100. All levels, all governments (federal, state and local), seasonally adjusted annual rates. Quarters where any input is unpublished are omitted.",
+  "role": "primary"
+}

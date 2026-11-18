@@ -1,0 +1,22 @@
+{
+  "series_id": "profit_share",
+  "indicator_id": "E1",
+  "title": "Corporate profits after tax as a share of GDP",
+  "units": "percent",
+  "frequency": "quarterly",
+  "source_name": "BEA National Income and Product Accounts, via FRED",
+  "source_url": "https://fred.stlouisfed.org/series/CPATAX",
+  "license": "US government work, public domain",
+  "fetched_at": "2026-11-18T18:07:26Z",
+  "data_through": "2026-04-01",
+  "max_lag_days": 150,
+  "breaks": [],
+  "annotations": [
+    {
+      "date": "2022-11-30",
+      "label": "ChatGPT released to the public"
+    }
+  ],
+  "notes": "Formula: CPATAX (corporate profits after tax with inventory valuation and capital consumption adjustments) / GDP (gross domestic product) x 100. Both seasonally adjusted annual rates.",
+  "role": "context"
+}
