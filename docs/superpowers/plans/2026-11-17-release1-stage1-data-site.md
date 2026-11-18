@@ -234,6 +234,16 @@ disempowerment-indicators/
 
 ---
 
+### Task 9b: Name the project (owner decision)
+
+*(Added 2026-11-17 at the owner's request.)* "The site" is ambiguous in the prose (it can be read as one of the data sources' websites). Before Task 10:
+
+- [ ] **Step 1:** Brainstorm candidate names with the owner, preferably with a memorable acronym; check each for clashes with existing projects and organizations and for domain/repository-name availability.
+- [ ] **Step 2: Owner decision** on the name (and whether the repository name changes).
+- [ ] **Step 3:** Replace "the site"/"this site" references to the project in content/, the design doc and config display text with the name (keep "website" where it means the web pages generically); use it in the Task 10 site title, navbar and About page.
+
+---
+
 ### Task 10: Quarto site, page generator and charts
 
 **Files:** Create `src/indicators/pages.py`, `site/_quarto.yml`, `site/index.qmd`, `site/methodology.qmd`, `site/archive.qmd`, `site/about.qmd`, `site/_indicator_template.qmd`, `site/js/charts.js`, `site/styles.scss`, `tests/test_pages.py`
