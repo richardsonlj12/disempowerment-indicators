@@ -1,12 +1,13 @@
 This page explains how the site turns public data into indicators, and how it will turn indicators into readings. A **reading** is the site's label for what an indicator's data is doing, such as "Rising" or "Within baseline." For now the site shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see "Releases and stages" below).
 
+We welcome constructive and honest feedback on this project.
 ## The framework
 
 The site tracks the scenario that Kulveit et al. (2025) call **gradual disempowerment** ([Kulveit et al., "Gradual Disempowerment," arXiv 2501.16946](https://arxiv.org/abs/2501.16946)). Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. As AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. The site's author has written a short introduction to the argument ([Richardson, "No Robot Uprising Required"](https://richardsonlj.substack.com/p/no-robot-uprising-required)).
 
 The site uses one word for this throughout: **leverage**, the bargaining power people have because systems need their work, taxes or attention.
 
-These indicators show whether the conditions for disempowerment are present. They do not show that it is happening.
+These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.
 
 ### Releases and stages
 
