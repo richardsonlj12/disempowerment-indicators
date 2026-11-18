@@ -1,4 +1,4 @@
-"""E1 and G1 US series.
+"""ED1 and GD1 US series.
 
 Keyless sources only:
 - FRED `fredgraph.csv` for NIPA series (profit share, labor-based tax share).
@@ -146,7 +146,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         labor,
         fetched_at,
         series_id="labor_share_nfb",
-        indicator_id="E1",
+        indicator_id="ED1",
         title="Labor share of income, nonfarm business sector",
         source_name="BLS Productivity and Costs",
         source_url="https://www.bls.gov/productivity/home.htm",
@@ -166,7 +166,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         profit,
         fetched_at,
         series_id="profit_share",
-        indicator_id="E1",
+        indicator_id="ED1",
         title="Corporate profits after tax as a share of GDP",
         source_name="BEA National Income and Product Accounts, via FRED",
         source_url="https://fred.stlouisfed.org/series/CPATAX",
@@ -188,7 +188,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         tax,
         fetched_at,
         series_id="us_labor_tax_share",
-        indicator_id="G1",
+        indicator_id="GD1",
         title="US labor-based share of tax revenue",
         source_name="BEA National Income and Product Accounts, via FRED",
         source_url="https://fred.stlouisfed.org/series/" + PERSONAL_TAXES,

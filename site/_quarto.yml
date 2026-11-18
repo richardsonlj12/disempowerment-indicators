@@ -20,16 +20,16 @@ website:
         text: Summary
       - text: Indicators
         menu:
-          - href: indicators/E1.qmd
-            text: "E1 · Labor share of income, nonfarm business"
-          - href: indicators/E2.qmd
-            text: "E2 · Firm AI adoption"
-          - href: indicators/E3.qmd
-            text: "E3 · How AI is used, automation versus augmentation"
-          - href: indicators/G1.qmd
-            text: "G1 · Labor-based share of tax revenue"
-          - href: indicators/C1.qmd
-            text: "C1 · Human knowledge-commons activity"
+          - href: indicators/EA1.qmd
+            text: "Firm AI adoption (EA1)"
+          - href: indicators/EA2.qmd
+            text: "How AI is used, automation versus augmentation (EA2)"
+          - href: indicators/ED1.qmd
+            text: "Labor share of income, nonfarm business (ED1)"
+          - href: indicators/GD1.qmd
+            text: "Labor-based share of tax revenue (GD1)"
+          - href: indicators/CD1.qmd
+            text: "Human knowledge-commons activity (CD1)"
       - href: methodology.qmd
         text: Methodology
       - href: archive.qmd

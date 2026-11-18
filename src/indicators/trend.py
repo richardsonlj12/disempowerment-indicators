@@ -47,7 +47,7 @@ def relative_yoy(treated, comparison, periods_per_year):
     return result.sort_values("date").reset_index(drop=True)
 
 
-# ---------------------------------------------------------------- relative-activity index (C1)
+# ---------------------------------------------------------------- relative-activity index (CD1)
 #
 # Stack Overflow (the treated site) against a set of comparison sites, all on 12-month rolling
 # totals so seasonality and day-count noise drop out. R is a log ratio, so a constant gap between

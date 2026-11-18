@@ -9,7 +9,7 @@ markers:
       source_url: https://openai.com/index/chatgpt/
       verified: true
       verified_on: 2026-11-17
-  C1:
+  CD1:
     - date: 2021-06-29
       label: GitHub Copilot technical preview announced
       source_url: https://github.blog/news-insights/product-news/introducing-github-copilot-ai-pair-programmer/
@@ -30,7 +30,7 @@ markers:
       source_url: https://openletter.mousetail.nl
       verified: true
       verified_on: 2026-11-17
-  E2:
+  EA1:
     - date: 2026-10-19
       label: "Census question wording changed: term 'AI' replaced by 'Super Intelligence or SI (formerly AI)' (from the collection starting 19 October 2026)"
       source_url: https://www.census.gov/hfp/btos/downloads/BTOS%20Content%20V5%20Core%20and%20SI%20Instrument%20-%20Cycle%202-Tagged.pdf

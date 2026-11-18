@@ -1,4 +1,4 @@
-"""Tests for the FRED/BLS (E1, G1) and OECD (G1) source modules."""
+"""Tests for the FRED/BLS (ED1, GD1) and OECD (GD1) source modules."""
 
 import json
 import re
@@ -91,7 +91,7 @@ def test_labor_share_parses_percent():
     df, meta = _by_id(fred.fetch())["labor_share_nfb"]
     validate_frame(df)
     assert meta.units == "percent"
-    assert meta.indicator_id == "E1" and meta.role == "primary"
+    assert meta.indicator_id == "ED1" and meta.role == "primary"
     # Percent level, not an index: every value sits in a plausible percent band.
     assert df["value"].between(40, 70).all()
     row = df[df["date"] == "2026-04-01"]
@@ -107,7 +107,7 @@ def test_profit_share_formula():
     row = df[df["date"] == "2026-04-01"]["value"].iloc[0]
     # CPATAX 3877.434 / GDP 32563.030 * 100, hand-computed
     assert row == pytest.approx(11.9075, abs=1e-3)
-    assert meta.role == "context" and meta.indicator_id == "E1"
+    assert meta.role == "context" and meta.indicator_id == "ED1"
 
 
 @responses.activate
@@ -124,7 +124,7 @@ def test_tax_share_formula():
     assert meta.data_through == "2026-04-01"
     for sid in ("W055RC1Q027SBEA", "W782RC1Q027SBEA", "W054RC1Q027SBEA"):
         assert sid in meta.notes
-    assert meta.indicator_id == "G1" and meta.role == "primary"
+    assert meta.indicator_id == "GD1" and meta.role == "primary"
 
 
 @responses.activate
@@ -187,7 +187,7 @@ def test_meta_fields_complete():
             assert value not in (None, ""), f"{meta.series_id}.{key} is empty"
         assert meta.frequency in FREQUENCIES
         assert meta.role in ROLES
-        assert meta.indicator_id in ("E1", "G1")
+        assert meta.indicator_id in ("ED1", "GD1")
         assert meta.max_lag_days > 0
         assert meta.data_through == df["date"].max().strftime("%Y-%m-%d")
         assert meta.fetched_at.endswith("Z") or "+00:00" in meta.fetched_at

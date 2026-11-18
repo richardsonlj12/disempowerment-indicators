@@ -1,4 +1,4 @@
-"""Tests for the BTOS (E2) and Anthropic Economic Index (E3) source modules."""
+"""Tests for the BTOS (EA1) and Anthropic Economic Index (EA2) source modules."""
 
 import io
 import json
@@ -67,7 +67,7 @@ def test_btos_by_size_class_series():
     _mock_btos()
     df, meta = _by_id(btos.fetch())["btos_ai_use_by_size"]
     validate_frame(df)
-    assert meta.indicator_id == "E2" and meta.role == "context" and meta.frequency == "biweekly"
+    assert meta.indicator_id == "EA1" and meta.role == "context" and meta.frequency == "biweekly"
     assert meta.units == "percent" and meta.breaks == []
     assert set(df["group"]) == {
         "1 to 4 employees", "5 to 9 employees", "10 to 19 employees", "20 to 49 employees",
@@ -118,7 +118,7 @@ def test_btos_value_is_percent():
     _mock_btos()
     df, meta = _btos_series()
     assert meta.units == "percent" and meta.frequency == "biweekly"
-    assert meta.indicator_id == "E2" and meta.role == "primary"
+    assert meta.indicator_id == "EA1" and meta.role == "primary"
     assert df["value"].between(0, 100).all()
     # Dated by collection end; values are percent, not fractions.
     by_date = df.set_index("date")["value"]
@@ -247,7 +247,7 @@ def test_aei_release_schema_mapping():
     for date, (a, g) in EXPECTED.items():
         assert auto.set_index("date")["value"][pd.Timestamp(date)] == pytest.approx(a, abs=1e-4)
         assert aug.set_index("date")["value"][pd.Timestamp(date)] == pytest.approx(g, abs=1e-4)
-    assert auto_meta.indicator_id == aug_meta.indicator_id == "E3"
+    assert auto_meta.indicator_id == aug_meta.indicator_id == "EA2"
     assert auto_meta.role == "primary" and aug_meta.role == "context"
     assert auto_meta.frequency == aug_meta.frequency == "irregular"
     assert auto_meta.units == "percent"

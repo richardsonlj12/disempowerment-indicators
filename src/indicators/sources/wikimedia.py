@@ -1,4 +1,4 @@
-"""C1 context: English Wikipedia human pageviews and active editors (keyless Wikimedia REST API).
+"""CD1 context: English Wikipedia human pageviews and active editors (keyless Wikimedia REST API).
 
 - Pageviews: `/metrics/pageviews/aggregate/en.wikipedia/all-access/user/monthly/...` (agent `user`,
   which excludes spiders and automated traffic), available from 2015-07.
@@ -95,7 +95,7 @@ def fetch(data_dir: Path | str = "data", today: date | None = None) -> list[tupl
     views = assign_segments(_pageviews(today), BREAKS)
     views_meta = SeriesMeta(
         series_id="wiki_user_pageviews_en",
-        indicator_id="C1",
+        indicator_id="CD1",
         title="English Wikipedia human pageviews per month",
         units="pageviews per month",
         frequency="monthly",
@@ -120,7 +120,7 @@ def fetch(data_dir: Path | str = "data", today: date | None = None) -> list[tupl
     editors = _editors(today)
     editors_meta = SeriesMeta(
         series_id="wiki_active_editors_en",
-        indicator_id="C1",
+        indicator_id="CD1",
         title="English Wikipedia active editors per month",
         units="editors",
         frequency="monthly",

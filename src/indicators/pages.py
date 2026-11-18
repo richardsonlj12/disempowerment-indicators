@@ -36,9 +36,9 @@ COMPARISON = {
     "structural": "A long-running series, compared with {baseline}.",
     "ai_native": "A series that measures AI use directly and has no period before AI, compared with {baseline}.",
 }
-# What each indicator is read against. C1's index starts in June 2012 (2019 = 100), so it has no
+# What each indicator is read against. CD1's index starts in June 2012 (2019 = 100), so it has no
 # 2010 to 2019 baseline.
-BASELINE_TEXT = {"E1": "its 2010 to 2019 trend", "G1": "its 2010 to 2019 trend", "C1": "its 2012 to 2019 history"}
+BASELINE_TEXT = {"ED1": "its 2010 to 2019 trend", "GD1": "its 2010 to 2019 trend", "CD1": "its 2012 to 2019 history"}
 DEFAULT_BASELINE = {"structural": "its 2010 to 2019 trend", "ai_native": "its own recent path"}
 AI_LINK_QUESTIONS = (
     ("directness", "Does it measure AI itself?"),
@@ -55,32 +55,32 @@ SECTIONS = (
     "Caveats",
 )
 KIND_LABELS = {"policy": "Policy pushback", "data_signal": "Data signal"}
-PUBLIC_CONFIG = ("indicators.yaml", "readings.yaml", "chart_markers.yaml", "c1_comparison_sites.yaml",
+PUBLIC_CONFIG = ("indicators.yaml", "readings.yaml", "chart_markers.yaml", "cd1_comparison_sites.yaml",
                  "curated/counter_evidence.yaml", "curated/oversight.yaml")
 
 # Chart views per indicator. kind: level (one series at a time, selector when several; standard
 # errors as a band; optional dashed 2010-19 trend), deviation (from the 2010-19 trend), band (line
 # plus a shaded range from two other series), multi (all series together, groups expanded).
 CHART_VIEWS: dict[str, list[dict]] = {
-    "E1": [
+    "ED1": [
         {"label": "Level", "kind": "level", "series": ["labor_share_nfb", "profit_share"], "trend": True},
         {"label": "Deviation from 2010–19 trend", "kind": "deviation", "series": ["labor_share_nfb", "profit_share"]},
     ],
-    "E2": [
+    "EA1": [
         {"label": "All firms", "kind": "level", "series": ["btos_ai_use"]},
         {"label": "By firm size", "kind": "multi", "series": ["btos_ai_use_by_size"]},
     ],
-    "E3": [
+    "EA2": [
         {"label": "Automation and augmentation shares", "kind": "multi",
          "series": ["aei_automation_share", "aei_augmentation_share"]},
     ],
-    "G1": [
+    "GD1": [
         {"label": "Level", "kind": "level",
          "series": ["us_labor_tax_share", "oecd_labor_tax_share_usa", "oecd_labor_tax_share_avg"], "trend": True},
         {"label": "Deviation from 2010–19 trend", "kind": "deviation",
          "series": ["us_labor_tax_share", "oecd_labor_tax_share_usa", "oecd_labor_tax_share_avg"]},
     ],
-    "C1": [
+    "CD1": [
         {"label": "Relative activity index (2019 = 100)", "kind": "band", "series": ["so_relative_index"],
          "band": ["so_relative_index_loo_min", "so_relative_index_loo_max"], "rule": 100,
          "note": "Shaded band: the lowest and highest index when each comparison site is left out in turn."},
@@ -399,7 +399,7 @@ def write_trend_csv(frame, meta: SeriesMeta, out_dir: Path) -> None:
 
 def indicator_page(template: str, ind, front, sections, reading, history, views, series, markers,
                    group_labels, trend_files, today) -> str:
-    title = f"{ind.id} · {ind.name}"
+    title = f"{ind.name} ({ind.id})"
     fm = yaml.safe_dump({"title": title, "pagetitle": f"{title} · {SITE_NAME}"}, allow_unicode=True,
                         sort_keys=False, width=1000).strip()
     spec = chart_spec(ind, views, series, markers, group_labels)
@@ -464,7 +464,7 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
                 for ind_id in ids:
                     ind = by_id[ind_id]
                     state = reg.STATE_LABELS[reg.current_reading(readings, ind_id).state]
-                    lines = [f"[{ind.id} · {ind.name}](indicators/{ind.id}.qmd)", f"**{state}**",
+                    lines = [f"[{ind.name}](indicators/{ind.id}.qmd) ({ind.id})", f"**{state}**",
                              *latest_text[ind_id],
                              f"[AI link: {ind.ai_link.capitalize()}]{{.keel-badge .keel-badge-{ind.ai_link}}}"]
                     parts.append("\\\n".join(lines))
@@ -525,7 +525,7 @@ def build(repo_root: Path, today: date | None = None) -> None:
     readings = reg.load_readings(config / "readings.yaml", all_indicators)  # validates every row
     indicators = [i for i in all_indicators if i.release == RELEASE]
     chart_markers = reg.load_chart_markers(config / "chart_markers.yaml")
-    sites = yaml.safe_load((config / "c1_comparison_sites.yaml").read_text(encoding="utf-8"))
+    sites = yaml.safe_load((config / "cd1_comparison_sites.yaml").read_text(encoding="utf-8"))
     group_labels = {s["api_site_name"]: s["name"] for s in sites.get("sites", [])}
     _, oversight_items = load_curated(config / "curated" / "oversight.yaml")
     counter_header, counter_items = load_curated(config / "curated" / "counter_evidence.yaml")

@@ -14,7 +14,7 @@ import yaml
 from indicators import pages
 
 ROOT = Path(__file__).resolve().parent.parent
-RELEASE1 = {"E1", "E2", "E3", "G1", "C1"}
+RELEASE1 = {"ED1", "EA1", "EA2", "GD1", "CD1"}
 TABLE_ROWS = ["Summary", "Current reading", "Grid position", "AI link", "Leading or lagging",
               "Warning sign", "Data source(s)", "Calculation", "Coverage"]
 INTERNAL_KEYS = ["structural", "ai_native", "exposure", "erosion", "lockin", "tier"]
@@ -126,8 +126,8 @@ def test_build_writes_release1_pages_only(repo):
 
 def test_title_contains_full_indicator_name(repo):
     pages.build(repo, today=TODAY)
-    assert _front_matter(_page(repo, "C1"))["title"] == "C1 · Human knowledge-commons activity"
-    assert _front_matter(_page(repo, "E1"))["title"] == "E1 · Labor share of income, nonfarm business"
+    assert _front_matter(_page(repo, "CD1"))["title"] == "Human knowledge-commons activity (CD1)"
+    assert _front_matter(_page(repo, "ED1"))["title"] == "Labor share of income, nonfarm business (ED1)"
 
 
 def test_summary_table_has_nine_rows_in_order(repo):
@@ -138,43 +138,43 @@ def test_summary_table_has_nine_rows_in_order(repo):
 
 def test_reading_rendered_in_three_lines(repo):
     pages.build(repo, today=TODAY)
-    rows = dict(_table(_page(repo, "E1")))
+    rows = dict(_table(_page(repo, "ED1")))
     lines = rows["Current reading"].split("<br>")
     assert len(lines) == 3
     assert "Not yet reviewed" in lines[0]
     assert lines[1].endswith("against its 2010 to 2019 trend") and "percent" in lines[1]
     assert lines[2].strip().startswith("AI link: Weak")
-    e2_lines = dict(_table(_page(repo, "E2")))["Current reading"].split("<br>")
+    e2_lines = dict(_table(_page(repo, "EA1")))["Current reading"].split("<br>")
     assert "own recent path" in e2_lines[1]
 
 
 def test_data_sources_render_as_links(repo):
     pages.build(repo, today=TODAY)
-    cell = dict(_table(_page(repo, "C1")))["Data source(s)"]
+    cell = dict(_table(_page(repo, "CD1")))["Data source(s)"]
     assert "[Stack Exchange API (new questions per month)](https://api.stackexchange.com/docs/questions)" in cell
     assert "(https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/)" in cell
 
 
 def test_grid_position_and_coverage_filled_automatically(repo):
     pages.build(repo, today=TODAY)
-    rows = dict(_table(_page(repo, "G1")))
+    rows = dict(_table(_page(repo, "GD1")))
     assert rows["Grid position"] == "Displacement · Government"
     assert "data through 2026 Q2" in rows["Coverage"]
-    assert dict(_table(_page(repo, "E2")))["Grid position"] == "Adoption · Economic"
+    assert dict(_table(_page(repo, "EA1")))["Grid position"] == "Adoption · Economic"
 
 
 def test_e3_page_has_caveat_and_disclosure(repo):
     pages.build(repo, today=TODAY)
-    text = _page(repo, "E3")
+    text = _page(repo, "EA2")
     assert "One vendor, one product: Claude usage only" in text
     assert "This data is published by Anthropic" in text
 
 
 def test_stale_badge_rendered_when_stale(repo):
     pages.build(repo, today=TODAY)
-    assert "Stale since" not in _page(repo, "E2")
+    assert "Stale since" not in _page(repo, "EA1")
     pages.build(repo, today=date(2030, 1, 1))
-    assert "Stale since 16 December 2026" in _page(repo, "E2")
+    assert "Stale since 16 December 2026" in _page(repo, "EA1")
 
 
 def test_all_pages_show_not_yet_reviewed(repo):
@@ -206,7 +206,7 @@ def test_index_lockin_row_says_no_public_measure(repo):
     assert set(lockin) == {"Economic", "Government", "Cultural"}
     assert all("No public measure yet" in body for body in lockin.values())
     assert "No public measure yet" in cells[("Adoption", "Government")]
-    assert "indicators/E2.qmd" in cells[("Adoption", "Economic")]
+    assert "indicators/EA1.qmd" in cells[("Adoption", "Economic")]
 
 
 def test_index_has_oversight_row_with_citation(repo):
@@ -344,32 +344,32 @@ def _add_c1_index(repo):
 def test_c1_baseline_is_its_2012_to_2019_history(repo):
     _add_c1_index(repo)
     pages.build(repo, today=TODAY)
-    lines = dict(_table(_page(repo, "C1")))["Current reading"].split("<br>")
+    lines = dict(_table(_page(repo, "CD1")))["Current reading"].split("<br>")
     assert lines[1].endswith("against its 2012 to 2019 history")
     assert "61.5 (index, 2019 = 100)" in lines[1]
-    text = _page(repo, "C1")
+    text = _page(repo, "CD1")
     method = text[text.index("## Method"):text.index("## Caveats")]
     assert "its 2012 to 2019 history" in method and "2010" not in method
     summary = _index(repo)
-    assert "C1: its 2012 to 2019 history" in summary
-    assert "E1: its 2010 to 2019 trend" in summary
+    assert "CD1: its 2012 to 2019 history" in summary
+    assert "ED1: its 2010 to 2019 trend" in summary
 
 
 def test_no_baseline_clause_without_a_value(repo):
     pages.build(repo, today=TODAY)
-    line = dict(_table(_page(repo, "C1")))["Current reading"].split("<br>")[1]
+    line = dict(_table(_page(repo, "CD1")))["Current reading"].split("<br>")[1]
     assert line == "Latest value not yet available (data still being collected)"
 
 
 def test_magnitude_line_names_the_series(repo):
     pages.build(repo, today=TODAY)
-    line = dict(_table(_page(repo, "E3")))["Current reading"].split("<br>")[1]
+    line = dict(_table(_page(repo, "EA2")))["Current reading"].split("<br>")[1]
     assert line.startswith("Automation share of categorized Claude.ai conversations, latest value:")
 
 
 def test_oecd_annual_series_not_stale_today(repo):
     pages.build(repo, today=TODAY)
-    assert "Stale" not in _page(repo, "G1")
+    assert "Stale" not in _page(repo, "GD1")
 
 
 def test_split_content_rejects_unknown_sections_and_preamble():
@@ -393,14 +393,14 @@ def test_release2_readings_do_not_break_build(repo):
 
 def test_caveat_has_single_period(repo):
     pages.build(repo, today=TODAY)
-    text = _page(repo, "E3")
+    text = _page(repo, "EA2")
     assert "**One vendor, one product: Claude usage only.**" in text
     assert "only..**" not in text
 
 
 def test_e3_disclosure_names_keel(repo):
     pages.build(repo, today=TODAY)
-    text = _page(repo, "E3")
+    text = _page(repo, "EA2")
     assert "This data is published by Anthropic, and KEEL is built with assistance from Claude." in text
     assert "this site is built" not in text
 
@@ -409,7 +409,9 @@ def test_navbar_names_match_registry():
     config = yaml.safe_load((ROOT / "site" / "_quarto.yml").read_text(encoding="utf-8"))
     menu = next(i for i in config["website"]["navbar"]["left"] if i.get("text") == "Indicators")["menu"]
     reg = yaml.safe_load((ROOT / "config" / "indicators.yaml").read_text(encoding="utf-8"))
-    expected = [(f"indicators/{i['id']}.qmd", f"{i['id']} · {i['name']}") for i in reg["indicators"] if i["release"] == 1]
+    names = {i["id"]: i["name"] for i in reg["indicators"] if i["release"] == 1}
+    grid_order = [i for cell in reg["grid"] for i in cell["indicator_ids"]]
+    expected = [(f"indicators/{i}.qmd", f"{names[i]} ({i})") for i in grid_order]
     assert [(m["href"], m["text"]) for m in menu] == expected
 
 
@@ -428,24 +430,24 @@ def test_c1_says_data_still_being_collected_when_series_absent(repo):
     for f in (repo / "data").glob("s[oe]_*"):
         f.unlink()
     pages.build(repo, today=TODAY)
-    text = _page(repo, "C1")
+    text = _page(repo, "CD1")
     assert "Data still being collected" in text
     assert "Wikipedia" in text
 
 
 def test_c1_views_listed_in_chart_spec(repo):
     pages.build(repo, today=TODAY)
-    text = _page(repo, "C1")
+    text = _page(repo, "CD1")
     for label in ("Relative activity index (2019 = 100)", "Change since November 2022",
                   "Year-over-year gap (alternative view)", "Monthly questions", "Wikipedia"):
         assert label in text
-    assert "By firm size" in _page(repo, "E2")
-    assert "Deviation from 2010–19 trend" in _page(repo, "E1")
+    assert "By firm size" in _page(repo, "EA1")
+    assert "Deviation from 2010–19 trend" in _page(repo, "ED1")
 
 
 def test_csv_links_relative(repo):
     pages.build(repo, today=TODAY)
-    text = _page(repo, "E1")
+    text = _page(repo, "ED1")
     assert "](../data/labor_share_nfb.csv)" in text
     assert "](../data/labor_share_nfb_trend.csv)" in text
     assert "](../archive.qmd)" in text

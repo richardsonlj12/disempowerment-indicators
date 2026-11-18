@@ -9,7 +9,7 @@ from indicators.store import SeriesMeta, read_series
 
 def _meta(series_id="s1", through="2026-09-30"):
     return SeriesMeta(
-        series_id=series_id, indicator_id="E1", title="t", units="u", frequency="quarterly",
+        series_id=series_id, indicator_id="ED1", title="t", units="u", frequency="quarterly",
         source_name="src", source_url="https://example.org", license="CC0",
         fetched_at="2026-11-17T00:00:00Z", data_through=through, max_lag_days=100,
     )
@@ -39,7 +39,7 @@ def test_refresh_isolates_source_failure(tmp_path):
 
 def test_refresh_attaches_chart_markers_without_splitting(tmp_path):
     refresh.run(tmp_path, sources={"a": lambda: [(_frame(), _meta())]}, today=date(2026, 11, 17))
-    _, meta = read_series("s1", tmp_path)  # indicator E1: only the all-indicator ChatGPT marker
+    _, meta = read_series("s1", tmp_path)  # indicator ED1: only the all-indicator ChatGPT marker
     assert meta.annotations == [{"date": "2022-11-30", "label": "ChatGPT released to the public"}]
     assert meta.breaks == []
 

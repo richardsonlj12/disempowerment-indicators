@@ -1,7 +1,7 @@
 # Release 1 indicator registry. Page prose (summary, warning sign, alternative explanations) lives in
 # content/indicators/[ID].md front matter and headings, the single source of truth.
 indicators:
-  - id: E1
+  - id: ED1
     release: 1
     domain: economic
     layer: erosion
@@ -28,7 +28,7 @@ indicators:
       - name: BEA National Income and Product Accounts (corporate profits, GDP), via FRED
         url: https://fred.stlouisfed.org/series/CPATAX
         license: US government work, public domain
-  - id: E2
+  - id: EA1
     release: 1
     domain: economic
     layer: exposure
@@ -52,7 +52,7 @@ indicators:
       - name: Census Business Trends and Outlook Survey (BTOS)
         url: https://www.census.gov/hfp/btos
         license: US government work, public domain
-  - id: E3
+  - id: EA2
     release: 1
     domain: economic
     layer: exposure
@@ -76,7 +76,7 @@ indicators:
       - name: Anthropic Economic Index (Hugging Face)
         url: https://huggingface.co/datasets/Anthropic/EconomicIndex
         license: "Data released under CC-BY, code released under MIT License (dataset README, License section)"
-  - id: G1
+  - id: GD1
     release: 1
     domain: government
     layer: erosion
@@ -103,7 +103,7 @@ indicators:
       - name: OECD Revenue Statistics
         url: https://data-explorer.oecd.org/?df[ds]=DisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS
         license: OECD terms and conditions
-  - id: C1
+  - id: CD1
     release: 1
     domain: cultural
     layer: erosion
@@ -132,12 +132,12 @@ indicators:
         license: CC0
 
 grid:
-  - {layer: exposure, domain: economic, indicator_ids: [E2, E3], empty_label: No public measure yet}
+  - {layer: exposure, domain: economic, indicator_ids: [EA1, EA2], empty_label: No public measure yet}
   - {layer: exposure, domain: government, indicator_ids: [], empty_label: No public measure yet}
   - {layer: exposure, domain: cultural, indicator_ids: [], empty_label: No public measure yet}
-  - {layer: erosion, domain: economic, indicator_ids: [E1], empty_label: No public measure yet}
-  - {layer: erosion, domain: government, indicator_ids: [G1], empty_label: No public measure yet}
-  - {layer: erosion, domain: cultural, indicator_ids: [C1], empty_label: No public measure yet}
+  - {layer: erosion, domain: economic, indicator_ids: [ED1], empty_label: No public measure yet}
+  - {layer: erosion, domain: government, indicator_ids: [GD1], empty_label: No public measure yet}
+  - {layer: erosion, domain: cultural, indicator_ids: [CD1], empty_label: No public measure yet}
   - {layer: lockin, domain: economic, indicator_ids: [], empty_label: No public measure yet}
   - {layer: lockin, domain: government, indicator_ids: [], empty_label: No public measure yet}
   - {layer: lockin, domain: cultural, indicator_ids: [], empty_label: No public measure yet}

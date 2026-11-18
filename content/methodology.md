@@ -16,8 +16,8 @@ KEEL is built in steps. **Releases** decide which indicators KEEL covers. **Stag
 
 **Releases.**
 
-- **Release 1 (now):** labor share of income (E1), firm AI adoption (E2), how AI is used (E3), the labor-based share of tax revenue (G1), human knowledge-commons activity (C1), the oversight row and the counter-evidence panel.
-- **Release 2:** wealth concentration (E4), federal AI use cases (G2), AI-interest political influence (G3), AI's share of cultural production versus consumption (C2), and a written definition of lock-in.
+- **Release 1 (now):** labor share of income (ED1), firm AI adoption (EA1), how AI is used (EA2), the labor-based share of tax revenue (GD1), human knowledge-commons activity (CD1), the oversight row and the counter-evidence panel.
+- **Release 2:** wealth concentration (EL1), federal AI use cases (GA1), AI-interest political influence (GL1), AI's share of cultural production versus consumption (CD2), and a written definition of lock-in.
 
 **Stages.** Each release goes through three stages.
 
@@ -39,8 +39,8 @@ A fourth row, **human deferral and oversight**, runs across all three domains. I
 
 | KEEL's row | Chooi, Lee and Li's term | How they relate |
 |---|---|---|
-| **Adoption:** AI entering a system (E2, E3) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it. We agree, and the adoption row's pages say so. |
-| **Displacement:** a whole system depending less on human participation (E1, G1, C1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
+| **Adoption:** AI entering a system (EA1, EA2) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it. We agree, and the adoption row's pages say so. |
+| **Displacement:** a whole system depending less on human participation (ED1, GD1, CD1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
 | Not measured | **Erosion:** individuals losing the ability to do a task without AI | None of KEEL's indicators measures individual capability. This is the largest gap between KEEL and the paper. |
 | **Lock-in:** reduced dependence becoming hard to restore (empty for now) | **Lock-in:** the institutional infrastructure for human agency dismantled, for example a profession that no longer trains juniors | Close to the paper's meaning. |
 
@@ -66,7 +66,7 @@ The mechanism at the center of the gradual disempowerment argument is decisions 
 
 **The study.** Professional analysts worked on a data analysis with an AI coding agent. On four analytical decisions, a coin flip set which option the agent was set to favor. Across those decisions, the 50 analysts in the study went with the agent's favored option 86 percent of the time, against 50 percent by chance. Many repeated the agent's arguments when explaining their choices without crediting it.
 
-**Its limits.** It is one experiment, in one task, with one agent, and the authors list these limits themselves. The agent in the study was Claude. The study is authored at Anthropic, which also publishes the data behind E3 and makes Claude. It is not a time series and cannot fill the row.
+**Its limits.** It is one experiment, in one task, with one agent, and the authors list these limits themselves. The agent in the study was Claude. The study is authored at Anthropic, which also publishes the data behind EA2 and makes Claude. It is not a time series and cannot fill the row.
 
 Moon and Boudreaux (2026, RAND Corporation) propose a formal way to track the same mechanism in ["A Formal Model of How Artificial Intelligence Erodes Human Agency"](https://www.rand.org/pubs/research_reports/RRA4817-1.html): the number and makeup of the groups whose agreement decides an outcome, and whether AI is entering those groups or shaping the options they see. If a public, repeatable measure of deferral appears, it will fill this row.
 
@@ -78,9 +78,9 @@ Each indicator is labeled **leading** or **lagging**. A leading indicator is lik
 
 ### Two sets of labels
 
-Adoption-row indicators (E2 and E3) use three labels: **Low, Rising, Pervasive**.
+Adoption-row indicators (EA1 and EA2) use three labels: **Low, Rising, Pervasive**.
 
-Displacement-row and lock-in-row indicators (E1, G1 and C1) use five labels, each measured against a baseline:
+Displacement-row and lock-in-row indicators (ED1, GD1 and CD1) use five labels, each measured against a baseline:
 
 - Within baseline
 - Above baseline
@@ -102,7 +102,7 @@ A reading says what the data did. It does not say why.
 
 *Illustrative example only. No such reading has been made, and the bracketed values are placeholders:*
 
-> **E1 Labor share: Below baseline**
+> **ED1 Labor share: Below baseline**
 >
 > [x] points below its 2010 to 2019 baseline, over the latest [n] quarters
 >
@@ -138,34 +138,34 @@ The rule of thumb:
 - **Moderate:** timing fits and there is a plausible mechanism, but no comparison group, or other causes only partly addressed.
 - **Weak:** the trend predates generative AI, or major other causes are unaddressed.
 
-"Strong" means the series measures AI directly (E2, E3). It is not strong evidence of harm, and it does not mean the indicator shows disempowerment. The current ratings are drafts. They will be reviewed in Stage 2, and any later change will be logged on this page.
+"Strong" means the series measures AI directly (EA1, EA2). It is not strong evidence of harm, and it does not mean the indicator shows disempowerment. The current ratings are drafts. They will be reviewed in Stage 2, and any later change will be logged on this page.
 
 ## Comparisons
 
 ### Two kinds of baseline
 
-**Long-running series** (E1, G1, C1) have decades of history and many causes. Their baseline is how the series behaved in **2010 to 2019**, after the 2008 to 2009 recession and before COVID. This page and the indicator pages call it the 2010 to 2019 baseline. The question is whether the series is departing from its baseline, and how fast.
+**Long-running series** (ED1, GD1, CD1) have decades of history and many causes. Their baseline is how the series behaved in **2010 to 2019**, after the 2008 to 2009 recession and before COVID. This page and the indicator pages call it the 2010 to 2019 baseline. The question is whether the series is departing from its baseline, and how fast.
 
-**Series that measure AI use directly** (E2, E3) have only a few years of history and no pre-AI period, and can change quickly. E2 began near zero. E3 is a share of AI conversations, so it has no zero point to start from. Their baseline is their **own recent path**: level, rate of change and whether that rate is speeding up, averaged over the last 3, 6 and 12 months, or at the series' own frequency where data are less frequent.
+**Series that measure AI use directly** (EA1, EA2) have only a few years of history and no pre-AI period, and can change quickly. EA1 began near zero. EA2 is a share of AI conversations, so it has no zero point to start from. Their baseline is their **own recent path**: level, rate of change and whether that rate is speeding up, averaged over the last 3, 6 and 12 months, or at the series' own frequency where data are less frequent.
 
 ### Comparison groups
 
-A comparison group can separate an AI-related change from other causes. C1 has one. Stack Overflow is compared with four non-programming Stack Exchange sites, the **comparison sites**, chosen under criteria fixed before any post-2019 counts were viewed. The main measure is a **relative-activity index**: Stack Overflow's questions over the past 12 months relative to the comparison sites', set to 100 for 2019. Because AI affects the comparison sites too, the index measures relative change and likely understates any AI effect. It is not a causal estimate.
+A comparison group can separate an AI-related change from other causes. Human knowledge-commons activity (CD1) has one. Stack Overflow is compared with four non-programming Stack Exchange sites, the **comparison sites**, chosen under criteria fixed before any post-2019 counts were viewed. The main measure is a **relative-activity index**: Stack Overflow's questions over the past 12 months relative to the comparison sites', set to 100 for 2019. Because AI affects the comparison sites too, the index measures relative change and likely understates any AI effect. It is not a causal estimate.
 
 **Leave-one-out band.** The index is also recomputed four times, each time leaving out one comparison site. The chart shows the range of those four results as a band, so a reader can see whether the result depends on any single site.
 
-E1 will gain an industry comparison in Release 2: labor share in industries where AI can do much of the work, against industries where it can do little, using published exposure scores.
+ED1 will gain an industry comparison in Release 2: labor share in industries where AI can do much of the work, against industries where it can do little, using published exposure scores.
 
 ### Uncertainty and seasonality
 
-- Where a source publishes standard errors (a measure of how much an estimate would vary from sample to sample), the chart shows them as bands. The Census Bureau's Business Trends and Outlook Survey (BTOS), used for E2, is one. The threshold rule will use them.
+- Where a source publishes standard errors (a measure of how much an estimate would vary from sample to sample), the chart shows them as bands. The Census Bureau's Business Trends and Outlook Survey (BTOS), used for EA1, is one. The threshold rule will use them.
 - Monthly series with seasonal patterns (Stack Exchange, Wikipedia) are compared over 12-month periods or year over year.
 - A move inside a series' usual month-to-month variation never counts as crossing a threshold.
 
 ### Breaks, markers and revisions
 
-- **Series breaks.** When a source changes its definition or method so that values before and after are not comparable, the chart marks the date and does not join the two parts. Examples: the change to the Census AI question on 17 November 2025 (E2), Wikimedia's improved bot detection in 2025 (C1), and changes in the Anthropic Economic Index release format (E3).
-- **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart), GitHub Copilot's launch and Stack Overflow policy events (C1), and the Census question wording that began on 19 October 2026 (E2).
+- **Series breaks.** When a source changes its definition or method so that values before and after are not comparable, the chart marks the date and does not join the two parts. Examples: the change to the Census AI question on 17 November 2025 (EA1), Wikimedia's improved bot detection in 2025 (CD1), and changes in the Anthropic Economic Index release format (EA2).
+- **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart), GitHub Copilot's launch and Stack Overflow policy events (CD1), and the Census question wording that began on 19 October 2026 (EA1).
 - **Revisions.** Official statistics are revised. KEEL uses the latest revised data. A revision that would change a reading is treated like new data and goes to review.
 
 ## Thresholds and the retrospective (coming in Stages 2 and 3)
@@ -234,7 +234,7 @@ These indicators are diagnostics. KEEL does not recommend that any policy aim to
 
 ### The cultural gap
 
-C1 measures activity on knowledge sites. It does not measure human capacity, attention or reliance on AI. The cultural column has no adoption indicator yet, and its displacement indicator counts activity, which is several steps removed from people's capacity to shape their culture.
+CD1 measures activity on knowledge sites. It does not measure human capacity, attention or reliance on AI. The cultural column has no adoption indicator yet, and its displacement indicator counts activity, which is several steps removed from people's capacity to shape their culture.
 
 The next candidate is survey data on how far people use AI as a go-between for information and relationships, such as Pew Research Center surveys and the Reuters Institute Digital News Report.
 
@@ -242,7 +242,7 @@ The next candidate is survey data on how far people use AI as a go-between for i
 
 **David Krueger (2025)**, a coauthor of the gradual disempowerment paper, warns that many proposed metrics do not separate empowering uses of AI from disempowering ones. Heavy AI use can look like progress while people lose real agency. KEEL responds in three ways:
 
-- It keeps adoption (E2, E3) apart from displacement.
+- It keeps adoption (EA1, EA2) apart from displacement.
 - It adds a note on augmentation versus replacement (AI helping people work, against AI doing the work instead of them) wherever adoption is shown.
 - It names deferral, whether people simply approve AI's decisions, as the row with no public measure.
 
@@ -261,19 +261,19 @@ KEEL's indicators are descriptive in exactly this sense.
 
 **Release 2** adds four indicators:
 
-- **Wealth concentration (E4).**
-- **Federal AI use cases (G2).**
-- **AI-interest political influence (G3):** lobbying by groups that profit from AI.
-- **AI's share of cultural production versus consumption (C2):** how much of what is made is AI-generated, against how much of what people actually read, watch or hear.
+- **Wealth concentration (EL1).**
+- **Federal AI use cases (GA1).**
+- **AI-interest political influence (GL1):** lobbying by groups that profit from AI.
+- **AI's share of cultural production versus consumption (CD2):** how much of what is made is AI-generated, against how much of what people actually read, watch or hear.
 
-E4 and G3 are placed in the lock-in row only if a lock-in test is adopted.
+EL1 and GL1 are placed in the lock-in row only if a lock-in test is adopted.
 
 Later versions are planned under four headings:
 
 - **Method.**
   - Readings computed with data as first published, alongside revised data (from the Federal Reserve Bank of St. Louis's ALFRED archive of past data versions).
-  - The E1 industry comparison.
-  - A test on US states of the rentier logic for G1: states funded by oil, gas and coal taxes, which may answer less to their residents, against states that are not.
+  - The ED1 industry comparison.
+  - A test on US states of the rentier logic for GD1: states funded by oil, gas and coal taxes, which may answer less to their residents, against states that are not.
   - A measure of deferral for the oversight row, if one becomes available.
 - **Harder indicators of AI's effect on work and research.**
   - Young workers in AI-exposed jobs.
@@ -302,4 +302,4 @@ The framework comes from [Kulveit et al. (2025)](https://arxiv.org/abs/2501.1694
 
 Every figure KEEL publishes is checked against its primary source before publication.
 
-KEEL is built with assistance from Claude (Anthropic). One indicator (E3) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.
+KEEL is built with assistance from Claude (Anthropic). One indicator (EA2) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.

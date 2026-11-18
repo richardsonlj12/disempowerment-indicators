@@ -17,7 +17,7 @@ The Anthropic Economic Index is the nearest public proxy. It sorts conversations
 - **Automation**: the AI is asked to complete a task with little involvement from the person. Anthropic's "directive" and "feedback loop" patterns.
 - **Augmentation**: the person and the AI work on it together. Anthropic's "validation," "task iteration" and "learning" patterns.
 
-This indicator sits in the **Adoption** row, as a measure of how much of the work is handed to AI. E2 asks whether firms use AI at all. E3 asks, for one product, how much of the work is handed over. It is a **leading** indicator, one that moves early.
+This indicator sits in the **Adoption** row, as a measure of how much of the work is handed to AI. Firm AI adoption (EA1) asks whether firms use AI at all. EA2 asks, for one product, how much of the work is handed over. It is a **leading** indicator, one that moves early.
 
 **Disclosure.** This data is published by Anthropic, and KEEL is built with assistance from Claude. Treat it as data from an interested party.
 
@@ -70,7 +70,7 @@ A rising automation share would be consistent with tasks moving from people to A
 - A rise in automation that holds within a stable population and product mix, between releases with no break.
 - A similar rise in usage data from other AI providers, if any is published.
 
-- Independent labor-market evidence linking automation, measured with this same data at the level of occupations (E3 charts only the overall share), to where young workers' employment fell. One study points this way, with limits: Brynjolfsson, Chandar and Chen find that employment of US workers aged 22 to 25 fell most in occupations whose tasks had the highest share of automation in Claude conversations. In occupations with the highest share of augmentation, employment was flat or rising. The authors call their findings descriptive, not estimates of what AI caused. The pattern weakens when they control for education, some of the trends began before generative AI, and it is stronger in their payroll data than in national survey data (["Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence," Stanford Digital Economy Lab, August 2026, Sec. 2.5, Fig. 5 and Table 3](https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf)).
+- Independent labor-market evidence linking automation, measured with this same data at the level of occupations (EA2 charts only the overall share), to where young workers' employment fell. One study points this way, with limits: Brynjolfsson, Chandar and Chen find that employment of US workers aged 22 to 25 fell most in occupations whose tasks had the highest share of automation in Claude conversations. In occupations with the highest share of augmentation, employment was flat or rising. The authors call their findings descriptive, not estimates of what AI caused. The pattern weakens when they control for education, some of the trends began before generative AI, and it is stronger in their payroll data than in national survey data (["Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence," Stanford Digital Economy Lab, August 2026, Sec. 2.5, Fig. 5 and Table 3](https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf)).
 
 **What would lower it:**
 

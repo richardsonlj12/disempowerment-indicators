@@ -27,7 +27,7 @@ def _ids(paths):
 
 
 def test_content_pages_exist():
-    assert {p.stem for p in INDICATOR_PAGES} >= {"E1", "E2", "E3", "G1", "C1"}
+    assert {p.stem for p in INDICATOR_PAGES} >= {"ED1", "EA1", "EA2", "GD1", "CD1"}
     assert METHODOLOGY.exists(), "content/methodology.md must exist with a lowercase name"
 
 

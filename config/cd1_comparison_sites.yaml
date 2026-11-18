@@ -1,4 +1,4 @@
-# Owner-approved comparison sites for C1 (selection record: review/c1-comparison-site-selection.md).
+# Owner-approved comparison sites for CD1 (selection record: review/cd1-comparison-site-selection.md).
 criteria: |
   1. Launched before 2015, defined as open_beta_date < 2015-01-01 (the API's launch_date is unreliable:
      it is often the graduation date or a bulk placeholder). Why: long pre-period for parallel-trends checks.
@@ -12,7 +12,7 @@ criteria: |
   5. A normal, active main site (site_type=main_site, site_state=normal); not a meta or StackApps site.
 approved_by_owner: true
 approved_on: 2026-11-17
-selection_record: review/c1-comparison-site-selection.md
+selection_record: review/cd1-comparison-site-selection.md
 sites:
   - api_site_name: diy
     name: Home Improvement

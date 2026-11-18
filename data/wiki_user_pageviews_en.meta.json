@@ -1,6 +1,6 @@
 {
   "series_id": "wiki_user_pageviews_en",
-  "indicator_id": "C1",
+  "indicator_id": "CD1",
   "title": "English Wikipedia human pageviews per month",
   "units": "pageviews per month",
   "frequency": "monthly",

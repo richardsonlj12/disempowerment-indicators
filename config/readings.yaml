@@ -1,7 +1,7 @@
 # Stage 1: every indicator is "Not yet reviewed". Readings are dated human judgments.
 readings:
-  - {indicator_id: E1, state: not_yet_reviewed, date: 2026-11-17, kind: current}
-  - {indicator_id: E2, state: not_yet_reviewed, date: 2026-11-17, kind: current}
-  - {indicator_id: E3, state: not_yet_reviewed, date: 2026-11-17, kind: current}
-  - {indicator_id: G1, state: not_yet_reviewed, date: 2026-11-17, kind: current}
-  - {indicator_id: C1, state: not_yet_reviewed, date: 2026-11-17, kind: current}
+  - {indicator_id: ED1, state: not_yet_reviewed, date: 2026-11-17, kind: current}
+  - {indicator_id: EA1, state: not_yet_reviewed, date: 2026-11-17, kind: current}
+  - {indicator_id: EA2, state: not_yet_reviewed, date: 2026-11-17, kind: current}
+  - {indicator_id: GD1, state: not_yet_reviewed, date: 2026-11-17, kind: current}
+  - {indicator_id: CD1, state: not_yet_reviewed, date: 2026-11-17, kind: current}

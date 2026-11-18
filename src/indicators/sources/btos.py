@@ -1,4 +1,4 @@
-"""E2: share of US firms using AI, from the Census Business Trends and Outlook Survey (BTOS).
+"""EA1: share of US firms using AI, from the Census Business Trends and Outlook Survey (BTOS).
 
 Keyless: public Census workbooks.
 - `National.xlsx` (current): question 7 (use "in any business function"), from the 2025-11-17 collection.
@@ -177,7 +177,7 @@ def _by_size(wb: openpyxl.Workbook, fetched_at: str) -> tuple[pd.DataFrame, Seri
     question = str(next(iter(est.values()))[2])
     meta = SeriesMeta(
         series_id="btos_ai_use_by_size",
-        indicator_id="E2",
+        indicator_id="EA1",
         title="Share of US firms using AI, by firm employment size class (firm-weighted)",
         units="percent",
         frequency="biweekly",
@@ -239,7 +239,7 @@ def fetch() -> list[tuple[pd.DataFrame, SeriesMeta]]:
 
     meta = SeriesMeta(
         series_id="btos_ai_use",
-        indicator_id="E2",
+        indicator_id="EA1",
         title="Share of US firms using AI (firm-weighted)",
         units="percent",
         frequency="biweekly",

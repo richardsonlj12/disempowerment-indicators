@@ -1,6 +1,6 @@
 {
   "series_id": "aei_automation_share",
-  "indicator_id": "E3",
+  "indicator_id": "EA2",
   "title": "Automation share of categorized Claude.ai conversations",
   "units": "percent",
   "frequency": "irregular",

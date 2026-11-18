@@ -1,4 +1,4 @@
-"""E3: automation and augmentation share of Claude.ai conversations (Anthropic Economic Index).
+"""EA2: automation and augmentation share of Claude.ai conversations (Anthropic Economic Index).
 
 Keyless: public files of the Hugging Face dataset `Anthropic/EconomicIndex`.
 
@@ -308,7 +308,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
     def meta(series_id: str, title: str, role: str, df: pd.DataFrame) -> SeriesMeta:
         return SeriesMeta(
             series_id=series_id,
-            indicator_id="E3",
+            indicator_id="EA2",
             title=title,
             units="percent",
             frequency="irregular",

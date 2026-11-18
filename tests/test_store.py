@@ -19,7 +19,7 @@ from indicators.store import (
 def make_meta(**kw):
     base = dict(
         series_id="test_series",
-        indicator_id="E1",
+        indicator_id="ED1",
         title="Test series",
         units="percent",
         frequency="monthly",

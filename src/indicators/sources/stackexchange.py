@@ -1,4 +1,4 @@
-"""C1: monthly new-question counts on Stack Overflow and owner-approved comparison sites.
+"""CD1: monthly new-question counts on Stack Overflow and owner-approved comparison sites.
 
 Keyless Stack Exchange API (anonymous quota: 300 requests a day per IP). The API has no
 aggregate-by-month route, so each site-month costs one `/2.3/questions` call with
@@ -81,7 +81,7 @@ RELATIVE_BOUND = 3
 ALL_TIME_SHARE = 0.99
 RETRY_PAUSE_SECONDS = 30
 LICENSE = "CC BY-SA"
-DEFAULT_SITES_PATH = Path(__file__).resolve().parents[3] / "config" / "c1_comparison_sites.yaml"
+DEFAULT_SITES_PATH = Path(__file__).resolve().parents[3] / "config" / "cd1_comparison_sites.yaml"
 
 _clock = time.time  # patched in tests
 _sleep = time.sleep  # patched in tests
@@ -134,7 +134,7 @@ def load_sites(path: Path | str | None = None) -> dict:
     """Read the comparison-site config; refuse to proceed unless the owner approved it."""
     config = yaml.safe_load(Path(path or DEFAULT_SITES_PATH).read_text(encoding="utf-8"))
     if config.get("approved_by_owner") is not True or not config.get("approved_on"):
-        raise SourceError("C1 comparison sites are not owner-approved (approved_by_owner and approved_on); nothing fetched")
+        raise SourceError("CD1 comparison sites are not owner-approved (approved_by_owner and approved_on); nothing fetched")
     return config
 
 
@@ -339,7 +339,7 @@ def fetch(
     start_month: str | None = None,
     today: date | None = None,
 ) -> list[tuple[pd.DataFrame, SeriesMeta]]:
-    """Fetch (resuming from cache) and return the C1 Stack Exchange series (seven, or three on a short run).
+    """Fetch (resuming from cache) and return the CD1 Stack Exchange series (seven, or three on a short run).
 
     `start_month` ("YYYY-MM") limits how far back to fetch, for smoke tests. `today` is for tests.
     """
@@ -406,7 +406,7 @@ def fetch(
     fetched_at = utc_now_iso()
     through = _key(last_complete) + "-01"
     common = dict(
-        indicator_id="C1",
+        indicator_id="CD1",
         frequency="monthly",
         source_name="Stack Exchange API",
         source_url=DOCS_URL,

@@ -52,7 +52,7 @@ This series measures AI use directly and has no history before AI. Its baseline 
 ## What it doesn't show
 
 - **It does not show disempowerment.** The **AI link** is **strong** because this series measures AI use directly. "Strong" means only that a change in the series is a change in AI use. It is not strong evidence of harm, and it does not mean the series shows lost leverage.
-- **It does not show how AI is used.** A firm that uses AI to help its staff (augmentation) and a firm that uses it to do the work instead of its staff (replacement) both answer "Yes." Adoption that augments workers may strengthen their position. Adoption that replaces them may weaken it. KEEL's next indicator, E3, is the nearest public data on a related split, and it covers one vendor's product.
+- **It does not show how AI is used.** A firm that uses AI to help its staff (augmentation) and a firm that uses it to do the work instead of its staff (replacement) both answer "Yes." Adoption that augments workers may strengthen their position. Adoption that replaces them may weaken it. KEEL's next indicator, how AI is used (EA2), is the nearest public data on a related split, and it covers one vendor's product.
 - **It does not show how much AI a firm uses.** A firm that tried one tool once and a firm that runs core operations on AI count the same.
 - **It does not measure welfare.** Wider AI use may raise output and incomes while shifting who has influence, or the reverse. This series speaks to neither.
 
@@ -64,7 +64,7 @@ Rising adoption would show AI spreading through firms. By itself it does not sho
 
 ### Alternative explanations
 
-- **Shallow or helpful use.** Adoption may be shallow or experimental, and may help workers rather than replace them. If adoption keeps rising while the displacement indicators (E1, labor share; G1, labor-based tax share) hold steady, that explanation becomes more likely. Adoption that rises alongside displacement signals would be consistent with the disempowerment scenario. It would still not prove it.
+- **Shallow or helpful use.** Adoption may be shallow or experimental, and may help workers rather than replace them. If adoption keeps rising while the displacement indicators (ED1, labor share; GD1, labor-based tax share) hold steady, that explanation becomes more likely. Adoption that rises alongside displacement signals would be consistent with the disempowerment scenario. It would still not prove it.
 - **Changes in how firms answer.** A move between "Do not know" and "Yes," or a change in the question, can shift the series with no change in actual use.
 
 These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.

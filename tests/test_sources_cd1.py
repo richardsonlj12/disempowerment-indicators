@@ -1,4 +1,4 @@
-"""Tests for the Stack Exchange and Wikimedia source modules (C1)."""
+"""Tests for the Stack Exchange and Wikimedia source modules (CD1)."""
 
 import json
 import re
@@ -17,7 +17,7 @@ from indicators.store import FREQUENCIES, ROLES, validate_frame
 
 FIXTURES = Path(__file__).parent / "fixtures" / "wikimedia"
 ROOT = Path(__file__).resolve().parent.parent
-SITES_YAML = ROOT / "config" / "c1_comparison_sites.yaml"
+SITES_YAML = ROOT / "config" / "cd1_comparison_sites.yaml"
 SE_URL = "https://api.stackexchange.com/2.3/questions"
 
 TODAY = date(2024, 6, 15)  # complete months: up to 2024-05; current month 2024-06
@@ -172,7 +172,7 @@ def test_relative_yoy_written(tmp_path):
     }
     yoy, meta = results["so_vs_comparison_yoy"]
     validate_frame(yoy)
-    assert meta.indicator_id == "C1" and meta.role == "context"
+    assert meta.indicator_id == "CD1" and meta.role == "context"
     assert meta.frequency == "monthly" and meta.units == "percentage points"
     # SO is +10% year over year, the comparison sites are flat, so the difference is 10.
     assert yoy["date"].min() == pd.Timestamp("2024-01-01") and yoy["date"].max() == pd.Timestamp("2024-05-01")
@@ -194,7 +194,7 @@ def test_relative_index_series_from_full_history():
             "so_change_since_chatgpt", "so_vs_comparison_yoy"} <= set(results)
     idx, meta = results["so_relative_index"]
     validate_frame(idx)
-    assert meta.role == "primary" and meta.units == "index (2019 = 100)" and meta.indicator_id == "C1"
+    assert meta.role == "primary" and meta.units == "index (2019 = 100)" and meta.indicator_id == "CD1"
     assert "not a causal estimate" in meta.notes and "2019 = 100" in meta.notes
     for sid in ("so_relative_index", "so_relative_index_loo_min", "so_relative_index_loo_max"):
         assert "November 2022" in results[sid][1].notes  # the reference of so_change_since_chatgpt
@@ -235,7 +235,7 @@ def test_comparison_series_shape_and_unadopted_sites_never_requested():
     assert not requested & {"gaming", "worldbuilding", "judaism"}
     comp, meta = results["se_comparison_questions_monthly"]
     validate_frame(comp)
-    assert meta.indicator_id == "C1" and meta.role == "comparison"
+    assert meta.indicator_id == "CD1" and meta.role == "comparison"
     assert meta.frequency in FREQUENCIES and meta.role in ROLES
     assert meta.license == "CC BY-SA"
     assert set(comp["group"]) == {"diy", "travel", "rpg", "scifi"}
@@ -654,7 +654,7 @@ def test_wikimedia_break_assigned():
     assert (before["segment"] == 0).all() and (after["segment"] == 1).all()
     assert df["date"].iloc[0] == pd.Timestamp("2015-07-01")
     assert df["value"].iloc[0] == 7665421980.0 and df["value"].dtype == float
-    assert meta.indicator_id == "C1" and meta.role == "context" and meta.frequency == "monthly"
+    assert meta.indicator_id == "CD1" and meta.role == "context" and meta.frequency == "monthly"
     assert "agent=user" in meta.notes or "agent user" in meta.notes
 
 
@@ -668,7 +668,7 @@ def test_wikimedia_active_editors_sum_five_plus_edit_levels():
     assert by_date[pd.Timestamp("2015-01-01")] == 26434 + 8000 + 3500
     assert by_date[pd.Timestamp("2010-01-01")] == 26000 + 9000 + 4000
     assert meta.breaks == [] and "segment" not in df.columns or (df["segment"] == 0).all()
-    assert meta.indicator_id == "C1" and meta.role == "context"
+    assert meta.indicator_id == "CD1" and meta.role == "context"
 
 
 @responses.activate

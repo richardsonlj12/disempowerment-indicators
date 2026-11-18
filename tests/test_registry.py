@@ -27,9 +27,19 @@ def registry():
     return load_registry(IND)
 
 
+def test_every_committed_meta_indicator_id_is_a_registry_id(registry):
+    import json
+
+    ids = {i.id for i in registry[0]}
+    metas = sorted((ROOT / "data").glob("*.meta.json"))
+    assert metas
+    for path in metas:
+        assert json.loads(path.read_text(encoding="utf-8"))["indicator_id"] in ids, path.name
+
+
 def test_release1_ids(registry):
     indicators, _, _ = registry
-    assert {i.id for i in indicators} == {"E1", "E2", "E3", "G1", "C1"}
+    assert {i.id for i in indicators} == {"ED1", "EA1", "EA2", "GD1", "CD1"}
     assert all(i.release == 1 for i in indicators)
 
 
@@ -38,7 +48,7 @@ def test_exposure_layer_uses_exposure_scale(registry):
         assert (i.layer == "exposure") == (i.scale == "exposure")
 
 
-@pytest.mark.parametrize("ind,state", [("E2", "below"), ("E1", "rising")])
+@pytest.mark.parametrize("ind,state", [("EA1", "below"), ("ED1", "rising")])
 def test_reading_state_matches_scale(registry, tmp_path, ind, state):
     p = tmp_path / "r.yaml"
     p.write_text(f"readings:\n  - {{indicator_id: {ind}, state: {state}, date: 2026-11-17}}\n")
@@ -54,7 +64,7 @@ def test_all_readings_not_yet_reviewed(registry):
 
 
 def test_current_reading_defaults_when_missing():
-    assert current_reading({}, "E1").state == "not_yet_reviewed"
+    assert current_reading({}, "ED1").state == "not_yet_reviewed"
 
 
 def _front_matter_and_body(path):
@@ -95,7 +105,7 @@ def test_registry_has_no_page_prose_fields():
 
 
 def test_e3_has_caveat_and_disclosure(registry):
-    e3 = next(i for i in registry[0] if i.id == "E3")
+    e3 = next(i for i in registry[0] if i.id == "EA2")
     assert e3.headline_caveat == "One vendor, one product: Claude usage only"
     assert "Anthropic" in e3.disclosure and "Claude" in e3.disclosure
 
@@ -138,27 +148,27 @@ MARKERS = ROOT / "config" / "chart_markers.yaml"
 
 def test_chart_markers_are_verified_and_sourced():
     markers = load_chart_markers(MARKERS)
-    assert set(markers) <= {"all", "E1", "E2", "E3", "G1", "C1"}
+    assert set(markers) <= {"all", "ED1", "EA1", "EA2", "GD1", "CD1"}
     for rows in markers.values():
         for m in rows:
             assert m["verified"] is True and m["source_url"].startswith("https://") and m["label"]
 
 
 def test_markers_for_merges_all_and_sorts_by_date():
-    out = markers_for(load_chart_markers(MARKERS), "C1")
+    out = markers_for(load_chart_markers(MARKERS), "CD1")
     assert [m["date"] for m in out] == sorted(m["date"] for m in out)
     assert {"date": "2022-11-30", "label": "ChatGPT released to the public"} in out
     assert any("Copilot" in m["label"] for m in out)
     assert all(set(m) == {"date", "label"} for m in out)
-    e2 = markers_for(load_chart_markers(MARKERS), "E2")
+    e2 = markers_for(load_chart_markers(MARKERS), "EA1")
     assert any(m["date"] == "2026-10-19" and "Super Intelligence" in m["label"] for m in e2)
-    assert [m["date"] for m in markers_for(load_chart_markers(MARKERS), "E1")] == ["2022-11-30"]
+    assert [m["date"] for m in markers_for(load_chart_markers(MARKERS), "ED1")] == ["2022-11-30"]
 
 
 def test_unverified_markers_are_dropped(tmp_path):
     p = tmp_path / "m.yaml"
     p.write_text("markers:\n  all:\n    - {date: 2020-01-01, label: x, source_url: https://e.org, verified: false}\n")
-    assert markers_for(load_chart_markers(p), "E1") == []
+    assert markers_for(load_chart_markers(p), "ED1") == []
 
 
 def test_ai_link_values(registry):

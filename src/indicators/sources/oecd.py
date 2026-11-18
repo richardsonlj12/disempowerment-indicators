@@ -1,4 +1,4 @@
-"""G1 comparison series: OECD Revenue Statistics via the keyless SDMX endpoint.
+"""GD1 comparison series: OECD Revenue Statistics via the keyless SDMX endpoint.
 
 Labor-based share = (personal income tax 1100 + social security contributions 2000)
 as a percentage of total tax revenue, general government, annual.
@@ -70,7 +70,7 @@ def fetch() -> list[tuple[pd.DataFrame, SeriesMeta]]:
         df = _labor_share(rows, area)
         meta = SeriesMeta(
             series_id=series_id,
-            indicator_id="G1",
+            indicator_id="GD1",
             title=f"Labor-based share of tax revenue, {label}",
             units="percent",
             frequency="annual",
