@@ -23,7 +23,7 @@ website:
           - href: indicators/EA1.qmd
             text: "Firm AI adoption (EA1)"
           - href: indicators/EA2.qmd
-            text: "Automation vs. Augmentation (EA2)"
+            text: "Automation vs. augmentation (EA2)"
           - href: indicators/ED1.qmd
             text: "Labor share of income (ED1)"
           - href: indicators/GD1.qmd

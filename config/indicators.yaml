@@ -57,7 +57,7 @@ indicators:
     domain: economic
     layer: exposure
     scale: exposure
-    name: Automation vs. Augmentation
+    name: Automation vs. augmentation
     ai_link: strong
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: Measures how AI is used, directly, but only for one vendor's product.
