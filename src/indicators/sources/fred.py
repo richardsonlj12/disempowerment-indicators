@@ -111,7 +111,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         indicator_id="E1",
         title="Labor share of income, nonfarm business sector",
         source_name="BLS Productivity and Costs",
-        source_url="https://www.bls.gov/lpc/",
+        source_url="https://www.bls.gov/productivity/home.htm",
         max_lag_days=150,
         role="primary",
         notes=(

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+import yaml
 
 from indicators.registry import (
     STATE_LABELS, SCALE_STATES, current_reading, load_chart_markers, load_readings, load_registry,
@@ -10,6 +11,7 @@ from indicators.registry import (
 ROOT = Path(__file__).resolve().parent.parent
 IND = ROOT / "config" / "indicators.yaml"
 READ = ROOT / "config" / "readings.yaml"
+CONTENT = ROOT / "content" / "indicators"
 
 
 @pytest.fixture
@@ -47,11 +49,34 @@ def test_current_reading_defaults_when_missing():
     assert current_reading({}, "E1").state == "not_yet_reviewed"
 
 
-def test_every_indicator_has_warning_sign_and_alternative_explanations(registry):
+def _front_matter_and_body(path):
+    text = path.read_text(encoding="utf-8")
+    _, fm, body = text.split("---", 2)
+    return yaml.safe_load(fm), body
+
+
+def test_every_indicator_has_ai_link_criteria(registry):
     for i in registry[0]:
-        assert i.warning_sign.strip() and i.alternative_explanations.strip()
         assert set(i.ai_link_criteria) == {
             "directness", "comparison_group", "timing", "confounders"}
+
+
+def test_every_content_page_has_summary_warning_sign_and_subheadings(registry):
+    """Page prose lives in content/indicators/[ID].md (single source of truth)."""
+    for i in registry[0]:
+        fm, body = _front_matter_and_body(CONTENT / f"{i.id}.md")
+        assert str(fm.get("summary") or "").strip(), i.id
+        assert str(fm.get("warning_sign") or "").strip(), i.id
+        assert content_summary(fm) == fm["summary"]
+        lines = body.splitlines()
+        assert "### Warning sign" in lines, i.id
+        assert "### Alternative explanations" in lines, i.id
+
+
+def test_registry_has_no_page_prose_fields():
+    data = yaml.safe_load(IND.read_text(encoding="utf-8"))
+    for row in data["indicators"]:
+        assert not {"summary", "warning_sign", "alternative_explanations"} & set(row), row["id"]
 
 
 def test_e3_has_caveat_and_disclosure(registry):
@@ -121,9 +146,9 @@ def test_unverified_markers_are_dropped(tmp_path):
     assert markers_for(load_chart_markers(p), "E1") == []
 
 
-def test_ai_link_values_and_summary_present(registry):
+def test_ai_link_values(registry):
     for i in registry[0]:
-        assert i.ai_link in {"strong", "moderate", "weak"} and i.summary.strip()
+        assert i.ai_link in {"strong", "moderate", "weak"}
 
 
 def test_layer_display_names():

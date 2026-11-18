@@ -42,12 +42,9 @@ class Indicator:
     layer: str
     scale: str
     name: str
-    summary: str
     ai_link: str  # strong | moderate | weak: how directly the series ties to AI (the "AI link" badge)
     ai_link_criteria: dict
     timing: str
-    warning_sign: str
-    alternative_explanations: str
     comparison: str
     tier: int
     series: list[str]

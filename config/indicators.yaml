@@ -1,4 +1,5 @@
-# Release 1 indicator registry. Summaries state no numbers (figures are verified and added later).
+# Release 1 indicator registry. Page prose (summary, warning sign, alternative explanations) lives in
+# content/indicators/[ID].md front matter and headings, the single source of truth.
 indicators:
   - id: E1
     release: 1
@@ -6,7 +7,6 @@ indicators:
     layer: erosion
     scale: baseline
     name: Labor share of income, nonfarm business
-    summary: The share of business income paid to workers, shown over its full history with the profit share alongside for context.
     ai_link: weak
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: A broad outcome that AI is one possible cause of, not a measure of AI itself.
@@ -14,8 +14,6 @@ indicators:
       timing: The decline began decades before generative AI spread in late 2022.
       confounders: Many documented non-AI causes, including globalization, market concentration and the sector mix of the economy.
     timing: lagging
-    warning_sign: A falling labor share would be consistent with eroding human leverage in the economy.
-    alternative_explanations: Labor share could hold steady while work shifts into low-leverage sectors (the relational-sector argument), so a flat line is not proof that leverage is intact.
     comparison: structural
     tier: 1
     series: [labor_share_nfb, profit_share]
@@ -36,7 +34,6 @@ indicators:
     layer: exposure
     scale: exposure
     name: Firm AI adoption
-    summary: The share of US firms reporting that they use AI, measured firm-weighted; exposure only, not evidence of lost leverage.
     ai_link: strong
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: Measures AI use by firms directly.
@@ -44,8 +41,6 @@ indicators:
       timing: Question wording changed in November 2025, so the series has a break that must be annotated.
       confounders: Strong here means only that AI is measured directly; it does not show disempowerment.
     timing: leading
-    warning_sign: Rising adoption would be consistent with growing AI exposure in firms; by itself it does not show lost human leverage.
-    alternative_explanations: Adoption may be shallow or experimental, and augmenting workers rather than replacing them.
     comparison: ai_native
     tier: 1
     series: [btos_ai_use, btos_ai_use_by_size]
@@ -63,7 +58,6 @@ indicators:
     layer: exposure
     scale: exposure
     name: How AI is used, automation versus augmentation
-    summary: The share of tasks handed over to AI entirely versus done together with a person, the nearest free public proxy for depth of AI exposure.
     ai_link: strong
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: Measures how AI is used, directly, but only for one vendor's product.
@@ -71,8 +65,6 @@ indicators:
       timing: Begins after generative AI was available, so timing is not a test here.
       confounders: Changes in the vendor's products (for example agentic tools) can move the series without any change in society.
     timing: leading
-    warning_sign: A rising automation share would be consistent with decisions and tasks moving from people to AI.
-    alternative_explanations: A rising automation share may reflect the vendor's own product changes rather than society delegating more.
     comparison: ai_native
     tier: 2
     series: [aei_automation_share, aei_augmentation_share]
@@ -90,7 +82,6 @@ indicators:
     layer: erosion
     scale: baseline
     name: Labor-based share of tax revenue
-    summary: The share of tax revenue that comes from taxes on workers (personal income tax and social contributions); the cleanest test of the state-dependence argument.
     ai_link: weak
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: A broad fiscal outcome, not a measure of AI.
@@ -98,8 +89,6 @@ indicators:
       timing: Not yet established that any change followed generative AI.
       confounders: Tax policy, the business cycle and demographics all move this share.
     timing: lagging
-    warning_sign: A falling labor-based share would be consistent with the state depending less on taxing workers; a rising share points away from disempowerment.
-    alternative_explanations: A state can co-opt citizens through transfers (the rentier pattern), so this is the cleanest test of state dependence, not a guarantee.
     comparison: structural
     tier: 1
     series: [us_labor_tax_share, oecd_labor_tax_share_usa, oecd_labor_tax_share_avg]
@@ -120,7 +109,6 @@ indicators:
     layer: erosion
     scale: baseline
     name: Human knowledge-commons activity
-    summary: Stack Overflow question activity relative to a fixed set of non-programming Stack Exchange sites (a relative-activity index, 2019 = 100), with Wikipedia human pageviews and editors alongside.
     ai_link: moderate
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: Measures activity on public knowledge sites, not AI use or human capacity.
@@ -128,8 +116,6 @@ indicators:
       timing: Stack Overflow declined from about 2020, before generative AI, so timing only partly fits.
       confounders: Site policy, community changes and the pre-ChatGPT decline are partly addressed by the contrast.
     timing: leading
-    warning_sign: Stack Overflow falling faster than comparison sites would be consistent with people turning from human knowledge communities to AI.
-    alternative_explanations: Falling Wikipedia pageviews may reflect AI intermediation (people still consume its content through chatbots) rather than human disengagement.
     comparison: structural
     tier: 1
     series: [so_relative_index, so_relative_index_loo_min, so_relative_index_loo_max, so_change_since_chatgpt, so_vs_comparison_yoy, so_questions_monthly, se_comparison_questions_monthly, wiki_user_pageviews_en, wiki_active_editors_en]
@@ -157,5 +143,6 @@ grid:
   - {layer: lockin, domain: cultural, indicator_ids: [], empty_label: No public measure yet}
 
 oversight:
+  row_label: Human deferral and oversight
   label: No public measure yet
   citation_ref: herdagdelen2026
