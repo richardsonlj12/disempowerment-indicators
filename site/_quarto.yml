@@ -1,0 +1,51 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - "data/*.csv"
+    - "data/*.json"
+    - "config/*.yaml"
+    - "config/curated/*.yaml"
+    - "js/*.js"
+
+website:
+  # No website title: Quarto would append " – KEEL" to every browser title. Each page sets
+  # pagetitle "[Page] · KEEL", and the navbar carries the name.
+  description: Indicators of gradual disempowerment
+  site-url: https://richardsonlj12.github.io/keel/
+  navbar:
+    title: KEEL
+    left:
+      - href: index.qmd
+        text: Summary
+      - text: Indicators
+        menu:
+          - href: indicators/E1.qmd
+            text: "E1 · Labor share of income, nonfarm business"
+          - href: indicators/E2.qmd
+            text: "E2 · Firm AI adoption"
+          - href: indicators/E3.qmd
+            text: "E3 · How AI is used, automation versus augmentation"
+          - href: indicators/G1.qmd
+            text: "G1 · Labor-based share of tax revenue"
+          - href: indicators/C1.qmd
+            text: "C1 · Human knowledge-commons activity"
+      - href: methodology.qmd
+        text: Methodology
+      - href: archive.qmd
+        text: Archive
+      - href: about.qmd
+        text: About
+  page-footer:
+    center: "by Jeremy Richardson · [Substack](https://richardsonlj.substack.com/)"
+
+format:
+  html:
+    theme:
+      light: [cosmo, styles.scss]
+      dark: [darkly, styles.scss]
+    toc: true
+    toc-depth: 3
+    link-external-newwindow: false
+    lang: en
+    respect-user-color-scheme: true

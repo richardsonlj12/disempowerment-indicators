@@ -1,0 +1,9 @@
+---
+title: Archive
+pagetitle: Archive · KEEL
+toc: false
+---
+
+No snapshots yet; the first retrospective snapshot will appear here in Stage 3.
+
+The Archive will keep, each with its date, every earlier retrospective snapshot, every past "what the data is telling us" statement and every superseded threshold rule.

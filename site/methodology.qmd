@@ -1,0 +1,6 @@
+---
+title: Methodology
+pagetitle: Methodology · KEEL
+---
+
+{{< include _generated/methodology.md >}}

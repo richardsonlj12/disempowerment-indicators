@@ -1,0 +1,37 @@
+---
+%%FRONT_MATTER%%
+---
+
+%%SUMMARY_TABLE%%
+
+%%NOTICES%%
+
+%%WHY%%
+
+## Chart
+
+%%CHART%%
+
+## Reading history
+
+%%READING_HISTORY%%
+
+%%SHOWS%%
+
+%%DOESNT_SHOW%%
+
+%%CHANGE%%
+
+%%DATA_AND_CALCULATION%%
+
+## Method
+
+%%METHOD%%
+
+%%CAVEATS%%
+
+## Download the data
+
+%%DOWNLOADS%%
+
+Earlier snapshots and superseded rules will be kept in the [Archive](../archive.qmd).

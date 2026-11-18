@@ -1,0 +1,8 @@
+---
+title: KEEL
+subtitle: Indicators of gradual disempowerment
+pagetitle: Summary · KEEL
+toc: false
+---
+
+{{< include _generated/summary.md >}}

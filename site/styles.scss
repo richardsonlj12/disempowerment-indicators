@@ -1,0 +1,168 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
+// Chart series colors, read by js/charts.js. Dark values are lighter so they keep contrast.
+body {
+  --keel-c0: #1f5fa8;
+  --keel-c1: #c0501c;
+  --keel-c2: #0f7a6c;
+  --keel-c3: #7a3fb8;
+  --keel-c4: #a3263b;
+  --keel-c5: #4f7a12;
+  --keel-c6: #8a6a00;
+  --keel-c7: #50606f;
+  --keel-border: rgba(110, 110, 110, 0.45);
+  --keel-soft: rgba(110, 110, 110, 0.08);
+}
+
+body.quarto-dark {
+  --keel-c0: #7ab0ff;
+  --keel-c1: #ff9a5c;
+  --keel-c2: #4fd1bd;
+  --keel-c3: #c7a2ff;
+  --keel-c4: #ff7f93;
+  --keel-c5: #a6d65e;
+  --keel-c6: #e8c552;
+  --keel-c7: #b4c2d0;
+  --keel-border: rgba(200, 200, 200, 0.4);
+  --keel-soft: rgba(200, 200, 200, 0.07);
+}
+
+// Long URLs and table cells wrap instead of widening the page at phone width.
+#quarto-document-content {
+  overflow-wrap: break-word;
+  td,
+  th {
+    overflow-wrap: anywhere;
+  }
+}
+
+// Summary table at the top of each indicator page.
+.keel-summary table {
+  width: 100%;
+  td {
+    vertical-align: top;
+  }
+  td:first-child {
+    font-weight: 600;
+    width: 24%;
+    min-width: 7rem;
+  }
+}
+
+// Scorecard grid on the summary page.
+.keel-grid {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.7fr) repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.keel-cell,
+.keel-oversight {
+  border: 1px solid var(--keel-border);
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--keel-soft);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.keel-rowhead,
+.keel-colhead {
+  padding: 0.6rem 0.25rem;
+  align-self: center;
+}
+
+.keel-oversight {
+  grid-column: 1 / -1;
+}
+
+.keel-cell-caption {
+  display: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.keel-badge {
+  display: inline-block;
+  border: 1px solid currentColor;
+  border-radius: 1rem;
+  padding: 0 0.5rem;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.keel-badge-strong {
+  font-weight: 700;
+}
+
+.keel-badge-weak {
+  border-style: dashed;
+}
+
+@media (max-width: 767.98px) {
+  .keel-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .keel-corner,
+  .keel-colhead {
+    display: none;
+  }
+  .keel-rowhead {
+    padding-top: 1rem;
+  }
+  .keel-cell-caption {
+    display: block;
+  }
+  .keel-summary td:first-child {
+    width: 34%;
+  }
+}
+
+// Charts.
+.keel-chart {
+  margin: 0.5rem 0 1rem;
+  svg {
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+    // Plot defaults to a white background; follow the page theme instead (also used by tooltips).
+    --plot-background: var(--bs-body-bg) !important;
+    background: transparent !important;
+    color: var(--bs-body-color) !important;
+  }
+}
+
+.keel-chart-message {
+  border: 1px dashed var(--keel-border);
+  border-radius: 0.4rem;
+  padding: 1rem;
+}
+
+.keel-chart-notes {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  padding-left: 1.25rem;
+}
+
+.keel-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.keel-legend-swatch {
+  display: inline-block;
+  width: 1.25rem;
+  height: 0.2rem;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+}

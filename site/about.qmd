@@ -1,0 +1,32 @@
+---
+title: About
+pagetitle: About · KEEL
+---
+
+## Purpose
+
+KEEL (Key Evidence on Eroding Leverage) tracks free public data on whether the conditions for gradual disempowerment are present: the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event. Each indicator page shows the data, how it is calculated, what it does and does not show, and what would change our reading. The [methodology](methodology.qmd) explains how the indicators fit together and how readings will work.
+
+These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.
+
+## About the author
+
+[OWNER TO EDIT] KEEL is written and maintained by Jeremy Richardson, Ph.D. He writes about gradual disempowerment and related questions on [Substack](https://richardsonlj.substack.com/).
+
+## How to cite
+
+Richardson, J. (2026). *KEEL: Indicators of gradual disempowerment*. https://richardsonlj12.github.io/keel/ (accessed [date]).
+
+Each indicator page links to its data as CSV files. Please cite the original source of any series as well; each page lists sources and licenses under "Method".
+
+## Report an error or give feedback
+
+We welcome constructive and honest feedback on this project.
+
+- [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) (GitHub issue)
+- [Give feedback](https://github.com/richardsonlj12/keel/discussions) (GitHub Discussions)
+- Feedback form: [feedback form link]
+
+## Disclosure
+
+KEEL is built with assistance from Claude (Anthropic). One indicator (E3) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.

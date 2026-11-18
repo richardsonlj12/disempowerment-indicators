@@ -9,3 +9,4 @@ site/indicators/
 .DS_Store
 .claude/
 .superpowers/
+site/_generated/
