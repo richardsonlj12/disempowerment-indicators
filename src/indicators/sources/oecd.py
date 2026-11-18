@@ -28,6 +28,14 @@ SERIES = (
 )
 
 
+# Ruling R15: the DF_RSOECD dataflow metadata carries no licence or restriction annotation
+# (checked 2026-11-18), so the series are published with this attribution.
+ATTRIBUTION = (
+    "Source: OECD, Revenue Statistics 2025. "
+    "OECD terms and conditions: https://www.oecd.org/en/about/terms-conditions.html"
+)
+
+
 def _labor_share(rows: pd.DataFrame, area: str) -> pd.DataFrame:
     sub = rows[rows["REF_AREA"] == area]
     wide = sub.pivot_table(index="TIME_PERIOD", columns="STANDARD_REVENUE", values="OBS_VALUE", aggfunc="first")
@@ -63,7 +71,7 @@ def fetch() -> list[tuple[pd.DataFrame, SeriesMeta]]:
             frequency="annual",
             source_name="OECD Revenue Statistics",
             source_url="https://data-explorer.oecd.org/?df[ds]=DisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS",
-            license="OECD terms and conditions: https://www.oecd.org/en/about/terms-conditions.html",
+            license=ATTRIBUTION,
             fetched_at=fetched_at,
             data_through=df["date"].max().strftime("%Y-%m-%d"),
             max_lag_days=730,

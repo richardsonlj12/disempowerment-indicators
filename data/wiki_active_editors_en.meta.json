@@ -11,6 +11,6 @@
   "data_through": "2026-09-01",
   "max_lag_days": 75,
   "breaks": [],
-  "notes": "en.wikipedia, editor type user (registered, non-bot), all page types. Active editors are those with 5 or more edits in the month: the sum of the 5..24, 25..99 and 100.. edit activity levels.",
+  "notes": "en.wikipedia, editor type user (logged-in editors not counted as bots by bot group or by a user name containing 'bot'), all page types. Active editors are those with 5 or more edits in the month: the sum of the 5..24, 25..99 and 100.. edit activity levels.",
   "role": "context"
 }

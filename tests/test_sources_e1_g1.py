@@ -119,6 +119,16 @@ def test_oecd_labor_share_formula():
 
 
 @responses.activate
+def test_oecd_meta_carries_attribution():
+    # Ruling R15: no licence or restriction annotation in the DF_RSOECD metadata, so the
+    # series are published with the OECD attribution in the downloadable metadata.
+    _mock_oecd()
+    for _, meta in oecd.fetch():
+        assert meta.license.startswith("Source: OECD, Revenue Statistics 2025.")
+        assert "https://www.oecd.org/en/about/terms-conditions.html" in meta.license
+
+
+@responses.activate
 def test_oecd_drops_years_missing_a_component():
     body = _fixture("oecd", "revenue_statistics.csv")
     lines = body.splitlines()

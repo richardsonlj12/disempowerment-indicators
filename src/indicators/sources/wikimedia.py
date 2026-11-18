@@ -3,7 +3,8 @@
 - Pageviews: `/metrics/pageviews/aggregate/en.wikipedia/all-access/user/monthly/...` (agent `user`,
   which excludes spiders and automated traffic), available from 2015-07.
 - Active editors: `/metrics/editors/aggregate/en.wikipedia/user/all-page-types/[level]/monthly/...`
-  for editor type `user` (registered, non-bot). Wikimedia defines an active editor as one with 5 or
+  for editor type `user`, which Wikistats defines as "logged in users that are not considered a bot
+  by name or group" (not in the bot user group and no "bot" in the user name). Wikimedia defines an active editor as one with 5 or
   more edits in the month, so the levels 5..24, 25..99 and 100.. are summed.
 
 Wikimedia states that it changed its bot detection in 2025 and reclassified March to August 2025
@@ -131,7 +132,8 @@ def fetch(data_dir: Path | str = "data", today: date | None = None) -> list[tupl
         breaks=[],
         role="context",
         notes=(
-            "en.wikipedia, editor type user (registered, non-bot), all page types. Active editors are "
+            "en.wikipedia, editor type user (logged-in editors not counted as bots by bot group or by a "
+            "user name containing 'bot'), all page types. Active editors are "
             "those with 5 or more edits in the month: the sum of the 5..24, 25..99 and 100.. edit "
             "activity levels."
         ),
