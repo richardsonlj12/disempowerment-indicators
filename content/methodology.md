@@ -38,7 +38,7 @@ A fourth row, **human deferral and oversight**, runs across all three domains. I
 | This site's row | Chooi, Lee and Li's term | How they relate |
 |---|---|---|
 | **Adoption:** AI entering a system (E2, E3) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it. We agree, and the adoption row's pages say so. |
-| **Displacement:** a whole system depending less on human participation (E1, G1, C1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states and knowledge communities. This follows Kulveit et al. |
+| **Displacement:** a whole system depending less on human participation (E1, G1, C1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
 | Not measured | **Erosion:** individuals losing the ability to do a task without AI | None of the site's indicators measures individual capability. This is the largest gap between the site and the paper. |
 | **Lock-in:** reduced dependence becoming hard to restore (empty for now) | **Lock-in:** the institutional infrastructure for human agency dismantled, for example a profession that no longer trains juniors | Close to the paper's meaning. |
 
@@ -168,7 +168,7 @@ E1 will gain an industry comparison in Release 2: labor share in industries wher
 
 ## Thresholds and the retrospective (coming in Stages 2 and 3)
 
-**The rule comes first.** In Stage 2, a mechanical rule for each kind of comparison will be written, reviewed, fixed in advance and dated. The bands for each indicator then follow from the rule. They are not hand-picked after looking at the data. The author and the builder have already seen the 2023 to 2026 data, so fixing hand-picked thresholds would not be enough.
+**The rule comes first.** In Stage 2, a mechanical rule for each kind of comparison will be written, reviewed, fixed in advance and dated. The bands for each indicator then follow from the rule. They are not hand-picked after looking at the data. The author and the AI assistant that built the site have already seen the 2023 to 2026 data, so fixing hand-picked thresholds would not be enough.
 
 **The candidate rule for long-running series** compares the change over an indicator's window with the spread of same-length changes in 2010 to 2019:
 
@@ -261,7 +261,7 @@ The site's indicators are descriptive in exactly this sense.
 
 - **Wealth concentration (E4).**
 - **Federal AI use cases (G2).**
-- **AI-interest political influence (G3):** lobbying by groups that profit from or lobby for AI.
+- **AI-interest political influence (G3):** lobbying by groups that profit from AI.
 - **AI's share of cultural production versus consumption (C2):** how much of what is made is AI-generated, against how much of what people actually read, watch or hear.
 
 E4 and G3 are placed in the lock-in row only if a lock-in test is adopted.
