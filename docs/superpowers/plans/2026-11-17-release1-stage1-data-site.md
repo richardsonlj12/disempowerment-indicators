@@ -14,7 +14,7 @@
 
 - $0: free tools and free data only.
 - **No API keys in Stage 1.** Use keyless endpoints (FRED `fredgraph.csv`, Stack Exchange anonymous quota, Wikimedia with User-Agent, Hugging Face public files). If a source truly needs a key, stop and ask the owner; keys go only in GitHub Actions Secrets.
-- HTTP User-Agent for every request: `disempowerment-indicators/0.1 (+https://github.com/richardsonlj12/disempowerment-indicators)`. Never put the owner's email in requests.
+- HTTP User-Agent for every request: `keel-indicators/0.1 (+https://github.com/richardsonlj12/keel)`. Never put the owner's email in requests.
 - Avoided sources: OpenSecrets API, EIU, Gallup microdata, ADP, Lightcast, S&P.
 - Nothing from `../research/` (the private folder beside the repo) is copied into the repo. Figures are re-verified from primary sources and cited by primary URL. Secondary-only figures are never published.
 - Stage 1 readings: every indicator shows **"Not yet reviewed"**. No script produces a reading.
@@ -23,7 +23,7 @@
 - Pre-AI baseline period for structural series: **2010-01-01 to 2019-12-31**. Retrospective start (mentioned on pages only): **2022Q4**.
 - Lock-in row shows "No public measure yet" in Release 1. The oversight row shows "No public measure yet" with its citation.
 - In Markdown prose (pages, docs), write placeholders as `[date]`, never in angle brackets, and avoid paired `~`.
-- Site base path: `https://richardsonlj12.github.io/disempowerment-indicators/`. All links and data URLs relative.
+- Site base path: `https://richardsonlj12.github.io/keel/`. All links and data URLs relative.
 - Accessible, readable in light and dark mode, usable at phone width.
 - Every commit ends with: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`
 
@@ -33,7 +33,7 @@
 2. **One source fails during a scheduled refresh.** Expected: the other sources still update and deploy; the failing series keeps its old data with a "stale since [date]" badge, and a GitHub issue opens (deduplicated by title). → `test_refresh_isolates_source_failure` (Task 8); issue step in Task 11.
 3. **Series breaks and schema changes** (BTOS question change 2025-11-17; Wikimedia bot reclassification; Economic Index release schemas). Expected: no line drawn across a break, each break annotated, Economic Index releases harmonized with each mapping documented. → `test_series_break_splits_segments` (Task 2), `test_aei_release_schema_mapping` (Task 6).
 4. **Rate limit hit partway through** (Stack Exchange anonymous quota of 300 requests a day across about 1 + N sites). Expected: partial results are not saved as complete; already-complete months are cached and the next run resumes. → `test_stackexchange_partial_quota_not_written` (Task 7).
-5. **Base path on GitHub Pages.** Expected: CSV downloads and inter-page links work under `/disempowerment-indicators/`. → link check in the deploy workflow (Task 11).
+5. **Base path on GitHub Pages.** Expected: CSV downloads and inter-page links work under `/keel/`. → link check in the deploy workflow (Task 11).
 
 ---
 
@@ -281,12 +281,12 @@ Page requirements:
 **Files:** Create `.github/workflows/ci.yml`, `.github/workflows/refresh-deploy.yml`, `scripts/link_check.py`, `tests/test_link_check.py`
 
 **Interfaces:**
-- Produces: `link_check.check(site_dir: Path, base_path: str = "/disempowerment-indicators/") -> list[str]` — broken internal links and missing files (HTML `href`/`src`, CSV links), resolved as under the base path.
+- Produces: `link_check.check(site_dir: Path, base_path: str = "/keel/") -> list[str]` — broken internal links and missing files (HTML `href`/`src`, CSV links), resolved as under the base path.
 
 - [ ] **Step 1: Tests:** `test_link_check_flags_missing_csv`; `test_link_check_accepts_relative_links_under_base_path`. FAIL → implement → PASS.
 - [ ] **Step 2:** `ci.yml`: on push and pull request — Python 3.12, install, `pytest` (offline).
 - [ ] **Step 3:** `refresh-deploy.yml`: on `schedule` (weekly, Mondays 12:00 UTC), `workflow_dispatch`, and push to `main`. Jobs: (1) refresh — `python -m indicators.refresh`, capture failure without stopping; commit changed `data/` as `github-actions[bot]` with `data: weekly refresh [date]`; for each failed source, open an issue titled `Data source failing: [source]` unless an open issue with that title exists (`gh issue list --search` then `gh issue create`). (2) build — `pytest`, `python -m indicators.pages`, Quarto ≥1.11, `quarto render site`, `python scripts/link_check.py site/_site` (fails on any broken link). (3) deploy — `actions/upload-pages-artifact`, `actions/deploy-pages`. Permissions: `contents: write`, `pages: write`, `id-token: write`, `issues: write`.
-- [ ] **Step 4:** **Ask the owner before** enabling GitHub Pages with the Actions source (`gh api -X POST repos/richardsonlj12/disempowerment-indicators/pages -f build_type=workflow`); it makes the site public. Do not deploy until Task 12 is complete.
+- [ ] **Step 4:** **Ask the owner before** enabling GitHub Pages with the Actions source (`gh api -X POST repos/richardsonlj12/keel/pages -f build_type=workflow`); it makes the site public. Do not deploy until Task 12 is complete.
 - [ ] **Step 5:** Commit `ci: tests, weekly refresh and Pages deploy`.
 
 ---
