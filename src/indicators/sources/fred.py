@@ -24,6 +24,9 @@ BLS_API = "https://api.bls.gov/publicAPI/v1/timeseries/data/"
 
 BLS_LABOR_SHARE = "PRS85006174"  # Nonfarm business labor share, percent of current-dollar output
 BLS_FIRST_YEAR = 1947
+# BLS Productivity and Costs and BEA NIPA publish a quarter about 1 to 2 months after it ends:
+# next quarter (about 90 days) + about 60 days to publication + 30 days slack, from quarter end.
+QUARTERLY_LAG_DAYS = 180
 BLS_CHUNK_YEARS = 10  # API v1 returns at most 10 years per request
 BLS_MIN_FULL_QUARTERS = 300  # 1947Q1 onward is ~315+; fewer means a truncated fetch
 
@@ -147,7 +150,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         title="Labor share of income, nonfarm business sector",
         source_name="BLS Productivity and Costs",
         source_url="https://www.bls.gov/productivity/home.htm",
-        max_lag_days=150,
+        max_lag_days=QUARTERLY_LAG_DAYS,
         role="primary",
         notes=(
             f"BLS series {BLS_LABOR_SHARE} (labor share, percent of current-dollar output, nonfarm "
@@ -167,7 +170,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         title="Corporate profits after tax as a share of GDP",
         source_name="BEA National Income and Product Accounts, via FRED",
         source_url="https://fred.stlouisfed.org/series/CPATAX",
-        max_lag_days=150,
+        max_lag_days=QUARTERLY_LAG_DAYS,
         role="context",
         notes=(
             f"Formula: {PROFIT_NUMERATOR} (corporate profits after tax with inventory valuation and "
@@ -189,7 +192,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         title="US labor-based share of tax revenue",
         source_name="BEA National Income and Product Accounts, via FRED",
         source_url="https://fred.stlouisfed.org/series/" + PERSONAL_TAXES,
-        max_lag_days=150,
+        max_lag_days=QUARTERLY_LAG_DAYS,
         role="primary",
         notes=(
             f"Formula: ({PERSONAL_TAXES} personal current taxes + {CONTRIBUTIONS} contributions for "

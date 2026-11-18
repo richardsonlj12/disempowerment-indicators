@@ -104,7 +104,7 @@ def fetch(data_dir: Path | str = "data", today: date | None = None) -> list[tupl
         license=LICENSE,
         fetched_at=fetched_at,
         data_through=views["date"].max().strftime("%Y-%m-%d"),
-        max_lag_days=75,
+        max_lag_days=60,  # from month end: next month + a few weeks
         breaks=BREAKS,
         role="context",
         notes=(
@@ -129,7 +129,7 @@ def fetch(data_dir: Path | str = "data", today: date | None = None) -> list[tupl
         license=LICENSE,
         fetched_at=fetched_at,
         data_through=editors["date"].max().strftime("%Y-%m-%d"),
-        max_lag_days=75,
+        max_lag_days=60,  # from month end: next month + a few weeks
         breaks=[],
         role="context",
         notes=(

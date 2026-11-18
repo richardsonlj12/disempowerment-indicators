@@ -13,14 +13,14 @@ import json
 import re
 import shutil
 import sys
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 import yaml
 
 from indicators import registry as reg
 from indicators.curated import load_curated, published
-from indicators.store import SeriesMeta, assign_segments, read_series, staleness
+from indicators.store import SeriesMeta, assign_segments, read_series, stale_since, staleness
 from indicators.trend import pre_ai_trend
 
 RELEASE = 1
@@ -33,13 +33,13 @@ TIMING = {
     "lagging": "Lagging: likely to move only after a change is well under way",
 }
 COMPARISON = {
-    "structural": "Long-running series, compared with how it behaved in 2010 to 2019 (the 2010 to 2019 baseline).",
-    "ai_native": "A series that measures AI use directly and has no period before AI, compared with its own recent path.",
+    "structural": "A long-running series, compared with {baseline}.",
+    "ai_native": "A series that measures AI use directly and has no period before AI, compared with {baseline}.",
 }
-BASELINE_PHRASE = {
-    "structural": "against the 2010 to 2019 baseline",
-    "ai_native": "against its own recent path",
-}
+# What each indicator is read against. C1's index starts in June 2012 (2019 = 100), so it has no
+# 2010 to 2019 baseline.
+BASELINE_TEXT = {"E1": "its 2010 to 2019 trend", "G1": "its 2010 to 2019 trend", "C1": "its 2012 to 2019 history"}
+DEFAULT_BASELINE = {"structural": "its 2010 to 2019 trend", "ai_native": "its own recent path"}
 AI_LINK_QUESTIONS = (
     ("directness", "Does it measure AI itself?"),
     ("comparison_group", "Is there a comparison group?"),
@@ -140,19 +140,29 @@ def _url(url: str) -> str:
 
 # ------------------------------------------------------------------ inputs
 
+def baseline_text(ind: reg.Indicator) -> str:
+    return BASELINE_TEXT.get(ind.id, DEFAULT_BASELINE[ind.comparison])
+
+
 def split_content(text: str) -> tuple[dict, dict[str, str]]:
-    """Front matter and the level-2 sections of a content page, by heading."""
+    """Front matter and the level-2 sections of a content page, by heading. The sections must be
+    exactly SECTIONS, with no text before the first one."""
     if not text.startswith("---\n"):
         raise ValueError("content page has no front matter")
     _, fm_text, body = text.split("---\n", 2)
     front = yaml.safe_load(fm_text) or {}
     sections: dict[str, str] = {}
     parts = re.split(r"^## (.+)$", body, flags=re.M)
+    if parts[0].strip():
+        raise ValueError("content page has text before its first level-2 heading")
     for heading, content in zip(parts[1::2], parts[2::2]):
         sections[heading.strip()] = content.strip()
     missing = [s for s in SECTIONS if s not in sections]
     if missing:
         raise ValueError(f"content page is missing sections: {missing}")
+    unknown = [s for s in sections if s not in SECTIONS]
+    if unknown:
+        raise ValueError(f"content page has unknown sections: {unknown}")
     return front, sections
 
 
@@ -172,25 +182,27 @@ def _latest(frame) -> tuple[float, str] | None:
     return float(row["value"]), row["date"].date().isoformat()
 
 
-def _stale_since(meta: SeriesMeta) -> date:
-    return date.fromisoformat(meta.data_through) + timedelta(days=meta.max_lag_days)
-
-
 # ------------------------------------------------------------------ pieces
 
+NO_VALUE = "Latest value not yet available (data still being collected)"
+
+
 def latest_value_text(ind: reg.Indicator, series: dict) -> str:
+    """'[series title], latest value: X (period)', naming the series so multi-series pages are clear."""
     primary = series.get(ind.primary_series)
     latest = _latest(primary[0]) if primary else None
     if latest is None:
-        return "Latest value not yet available (data still being collected)"
+        return NO_VALUE
     meta = primary[1]
-    return f"Latest value {fmt_value(latest[0], meta.units)} ({fmt_period(latest[1], meta.frequency)})"
+    return f"{meta.title}, latest value: {fmt_value(latest[0], meta.units)} ({fmt_period(latest[1], meta.frequency)})"
 
 
 def reading_lines(ind: reg.Indicator, reading: reg.Reading, series: dict) -> list[str]:
-    """The three-line reading: state label; magnitude naming the baseline; interpretation with AI link."""
+    """The three-line reading: state label; magnitude naming the baseline (no baseline clause while
+    there is no value); interpretation with the AI link."""
     label = reg.STATE_LABELS[reading.state]
-    magnitude = reading.magnitude or f"{latest_value_text(ind, series)}, {BASELINE_PHRASE[ind.comparison]}"
+    value = latest_value_text(ind, series)
+    magnitude = reading.magnitude or (value if value == NO_VALUE else f"{value}, against {baseline_text(ind)}")
     interpretive = f"AI link: {ind.ai_link.capitalize()}"
     if reading.interpretation:
         interpretive += f". {reading.interpretation}"
@@ -206,7 +218,7 @@ def summary_table(ind, front, reading, series) -> str:
         ("Summary", reg.content_summary(front)),
         ("Current reading", "<br>".join(_cell(x) for x in reading_lines(ind, reading, series))),
         ("Grid position", f"{reg.layer_label(ind.layer)} · {ind.domain.capitalize()}"),
-        ("AI link", f"{ind.ai_link.capitalize()}. A draft rating, reviewed in Stage 2; the four criteria are under "
+        ("AI link", f"{ind.ai_link.capitalize()}. A draft rating, to be reviewed in Stage 2; the four criteria are under "
                     "[Method](#method)."),
         ("Leading or lagging", TIMING[ind.timing]),
         ("Warning sign", front["warning_sign"]),
@@ -221,6 +233,15 @@ def summary_table(ind, front, reading, series) -> str:
     return "\n".join(lines)
 
 
+def _stale_item(meta: SeriesMeta) -> str:
+    due = fmt_date(stale_since(meta))
+    latest = fmt_period(meta.data_through, meta.frequency)
+    if meta.frequency == "irregular":
+        return (f"- **Stale since {due}.** {meta.title}: the latest data are for {latest}. The source "
+                f"publishes irregular releases, and a new release was expected by {due}.")
+    return f"- **Stale since {due}.** {meta.title}: the latest data are for {latest}, and newer data were expected by {due}."
+
+
 def notices(ind, views, series, today: date) -> str:
     out = []
     primary = series.get(ind.primary_series)
@@ -230,14 +251,13 @@ def notices(ind, views, series, today: date) -> str:
                    f"data through {fmt_period(meta.data_through, meta.frequency)}.*")
     stale = [meta for _, meta in series.values() if staleness(meta, today)]
     if stale:
-        items = "\n".join(
-            f"- **Stale since {fmt_date(_stale_since(meta))}.** {meta.title}: the latest data are for "
-            f"{fmt_period(meta.data_through, meta.frequency)}, and newer data were expected by "
-            f"{fmt_date(_stale_since(meta))}." for meta in stale)
+        items = "\n".join(_stale_item(meta) for meta in stale)
         out.append('::: {.callout-warning title="Stale data"}\n'
                    f"{items}\n\nThe chart shows the last data received.\n:::")
     if ind.headline_caveat:
-        out.append(f'::: {{.callout-important title="Caveat"}}\n**{ind.headline_caveat}.**\n:::')
+        caveat = ind.headline_caveat.rstrip()
+        caveat = caveat if caveat[-1:] in ".!?" else caveat + "."
+        out.append(f'::: {{.callout-important title="Caveat"}}\n**{caveat}**\n:::')
     if ind.disclosure:
         out.append(f'::: {{.callout-note title="Disclosure"}}\n{ind.disclosure}\n:::')
     waiting = [v["label"] for v in views if not v["available"]]
@@ -311,9 +331,9 @@ def reading_history(readings: list[reg.Reading]) -> str:
 
 
 def method_section(ind, series, markers) -> str:
-    lines = [f"- **Comparison and baseline.** {COMPARISON[ind.comparison]}",
+    lines = [f"- **Comparison and baseline.** {COMPARISON[ind.comparison].format(baseline=baseline_text(ind))}",
              "- **Threshold rule and sensitivity table.** Stage 2.",
-             f"- **AI link: {ind.ai_link.capitalize()}** (draft, reviewed in Stage 2), judged on four criteria:"]
+             f"- **AI link: {ind.ai_link.capitalize()}** (draft, to be reviewed in Stage 2), judged on four criteria:"]
     for key, question in AI_LINK_QUESTIONS:
         lines.append(f"    - *{question}* {ind.ai_link_criteria.get(key, 'Not yet assessed.')}")
     lines.append("- **Sources.**")
@@ -448,19 +468,19 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
             f"**{oversight['row_label']}** · {oversight['label']}", "", *cite, ":::", "::::", ""]
 
     exposure = [i.id for i in indicators if i.scale == "exposure"]
+    baselines = "; ".join(f"{i.id}: {baseline_text(i)}" for i in indicators if i.scale == "baseline")
     baseline = [i.id for i in indicators if i.scale == "baseline"]
     labels = reg.STATE_LABELS
     out += ["**Two sets of labels.** "
             f"Adoption indicators ({_and(exposure)}) will be read as {labels['low']}, {labels['rising']} or "
             f"{labels['pervasive']}. Indicators read against a baseline ({_and(baseline)}) will be read as "
             f"{labels['within']}, {labels['above']}, {labels['below']}, {labels['far_above']} or "
-            f"{labels['far_below']}, against their 2010 to 2019 baseline. Either can also read "
+            f"{labels['far_below']}, each against its own baseline ({baselines}). Either can also read "
             f"{labels['no_signal']}. The AI link badge (Strong, Moderate or Weak) says how clearly a movement in a "
             "series can be connected to AI rather than to other causes. See the [methodology](methodology.qmd).", ""]
 
     out += ["## Counter-evidence", "",
-            "Signals that point away from disempowerment, held to the same standard as the indicators. "
-            "Inclusion says nothing about whether a signal is caused by AI.", ""]
+            "Signals that point away from disempowerment, held to the same standard as the indicators.", ""]
     for item in counter_items:
         value = item["value"]
         measured = "" if isinstance(value, dict) else f" {item['metric']}: {value} {item['unit']}."
@@ -490,9 +510,9 @@ def build(repo_root: Path, today: date | None = None) -> None:
     today = today or date.today()
     site, data_dir, config = root / "site", root / "data", root / "config"
 
-    indicators, grid, oversight = reg.load_registry(config / "indicators.yaml")
-    indicators = [i for i in indicators if i.release == RELEASE]
-    readings = reg.load_readings(config / "readings.yaml", indicators)
+    all_indicators, grid, oversight = reg.load_registry(config / "indicators.yaml")
+    readings = reg.load_readings(config / "readings.yaml", all_indicators)  # validates every row
+    indicators = [i for i in all_indicators if i.release == RELEASE]
     chart_markers = reg.load_chart_markers(config / "chart_markers.yaml")
     sites = yaml.safe_load((config / "c1_comparison_sites.yaml").read_text(encoding="utf-8"))
     group_labels = {s["api_site_name"]: s["name"] for s in sites.get("sites", [])}

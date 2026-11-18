@@ -413,7 +413,7 @@ def fetch(
         license=LICENSE,
         fetched_at=fetched_at,
         data_through=through,
-        max_lag_days=75,
+        max_lag_days=60,  # from month end: next month + slack
     )
     count_note = (
         "Questions created in the calendar month (UTC), counted from the /2.3/questions endpoint with "

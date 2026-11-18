@@ -25,7 +25,7 @@ We welcome constructive and honest feedback on this project.
 
 - [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) (GitHub issue)
 - [Give feedback](https://github.com/richardsonlj12/keel/discussions) (GitHub Discussions)
-- Feedback form: [feedback form link]
+- [Feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
 
 ## Disclosure
 

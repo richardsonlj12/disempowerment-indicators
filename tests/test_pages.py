@@ -1,7 +1,9 @@
 """Page generator (Task 10): builds the Quarto sources in a copy of the repository."""
 
 import re
+import json
 import shutil
+import subprocess
 from datetime import date
 from pathlib import Path
 
@@ -16,6 +18,8 @@ RELEASE1 = {"E1", "E2", "E3", "G1", "C1"}
 TABLE_ROWS = ["Summary", "Current reading", "Grid position", "AI link", "Leading or lagging",
               "Warning sign", "Data source(s)", "Calculation", "Coverage"]
 INTERNAL_KEYS = ["structural", "ai_native", "exposure", "erosion", "lockin", "tier"]
+RETIRED_TERMS = ["AI-specificity", "rival", "direction assumption", "takeaway"]
+FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform"
 TODAY = date(2026, 11, 18)
 
 SYNTHETIC_PAGE = """---
@@ -138,7 +142,7 @@ def test_reading_rendered_in_three_lines(repo):
     lines = rows["Current reading"].split("<br>")
     assert len(lines) == 3
     assert "Not yet reviewed" in lines[0]
-    assert "2010 to 2019 baseline" in lines[1] and "percent" in lines[1]
+    assert lines[1].endswith("against its 2010 to 2019 trend") and "percent" in lines[1]
     assert lines[2].strip().startswith("AI link: Weak")
     e2_lines = dict(_table(_page(repo, "E2")))["Current reading"].split("<br>")
     assert "own recent path" in e2_lines[1]
@@ -288,16 +292,136 @@ def test_no_angle_bracket_placeholders_in_generated_qmd(repo):
         assert "%%" not in text, path.name
 
 
-def test_no_internal_keys_in_generated_text(repo):
+def _assert_no_internal_terms(name, text):
+    for key in INTERNAL_KEYS:
+        assert not re.search(rf"\b{key}\b", text, re.I), (name, key)
+    for term in RETIRED_TERMS:
+        assert not re.search(rf"\b{re.escape(term)}\b", text, re.I), (name, term)
+
+
+def _synthetic_content(repo):
     for ind_id in RELEASE1:
         (repo / "content" / "indicators" / f"{ind_id}.md").write_text(SYNTHETIC_PAGE, encoding="utf-8")
+    (repo / "content" / "methodology.md").write_text("Neutral methodology text.\n", encoding="utf-8")
+
+
+def test_no_internal_keys_in_generated_text(repo):
+    _synthetic_content(repo)
     pages.build(repo, today=TODAY)
     generated = list((repo / "site" / "indicators").glob("*.qmd")) + [repo / "site" / "_generated" / "summary.md"]
     for path in generated:
-        text = re.sub(r"```\{ojs\}.*?```", "", path.read_text(encoding="utf-8"), flags=re.S)
-        for key in INTERNAL_KEYS:
-            assert not re.search(rf"\b{key}\b", text, re.I), (path.name, key)
-        assert "AI-specificity" not in text, path.name
+        _assert_no_internal_terms(path.name, re.sub(r"```\{ojs\}.*?```", "", path.read_text(encoding="utf-8"), flags=re.S))
+
+
+QUARTO = shutil.which("quarto") or next((str(p) for p in [Path.home() / ".local/bin/quarto"] if p.exists()), None)
+
+
+@pytest.mark.skipif(QUARTO is None, reason="Quarto is not installed")
+def test_no_internal_keys_in_rendered_html(repo):
+    """Render the whole site (generator text and static pages, synthetic prose) and check visible text."""
+    _synthetic_content(repo)
+    pages.build(repo, today=TODAY)
+    subprocess.run([QUARTO, "render", str(repo / "site"), "--quiet"], check=True, capture_output=True)
+    htmls = list((repo / "site" / "_site").rglob("*.html"))
+    assert len(htmls) >= 9
+    for path in htmls:
+        html = path.read_text(encoding="utf-8")
+        html = re.sub(r"<(script|style)\b.*?</\1>", " ", html, flags=re.S | re.I)
+        visible = re.sub(r"<[^>]+>", " ", html)
+        _assert_no_internal_terms(path.name, visible)
+
+
+def _add_c1_index(repo):
+    """Write a small so_relative_index series (as the Stack Exchange source would) into the copy."""
+    (repo / "data" / "so_relative_index.csv").write_text(
+        "date,value\n2019-12-01,100.0\n2026-09-01,61.5\n", encoding="utf-8")
+    meta = json.loads((repo / "data" / "wiki_active_editors_en.meta.json").read_text(encoding="utf-8"))
+    meta.update(series_id="so_relative_index", title="Stack Overflow activity relative to comparison sites "
+                "(index, 2019 = 100)", units="index (2019 = 100)", data_through="2026-09-01", breaks=[])
+    (repo / "data" / "so_relative_index.meta.json").write_text(json.dumps(meta), encoding="utf-8")
+
+
+def test_c1_baseline_is_its_2012_to_2019_history(repo):
+    _add_c1_index(repo)
+    pages.build(repo, today=TODAY)
+    lines = dict(_table(_page(repo, "C1")))["Current reading"].split("<br>")
+    assert lines[1].endswith("against its 2012 to 2019 history")
+    assert "61.5 (index, 2019 = 100)" in lines[1]
+    text = _page(repo, "C1")
+    method = text[text.index("## Method"):text.index("## Caveats")]
+    assert "its 2012 to 2019 history" in method and "2010" not in method
+    summary = _index(repo)
+    assert "C1: its 2012 to 2019 history" in summary
+    assert "E1: its 2010 to 2019 trend" in summary
+
+
+def test_no_baseline_clause_without_a_value(repo):
+    pages.build(repo, today=TODAY)
+    line = dict(_table(_page(repo, "C1")))["Current reading"].split("<br>")[1]
+    assert line == "Latest value not yet available (data still being collected)"
+
+
+def test_magnitude_line_names_the_series(repo):
+    pages.build(repo, today=TODAY)
+    line = dict(_table(_page(repo, "E3")))["Current reading"].split("<br>")[1]
+    assert line.startswith("Automation share of categorized Claude.ai conversations, latest value:")
+
+
+def test_oecd_annual_series_not_stale_today(repo):
+    pages.build(repo, today=TODAY)
+    assert "Stale" not in _page(repo, "G1")
+
+
+def test_split_content_rejects_unknown_sections_and_preamble():
+    with pytest.raises(ValueError, match="unknown sections"):
+        pages.split_content(SYNTHETIC_PAGE + "\n## Something else\n\nText.\n")
+    front, body = SYNTHETIC_PAGE.split("---\n", 2)[1:]
+    with pytest.raises(ValueError, match="before its first"):
+        pages.split_content(f"---\n{front}---\nStray text.\n{body}")
+
+
+def test_release2_readings_do_not_break_build(repo):
+    reg_path = repo / "config" / "indicators.yaml"
+    reg = yaml.safe_load(reg_path.read_text())
+    reg["indicators"].append(dict(reg["indicators"][0], id="E9", release=2))
+    reg_path.write_text(yaml.safe_dump(reg, sort_keys=False))
+    with open(repo / "config" / "readings.yaml", "a", encoding="utf-8") as f:
+        f.write("  - {indicator_id: E9, state: not_yet_reviewed, date: 2026-11-17, kind: current}\n")
+    pages.build(repo, today=TODAY)
+    assert not (repo / "site" / "indicators" / "E9.qmd").exists()
+
+
+def test_caveat_has_single_period(repo):
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "E3")
+    assert "**One vendor, one product: Claude usage only.**" in text
+    assert "only..**" not in text
+
+
+def test_e3_disclosure_names_keel(repo):
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "E3")
+    assert "This data is published by Anthropic, and KEEL is built with assistance from Claude." in text
+    assert "this site is built" not in text
+
+
+def test_navbar_names_match_registry():
+    config = yaml.safe_load((ROOT / "site" / "_quarto.yml").read_text(encoding="utf-8"))
+    menu = next(i for i in config["website"]["navbar"]["left"] if i.get("text") == "Indicators")["menu"]
+    reg = yaml.safe_load((ROOT / "config" / "indicators.yaml").read_text(encoding="utf-8"))
+    expected = [(f"indicators/{i['id']}.qmd", f"{i['id']} · {i['name']}") for i in reg["indicators"] if i["release"] == 1]
+    assert [(m["href"], m["text"]) for m in menu] == expected
+
+
+def test_feedback_form_link_on_about_page():
+    text = (ROOT / "site" / "about.qmd").read_text(encoding="utf-8")
+    assert f"[Feedback form]({FORM_URL})" in text
+    assert "[feedback form link]" not in text
+
+
+def test_counter_evidence_intro_not_repeated(repo):
+    pages.build(repo, today=TODAY)
+    assert _index(repo).count("Inclusion says nothing about whether") == 1
 
 
 def test_c1_says_data_still_being_collected_when_series_absent(repo):

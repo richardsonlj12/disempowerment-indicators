@@ -317,7 +317,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
             license=LICENSE,
             fetched_at=fetched_at,
             data_through=df["date"].max().strftime("%Y-%m-%d"),
-            max_lag_days=200,
+            max_lag_days=270,  # irregular releases; generous
             breaks=[dict(b) for b in BREAKS],
             notes=NOTES,
             role=role,

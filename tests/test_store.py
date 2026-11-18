@@ -1,5 +1,5 @@
 import json
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 import pytest
@@ -8,6 +8,8 @@ from indicators.store import (
     SeriesMeta,
     assign_segments,
     read_series,
+    period_end,
+    stale_since,
     staleness,
     validate_frame,
     write_series,
@@ -134,6 +136,28 @@ def test_staleness():
     meta = make_meta(data_through="2026-06-30", max_lag_days=120)
     assert staleness(meta, date(2026, 11, 12)) == 15
     assert staleness(meta, date(2026, 10, 1)) is None
+
+
+def test_period_end_by_frequency():
+    assert period_end("2026-04-01", "quarterly") == date(2026, 6, 30)
+    assert period_end("2023-01-01", "annual") == date(2023, 12, 31)
+    assert period_end("2026-02-01", "monthly") == date(2026, 2, 28)
+    assert period_end("2026-11-01", "biweekly") == date(2026, 11, 1)
+    assert period_end("2026-05-01", "irregular") == date(2026, 5, 1)
+
+
+def test_oecd_annual_2023_not_stale_on_2026_11_18():
+    meta = make_meta(frequency="annual", data_through="2023-01-01", max_lag_days=1140)
+    assert staleness(meta, date(2026, 11, 18)) is None
+    assert stale_since(meta) == date(2023, 12, 31) + timedelta(days=1140)
+
+
+def test_quarterly_200_days_past_quarter_end_with_120_day_lag_is_stale():
+    meta = make_meta(frequency="quarterly", data_through="2026-01-01", max_lag_days=120)
+    today = date(2026, 3, 31) + timedelta(days=200)
+    assert staleness(meta, today) == 80
+    assert staleness(make_meta(frequency="quarterly", data_through="2026-01-01", max_lag_days=120),
+                     date(2026, 3, 31) + timedelta(days=100)) is None
 
 
 def test_write_is_atomic_on_invalid(tmp_path):

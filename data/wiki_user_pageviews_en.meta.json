@@ -7,9 +7,9 @@
   "source_name": "Wikimedia Pageviews API",
   "source_url": "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/",
   "license": "CC0",
-  "fetched_at": "2026-11-18T18:27:23Z",
+  "fetched_at": "2026-11-18T19:01:09Z",
   "data_through": "2026-10-01",
-  "max_lag_days": 75,
+  "max_lag_days": 60,
   "breaks": [
     {
       "date": "2025-03-01",

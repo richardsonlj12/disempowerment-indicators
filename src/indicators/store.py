@@ -6,7 +6,7 @@ import json
 import os
 import tempfile
 from dataclasses import asdict, dataclass, field
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -27,6 +27,8 @@ class SeriesMeta:
     license: str
     fetched_at: str  # ISO UTC
     data_through: str  # ISO date
+    # Days after the END of the latest period (see period_end) by which newer data are expected:
+    # one more period plus the source's usual publication lag, with slack. Drives the stale badge.
     max_lag_days: int
     breaks: list[dict] = field(default_factory=list)  # {"date": "YYYY-MM-DD", "note": str}; split lines
     annotations: list[dict] = field(default_factory=list)  # {"date": "YYYY-MM-DD", "label": str}; markers only
@@ -116,8 +118,27 @@ def read_series(series_id: str, data_dir: Path) -> tuple[pd.DataFrame, SeriesMet
     return df, meta
 
 
+def period_end(data_through: str, frequency: str) -> date:
+    """Last day of the period that `data_through` labels. Quarterly, annual and monthly series are
+    dated by the period's first day; weekly, biweekly and irregular dates are taken as they are."""
+    d = date.fromisoformat(str(data_through)[:10])
+    if frequency == "annual":
+        return date(d.year, 12, 31)
+    if frequency in ("quarterly", "monthly"):
+        months = 3 if frequency == "quarterly" else 1
+        first = d.month if frequency == "monthly" else 3 * ((d.month - 1) // 3) + 1
+        year, month = divmod(first - 1 + months, 12)
+        return date(d.year + year, month + 1, 1) - timedelta(days=1)
+    return d
+
+
+def stale_since(meta: SeriesMeta) -> date:
+    """Date by which newer data were expected: the end of the latest period plus max_lag_days
+    (one more period plus the source's usual publication lag, with some slack)."""
+    return period_end(meta.data_through, meta.frequency) + timedelta(days=meta.max_lag_days)
+
+
 def staleness(meta: SeriesMeta, today: date) -> int | None:
-    """Days past data_through + max_lag_days, or None if not overdue."""
-    due = date.fromisoformat(meta.data_through).toordinal() + meta.max_lag_days
-    late = today.toordinal() - due
+    """Days past stale_since(meta), or None if not overdue."""
+    late = (today - stale_since(meta)).days
     return late if late > 0 else None

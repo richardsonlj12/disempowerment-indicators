@@ -22,6 +22,11 @@ URL = f"https://sdmx.oecd.org/public/rest/data/{DATAFLOW}/{KEY}"
 START_YEAR = "1965"
 
 PIT, SSC = "T_1100", "T_2000"
+# Revenue Statistics appears each December. The United States is published for year t in December
+# t+1, the OECD average for year t in December t+2. Lag from the end of the latest year to the next
+# release that should add a year, plus about 45 days slack.
+LAG_DAYS = {"oecd_labor_tax_share_usa": 790, "oecd_labor_tax_share_avg": 1140}
+
 SERIES = (
     ("USA", "oecd_labor_tax_share_usa", "United States"),
     ("OECD_REP", "oecd_labor_tax_share_avg", "OECD average"),
@@ -74,7 +79,7 @@ def fetch() -> list[tuple[pd.DataFrame, SeriesMeta]]:
             license=ATTRIBUTION,
             fetched_at=fetched_at,
             data_through=df["date"].max().strftime("%Y-%m-%d"),
-            max_lag_days=730,
+            max_lag_days=LAG_DAYS[series_id],
             role="context",
             notes=(
                 f"Formula: (revenue category {PIT[2:]} taxes on income of individuals + {SSC[2:]} social "
