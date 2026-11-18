@@ -7,7 +7,7 @@
   "source_name": "Wikimedia Pageviews API",
   "source_url": "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/",
   "license": "CC0",
-  "fetched_at": "2026-11-17T20:00:34Z",
+  "fetched_at": "2026-11-18T18:27:23Z",
   "data_through": "2026-10-01",
   "max_lag_days": 75,
   "breaks": [
@@ -16,6 +16,28 @@
       "note": "Wikimedia updated its bot detection and reclassified traffic for March to August 2025, moving automated traffic out of human (agent=user) pageviews; months before March 2025 keep the old classification. Announcement: https://diff.wikimedia.org/2025/10/17/new-user-trends-on-wikipedia/"
     }
   ],
-  "notes": "en.wikipedia, all-access, agent=user (Wikimedia's classification of human traffic; spiders and, since the 2025 reclassification, detected automated traffic are excluded). Available from July 2015. Wikimedia cautions that comparisons across the March 2025 break need care because bot detection rules changed; see https://diff.wikimedia.org/2025/10/17/new-user-trends-on-wikipedia/. Falling human pageviews may reflect AI intermediation rather than less interest in the content.",
+  "annotations": [
+    {
+      "date": "2021-06-29",
+      "label": "GitHub Copilot technical preview announced"
+    },
+    {
+      "date": "2022-06-21",
+      "label": "GitHub Copilot generally available to all developers"
+    },
+    {
+      "date": "2022-11-30",
+      "label": "ChatGPT released to the public"
+    },
+    {
+      "date": "2022-12-05",
+      "label": "Stack Overflow bans AI-generated answers"
+    },
+    {
+      "date": "2023-06-05",
+      "label": "Stack Overflow moderators begin a strike over AI-content policy"
+    }
+  ],
+  "notes": "en.wikipedia, all-access, agent=user (Wikimedia's classification of human traffic; spiders and, since the 2025 reclassification, detected automated traffic are excluded). Available from July 2015. Wikimedia cautions that comparisons across the March 2025 break need care because bot detection rules changed; see https://diff.wikimedia.org/2025/10/17/new-user-trends-on-wikipedia/. Falling human pageviews may reflect AI intermediation (people reading Wikipedia content through AI tools such as chatbots and search summaries rather than visiting the site) rather than less interest in the content.",
   "role": "context"
 }

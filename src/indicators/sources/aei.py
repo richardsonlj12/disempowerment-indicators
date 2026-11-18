@@ -64,8 +64,8 @@ RELEASE_SCHEMAS: dict[str, dict] = {
         "automation": AUTOMATION,
         "augmentation": AUGMENTATION,
         "excluded": ("none",),
-        "window": "first report sample, Claude.ai Free and Pro; Anthropic's chart caption prints "
-        "'Dec 25 - Jan 25', read here as December 2024 to January 2025",
+        "window": "first report sample, Claude.ai Free and Pro, 2024-12-16 to 2024-12-23 (Handa et al., "
+        "arXiv 2503.04761, Appendix E, automation vs. augmentation sample)",
     },
     "release_2025_03_27": {
         "kind": "interaction_csv",
