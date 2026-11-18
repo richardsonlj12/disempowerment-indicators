@@ -1,5 +1,6 @@
 """Tests for the FRED/BLS (E1, G1) and OECD (G1) source modules."""
 
+import json
 import re
 from datetime import date
 from dataclasses import asdict
@@ -9,6 +10,7 @@ import pandas as pd
 import pytest
 import responses
 
+from indicators.http import SourceError
 from indicators.sources import fred, oecd
 from indicators.store import ROLES, FREQUENCIES, SeriesMeta, validate_frame
 
@@ -27,13 +29,37 @@ def _mock_fred():
             body=_fixture("fred", f"{sid}.csv"),
             match=[responses.matchers.query_param_matcher({"id": sid}, strict_match=False)],
         )
-    # The BLS fixture is returned for every chunked request; duplicates are merged by date.
-    responses.add(
+    # BLS v1 ignores startyear/endyear on GET; only a POST body is honoured. The callback
+    # emulates that: it builds quarters for exactly the requested years (value = year + q/10).
+    responses.add_callback(
+        responses.POST,
+        "https://api.bls.gov/publicAPI/v1/timeseries/data/",
+        callback=_bls_post_callback,
+        content_type="application/json",
+    )
+    responses.add(  # a GET (the old, broken route) returns only the latest ~3 years
         responses.GET,
         re.compile(r"https://api\.bls\.gov/publicAPI/v1/timeseries/data/PRS85006174.*"),
         body=_fixture("fred", "bls_PRS85006174.json"),
         content_type="application/json",
     )
+
+
+def _bls_payload(years):
+    data = []
+    for y in sorted(years, reverse=True):
+        for q in (4, 3, 2, 1):
+            if y == 2026 and q == 4:
+                continue
+            value = 53.3 if (y, q) == (2026, 2) else round(50 + (y - 1947) / 100 + q / 100, 2)
+            data.append({"year": str(y), "period": f"Q0{q}", "value": str(value), "footnotes": [{}]})
+    return {"status": "REQUEST_SUCCEEDED", "message": [], "Results": {"series": [{"seriesID": "PRS85006174", "data": data}]}}
+
+
+def _bls_post_callback(request):
+    body = json.loads(request.body)
+    years = range(int(body["startyear"]), int(body["endyear"]) + 1)
+    return (200, {}, json.dumps(_bls_payload(years)))
 
 
 def _mock_oecd():
@@ -178,6 +204,44 @@ def test_labor_share_full_when_no_existing_file(tmp_path):
     fred.fetch(data_dir=tmp_path)
     expected = len(range(fred.BLS_FIRST_YEAR, date.today().year + 1, fred.BLS_CHUNK_YEARS))
     assert len(_bls_calls()) == expected > 1
+
+
+@responses.activate
+def test_labor_share_full_posts_requested_year_ranges_and_reaches_1947(tmp_path):
+    _mock_fred()
+    df, _ = _by_id(fred.fetch(data_dir=tmp_path))["labor_share_nfb"]
+    posts = [c for c in _bls_calls() if c.request.method == "POST"]
+    assert len(posts) == len(_bls_calls()) > 1
+    bodies = [json.loads(c.request.body) for c in posts]
+    assert bodies[0] == {"seriesid": ["PRS85006174"], "startyear": "1947", "endyear": "1956"}
+    assert bodies[1]["startyear"] == "1957"
+    assert df["date"].min() == pd.Timestamp("1947-01-01")
+    assert len(df) >= 300
+    assert df[df["date"] == "2026-04-01"]["value"].iloc[0] == pytest.approx(53.3)
+
+
+@responses.activate
+def test_labor_share_full_fails_loudly_on_short_history(tmp_path):
+    _mock_fred()
+    responses.replace(  # every chunk answers with the same recent ~3 years, as BLS GET did
+        responses.POST,
+        "https://api.bls.gov/publicAPI/v1/timeseries/data/",
+        json=_bls_payload([2024, 2025, 2026]),
+    )
+    with pytest.raises(SourceError, match="BLS"):
+        fred.fetch(data_dir=tmp_path)
+
+
+@responses.activate
+def test_labor_share_full_fails_when_chunks_return_identical_years(tmp_path):
+    _mock_fred()
+    responses.replace(
+        responses.POST,
+        "https://api.bls.gov/publicAPI/v1/timeseries/data/",
+        json=_bls_payload(range(1947, 1957)),
+    )
+    with pytest.raises(SourceError, match="identical|ignored"):
+        fred.fetch(data_dir=tmp_path)
 
 
 @responses.activate

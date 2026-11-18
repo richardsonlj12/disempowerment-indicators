@@ -12,6 +12,7 @@ from datetime import date
 from pathlib import Path
 
 import pandas as pd
+import requests
 
 from indicators import http
 from indicators.http import SourceError
@@ -24,6 +25,7 @@ BLS_API = "https://api.bls.gov/publicAPI/v1/timeseries/data/"
 BLS_LABOR_SHARE = "PRS85006174"  # Nonfarm business labor share, percent of current-dollar output
 BLS_FIRST_YEAR = 1947
 BLS_CHUNK_YEARS = 10  # API v1 returns at most 10 years per request
+BLS_MIN_FULL_QUARTERS = 300  # 1947Q1 onward is ~315+; fewer means a truncated fetch
 
 PROFIT_NUMERATOR = "CPATAX"
 PROFIT_DENOMINATOR = "GDP"
@@ -44,26 +46,57 @@ def _fred_series(series_id: str) -> pd.Series:
     return out.dropna().sort_index()
 
 
-def _bls_labor_share(starts: list[int]) -> pd.Series:
+def _bls_post(start: int, end: int) -> dict:
+    """The v1 API honours startyear/endyear only in a POST body; on GET it silently
+    returns its default (latest ~3 years) for every request."""
+    body = {"seriesid": [BLS_LABOR_SHARE], "startyear": str(start), "endyear": str(end)}
+    for attempt in range(http.RETRIES + 1):
+        response = requests.post(BLS_API, json=body, headers={"User-Agent": http.USER_AGENT}, timeout=60)
+        if (response.status_code == 429 or response.status_code >= 500) and attempt < http.RETRIES:
+            http._sleep(http.BACKOFF_SECONDS * (2**attempt))
+            continue
+        break
+    if response.status_code >= 400:
+        raise SourceError(f"BLS {BLS_LABOR_SHARE}: HTTP {response.status_code}: {response.text[:200]}")
+    try:
+        return response.json()
+    except ValueError as exc:
+        raise SourceError(f"BLS {BLS_LABOR_SHARE}: response was not JSON") from exc
+
+
+def _bls_labor_share(starts: list[int], min_quarters: int = 0) -> pd.Series:
     rows: dict[pd.Timestamp, float] = {}
+    seen_year_sets: list[frozenset[int]] = []
     for start in starts:
-        response = http.get(
-            BLS_API + BLS_LABOR_SHARE,
-            params={"startyear": start, "endyear": min(start + BLS_CHUNK_YEARS - 1, date.today().year)},
-            expect="json",
-        )
-        payload = response.json()
+        end = min(start + BLS_CHUNK_YEARS - 1, date.today().year)
+        payload = _bls_post(start, end)
         if payload.get("status") != "REQUEST_SUCCEEDED":
             raise SourceError(f"BLS {BLS_LABOR_SHARE}: {payload.get('status')} {payload.get('message')}")
+        years: set[int] = set()
         for series in payload["Results"]["series"]:
             for obs in series["data"]:
                 period = obs["period"]
                 if not (period.startswith("Q") and period != "Q05"):  # Q05 is the annual average
                     continue
+                year = int(obs["year"])
+                years.add(year)
                 month = (int(period[1:]) - 1) * 3 + 1
-                rows[pd.Timestamp(year=int(obs["year"]), month=month, day=1)] = float(obs["value"])
+                rows[pd.Timestamp(year=year, month=month, day=1)] = float(obs["value"])
+        if years and not years <= set(range(start, end + 1)):
+            raise SourceError(
+                f"BLS {BLS_LABOR_SHARE}: requested {start}-{end} but got {min(years)}-{max(years)}; "
+                f"the year range was ignored (message: {payload.get('message')})"
+            )
+        if years and frozenset(years) in seen_year_sets:
+            raise SourceError(f"BLS {BLS_LABOR_SHARE}: identical year ranges returned for different chunks")
+        seen_year_sets.append(frozenset(years))
     if not rows:
         raise SourceError(f"BLS {BLS_LABOR_SHARE}: no observations returned")
+    if len(rows) < min_quarters:
+        raise SourceError(
+            f"BLS {BLS_LABOR_SHARE}: full history returned only {len(rows)} quarters (< {min_quarters}); "
+            "the year range may have been truncated"
+        )
     return pd.Series(rows, dtype=float).sort_index()
 
 
@@ -93,7 +126,9 @@ def _labor_share_history(data_dir: Path, full: bool) -> pd.Series:
     this_year = date.today().year
     existing_path = Path(data_dir) / "labor_share_nfb.csv"
     if full or not existing_path.exists():
-        return _bls_labor_share(list(range(BLS_FIRST_YEAR, this_year + 1, BLS_CHUNK_YEARS)))
+        return _bls_labor_share(
+            list(range(BLS_FIRST_YEAR, this_year + 1, BLS_CHUNK_YEARS)), min_quarters=BLS_MIN_FULL_QUARTERS
+        )
     old = pd.read_csv(existing_path, parse_dates=["date"])
     old_series = pd.Series(old["value"].to_numpy(dtype=float), index=pd.DatetimeIndex(old["date"]))
     recent = _bls_labor_share([this_year - BLS_CHUNK_YEARS + 1])

@@ -7,7 +7,7 @@
   "source_name": "BEA National Income and Product Accounts, via FRED",
   "source_url": "https://fred.stlouisfed.org/series/W055RC1Q027SBEA",
   "license": "US government work, public domain",
-  "fetched_at": "2026-11-18T18:07:26Z",
+  "fetched_at": "2026-11-18T18:57:44Z",
   "data_through": "2026-04-01",
   "max_lag_days": 150,
   "breaks": [],
