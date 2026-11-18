@@ -39,7 +39,9 @@ def get(url, params=None, expect="any", timeout=60):
         break
     if 400 <= response.status_code < 500:
         # Stack Exchange signals throttling with HTTP 400 and a JSON error body.
-        raise SourceError(f"{url} returned {response.status_code}: {response.text[:200]}")
+        error = SourceError(f"{url} returned {response.status_code}: {response.text[:200]}")
+        error.body = response.text  # lets callers read fields such as Stack Exchange's `backoff`
+        raise error
     response.raise_for_status()
     if expect in ("csv", "json"):
         head = response.content.lstrip()[:16].lower()  # only the START of the body counts

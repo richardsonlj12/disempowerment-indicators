@@ -20,6 +20,15 @@ The bound for a site is min(ABSOLUTE_BOUND, max(3 x the largest monthly count al
 that site, BOUND_FLOOR)): 400,000 (floor 50,000) for Stack Overflow and 10,000 (floor 5,000) for a
 comparison site. The floor keeps a young site's fast early growth from being rejected.
 
+Request pacing: the API's `backoff` value is recorded from every response that carries it (errors
+included) per method; both the all-time and month calls hit `/2.3/questions`, so they share one
+backoff, and the next call to that method waits until it has passed. The earliest allowed next-call
+time is persisted in `[data_dir]/_cache/stackexchange-throttle.json`, so a later process honours it
+too (a wait over MAX_WAIT_SECONDS ends the run cleanly with a `SourceError` instead). Any two
+requests are also at least MIN_REQUEST_INTERVAL_SECONDS (0.2 s) apart, well inside the limit of 30
+requests per second. Error 502 (throttle_violation) stops the run at once, with no retry and
+nothing cached for the failing month.
+
 Every accepted fetch is also appended to `[data_dir]/_archive/stackexchange/[YYYY-MM-DD].csv`
 (site, month, count, fetched_at) so that deletions accruing after the fact can be measured later.
 
@@ -73,6 +82,7 @@ RETRY_PAUSE_SECONDS = 30
 LICENSE = "CC BY-SA"
 DEFAULT_SITES_PATH = Path(__file__).resolve().parents[3] / "config" / "c1_comparison_sites.yaml"
 
+_clock = time.time  # patched in tests
 _sleep = time.sleep  # patched in tests
 
 
@@ -148,32 +158,91 @@ def _write_cache(path: Path, cache: dict[str, int]) -> None:
     _atomic_write(path, json.dumps(dict(sorted(cache.items())), indent=0) + "\n")
 
 
+METHOD = "questions"  # the API method both the all-time and the month calls hit
+MIN_REQUEST_INTERVAL_SECONDS = 0.2  # spacing between any two requests (API limit: 30 per second per IP)
+MAX_WAIT_SECONDS = 300  # a backoff longer than this ends the run cleanly instead of sleeping
+
+
+def _throttle_path(data_dir: Path) -> Path:
+    # A sibling of the cache directory, so that `_cache/stackexchange/*.json` holds only month caches.
+    return Path(data_dir) / "_cache" / "stackexchange-throttle.json"
+
+
+def _read_throttle_state(data_dir: Path) -> dict[str, float]:
+    path = _throttle_path(data_dir)
+    try:
+        return {k: float(v) for k, v in json.loads(path.read_text()).items()}
+    except (OSError, ValueError, AttributeError):
+        return {}
+
+
+def _write_throttle_state(data_dir: Path, state: dict[str, float]) -> None:
+    _atomic_write(_throttle_path(data_dir), json.dumps(state) + "\n")
+
+
+class _Throttle:
+    """Per-method `backoff` plus a minimum spacing, persisted so a later process honours both."""
+
+    def __init__(self, data_dir: Path):
+        self.data_dir = Path(data_dir)
+        self.allowed_at = _read_throttle_state(self.data_dir)  # method -> earliest epoch time of the next call
+        self.last_request = 0.0
+
+    def wait(self, method: str = METHOD) -> None:
+        delay = max(self.allowed_at.get(method, 0.0), self.last_request + MIN_REQUEST_INTERVAL_SECONDS) - _clock()
+        if delay > MAX_WAIT_SECONDS:
+            raise SourceError(
+                f"Stack Exchange asked for a backoff of {delay:.0f}s on /{method}; stopping cleanly. "
+                "Completed months are cached; run again later."
+            )
+        if delay > 0:
+            _sleep(delay)
+        self.last_request = _clock()
+
+    def record(self, body, method: str = METHOD) -> None:
+        backoff = body.get("backoff") if isinstance(body, dict) else None
+        if backoff:
+            self.allowed_at[method] = max(self.allowed_at.get(method, 0.0), _clock() + float(backoff))
+            _write_throttle_state(self.data_dir, self.allowed_at)
+
+
+_throttle: _Throttle | None = None
+
+
+def _api_get(params: dict, what: str) -> dict:
+    """One API call, spaced and backoff-aware. Returns the JSON body; raises SourceError on an API error.
+
+    `backoff` is recorded from every response that carries it, errors included. Error 502
+    (throttle_violation) is never retried: it raises straight away."""
+    _throttle.wait()
+    try:
+        body = http.get(API, params=params, expect="json").json()
+    except SourceError as error:
+        try:
+            _throttle.record(json.loads(getattr(error, "body", "")))
+        except ValueError:
+            pass
+        raise
+    _throttle.record(body)
+    if "error_id" in body:
+        raise SourceError(f"Stack Exchange {what}: {body.get('error_name')} {body.get('error_message')}")
+    return body
+
+
 def _month_total(site: str, ym: tuple[int, int]) -> tuple[int, int | None]:
     """One API call: (question count, quota_remaining or None)."""
     from_ts, to_ts = month_bounds(*ym)
-    response = http.get(
-        API,
-        params={"site": site, "fromdate": from_ts, "todate": to_ts, "filter": TOTAL_FILTER},
-        expect="json",
-    )
-    body = response.json()
-    if "error_id" in body:
-        raise SourceError(f"Stack Exchange {site} {_key(ym)}: {body.get('error_name')} {body.get('error_message')}")
+    body = _api_get({"site": site, "fromdate": from_ts, "todate": to_ts, "filter": TOTAL_FILTER}, f"{site} {_key(ym)}")
     if "total" not in body:
         raise SourceError(f"Stack Exchange {site} {_key(ym)}: response has no total")
-    if body.get("backoff"):
-        _sleep(float(body["backoff"]))
     return int(body["total"]), body.get("quota_remaining")
 
 
 def _all_time_total(site: str) -> tuple[int, int | None]:
     """One API call without dates: the site's all-time question total (and quota_remaining)."""
-    response = http.get(API, params={"site": site, "filter": TOTAL_FILTER}, expect="json")
-    body = response.json()
-    if "error_id" in body or "total" not in body:
-        raise SourceError(f"Stack Exchange {site} all-time total: {body.get('error_name') or 'response has no total'}")
-    if body.get("backoff"):
-        _sleep(float(body["backoff"]))
+    body = _api_get({"site": site, "filter": TOTAL_FILTER}, f"{site} all-time total")
+    if "total" not in body:
+        raise SourceError(f"Stack Exchange {site} all-time total: response has no total")
     return int(body["total"]), body.get("quota_remaining")
 
 
@@ -270,6 +339,8 @@ def fetch(
     refresh = {last_complete, _previous(last_complete)}
     floor = _ym(start_month) if start_month else (1, 1)
     cache_dir = Path(data_dir) / "_cache" / "stackexchange"
+    global _throttle
+    _throttle = _Throttle(Path(data_dir))
 
     plan = [(SO_SITE, SO_START)]
     # A site's opening month is partial (beta opens mid-month); start at its first full month.

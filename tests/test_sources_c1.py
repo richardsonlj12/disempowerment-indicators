@@ -296,13 +296,161 @@ def test_yoy_comparison_mean_uses_four_sites_throughout():
     assert jan == pytest.approx(-12.5)  # 0 - (50 + 0 + 0 + 0) / 4
 
 
+class _Clock:
+    """Fake wall clock: patched `_sleep` advances it, patched `_clock` reads it."""
+
+    def __init__(self, monkeypatch, start=1_000_000.0):
+        self.now, self.sleeps = start, []
+        monkeypatch.setattr(stackexchange, "_clock", lambda: self.now)
+        monkeypatch.setattr(stackexchange, "_sleep", self.sleep)
+
+    def sleep(self, seconds):
+        self.sleeps.append(seconds)
+        self.now += seconds
+
+
+def _mock_se_timed(clock, backoffs):
+    """Mock API recording the clock at each request. `backoffs` maps request index (0-based) to a backoff."""
+    state = {"times": [], "kinds": []}
+
+    def callback(request):
+        qs = parse_qs(urlparse(request.url).query)
+        i = len(state["times"])
+        state["times"].append(clock.now)
+        state["kinds"].append("month" if "fromdate" in qs else "all_time")
+        body = {"total": 1000 if "fromdate" in qs else 24_000_000, "has_more": False, "quota_remaining": 200}
+        if i in backoffs:
+            body["backoff"] = backoffs[i]
+        return (200, {}, json.dumps(body))
+
+    responses.add_callback(responses.GET, SE_URL, callback=callback)
+    return state
+
+
 @responses.activate
-def test_backoff_field_is_honoured(monkeypatch):
-    slept = []
-    monkeypatch.setattr(stackexchange, "_sleep", slept.append)
-    _mock_se(backoff=5)
+def test_backoff_from_all_time_call_delays_first_month_call(monkeypatch):
+    clock = _Clock(monkeypatch)
+    state = _mock_se_timed(clock, {0: 30})  # the first (all-time) call asks for 30 s
     stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
-    assert slept and set(slept) == {5}
+    assert state["kinds"][:2] == ["all_time", "month"]
+    assert state["times"][1] - state["times"][0] >= 30
+
+
+@responses.activate
+def test_backoff_is_per_method_across_calls_and_every_request_is_spaced(monkeypatch):
+    clock = _Clock(monkeypatch)
+    state = _mock_se_timed(clock, {1: 7})  # month call asks for 7 s; later calls hit the same method
+    stackexchange.fetch(start_month="2024-03", today=date(2024, 5, 20))
+    t = state["times"]
+    assert t[2] - t[1] >= 7
+    assert all(b - a >= stackexchange.MIN_REQUEST_INTERVAL_SECONDS - 1e-6 for a, b in zip(t, t[1:]))
+
+
+@responses.activate
+def test_backoff_on_rejected_month_is_honoured_before_retry(monkeypatch):
+    clock = _Clock(monkeypatch)
+    seen = {"n": 0}
+    state = {"times": []}
+
+    def callback(request):
+        qs = parse_qs(urlparse(request.url).query)
+        state["times"].append(clock.now)
+        if "fromdate" not in qs:
+            return (200, {}, json.dumps({"total": 24_000_000, "quota_remaining": 200}))
+        seen["n"] += 1
+        # first month response is a rejected (all-time sized) answer carrying a big backoff
+        if seen["n"] == 1:
+            return (200, {}, json.dumps({"total": 24_000_000, "quota_remaining": 200, "backoff": 120}))
+        return (200, {}, json.dumps({"total": 1000, "quota_remaining": 200}))
+
+    responses.add_callback(responses.GET, SE_URL, callback=callback)
+    stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    assert state["times"][2] - state["times"][1] >= 120  # not just RETRY_PAUSE_SECONDS (30)
+
+
+@responses.activate
+def test_persisted_backoff_from_previous_run_is_honoured(tmp_path, monkeypatch):
+    clock = _Clock(monkeypatch)
+    state = _mock_se_timed(clock, {0: 20})
+    stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    # 'later process': backoff recorded on the last call (index 1: none) -> make last call carry one
+    responses.reset()
+    clock.sleeps.clear()
+    state2 = _mock_se_timed(clock, {})
+    path = tmp_path / "data" / "_cache"
+    (path).mkdir(parents=True, exist_ok=True)
+    start = clock.now
+    # a previous run left a backoff for the questions method 15 s into the future
+    for f in path.glob("*throttle*"):
+        f.unlink()
+    stackexchange._write_throttle_state(tmp_path / "data", {"questions": start + 15})
+    stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    assert state2["times"][0] - start >= 15
+
+
+@responses.activate
+def test_backoff_on_last_response_is_persisted_for_next_process(tmp_path, monkeypatch):
+    clock = _Clock(monkeypatch)
+    state = _mock_se_timed(clock, {9: 45})  # five sites x (all-time + one month): call 9 is the last
+    stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    assert len(state["times"]) == 10
+    saved = stackexchange._read_throttle_state(tmp_path / "data")
+    assert saved["questions"] >= clock.now + 44
+
+
+@responses.activate
+def test_overlong_persisted_backoff_exits_cleanly_without_a_request(tmp_path, monkeypatch):
+    clock = _Clock(monkeypatch)
+    state = _mock_se_timed(clock, {})
+    stackexchange._write_throttle_state(tmp_path / "data", {"questions": clock.now + 3600})
+    with pytest.raises(SourceError, match="backoff"):
+        stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    assert state["times"] == []
+
+
+@responses.activate
+def test_backoff_in_error_response_body_is_honoured(monkeypatch):
+    clock = _Clock(monkeypatch)
+    calls = {"n": 0}
+    times = []
+
+    def callback(request):
+        qs = parse_qs(urlparse(request.url).query)
+        times.append(clock.now)
+        calls["n"] += 1
+        if calls["n"] == 1:  # error body (not 502) that carries a backoff
+            return (400, {}, json.dumps({"error_id": 500, "error_name": "internal", "error_message": "x", "backoff": 40}))
+        total = 24_000_000 if "fromdate" not in qs else 1000
+        return (200, {}, json.dumps({"total": total, "quota_remaining": 200}))
+
+    responses.add_callback(responses.GET, SE_URL, callback=callback)
+    with pytest.raises(SourceError):
+        stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))
+    stackexchange.fetch(start_month="2024-04", today=date(2024, 5, 20))  # next process
+    assert times[1] - times[0] >= 40
+
+
+@responses.activate
+def test_throttle_violation_stops_without_retry_or_caching(tmp_path, monkeypatch):
+    clock = _Clock(monkeypatch)
+    n = {"month": 0}
+
+    def callback(request):
+        qs = parse_qs(urlparse(request.url).query)
+        if "fromdate" not in qs:
+            return (200, {}, json.dumps({"total": 24_000_000, "quota_remaining": 200}))
+        n["month"] += 1
+        if n["month"] == 1:
+            return (200, {}, json.dumps({"total": 1100, "quota_remaining": 200}))
+        body = {"error_id": 502, "error_name": "throttle_violation", "error_message": "Violation of backoff parameter"}
+        return (400, {}, json.dumps(body))
+
+    responses.add_callback(responses.GET, SE_URL, callback=callback)
+    with pytest.raises(SourceError, match="throttle_violation"):
+        stackexchange.fetch(start_month="2024-03", today=date(2024, 5, 20))
+    assert n["month"] == 2  # no retry after the violation
+    cached = json.loads((tmp_path / "data" / "_cache" / "stackexchange" / "stackoverflow.json").read_text())
+    assert cached == {"2024-03": 1100}  # the failing month wrote nothing
 
 
 @responses.activate
