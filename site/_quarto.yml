@@ -25,7 +25,7 @@ website:
           - href: indicators/EA2.qmd
             text: "How AI is used, automation versus augmentation (EA2)"
           - href: indicators/ED1.qmd
-            text: "Labor share of income, nonfarm business (ED1)"
+            text: "Labor share of income (ED1)"
           - href: indicators/GD1.qmd
             text: "Labor-based share of tax revenue (GD1)"
           - href: indicators/CD1.qmd

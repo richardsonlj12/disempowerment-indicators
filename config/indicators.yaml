@@ -6,7 +6,7 @@ indicators:
     domain: economic
     layer: erosion
     scale: baseline
-    name: Labor share of income, nonfarm business
+    name: Labor share of income
     ai_link: weak
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: A broad outcome that AI is one possible cause of, not a measure of AI itself.

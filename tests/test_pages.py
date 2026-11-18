@@ -127,7 +127,7 @@ def test_build_writes_release1_pages_only(repo):
 def test_title_contains_full_indicator_name(repo):
     pages.build(repo, today=TODAY)
     assert _front_matter(_page(repo, "CD1"))["title"] == "Human knowledge-commons activity (CD1)"
-    assert _front_matter(_page(repo, "ED1"))["title"] == "Labor share of income, nonfarm business (ED1)"
+    assert _front_matter(_page(repo, "ED1"))["title"] == "Labor share of income (ED1)"
 
 
 def test_summary_table_has_nine_rows_in_order(repo):

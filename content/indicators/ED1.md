@@ -7,7 +7,7 @@ data_sources:
   - name: "Bureau of Economic Analysis (BEA), corporate profits after tax and gross domestic product, via FRED (Federal Reserve Bank of St. Louis)"
     url: https://fred.stlouisfed.org/series/CPATAX
 calculation: The labor share is the part of what nonfarm businesses produce that is paid to workers as wages and benefits, as a percent of output, published by BLS. The profit share shown alongside is corporate profits after tax divided by gross domestic product.
-coverage: United States · quarterly · from 1947
+coverage: United States, nonfarm business sector · quarterly · from 1947
 ---
 
 ## Why this matters for gradual disempowerment
