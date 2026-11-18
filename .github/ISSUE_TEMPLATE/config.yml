@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Give feedback (GitHub Discussions)
+    url: https://github.com/richardsonlj12/keel/discussions
+    about: Comments, questions and suggestions about KEEL that are not error reports.

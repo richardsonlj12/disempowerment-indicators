@@ -1,17 +1,18 @@
-This page explains how the site turns public data into indicators, and how it will turn indicators into readings. A **reading** is the site's label for what an indicator's data is doing, such as "Rising" or "Within baseline." For now the site shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see "Releases and stages" below).
+This page explains how KEEL turns public data into indicators, and how it will turn indicators into readings. A **reading** is KEEL's label for what an indicator's data is doing, such as "Rising" or "Within baseline." For now KEEL shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see "Releases and stages" below).
 
-We welcome constructive and honest feedback on this project.
+We welcome constructive and honest feedback on this project. [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Give feedback](https://github.com/richardsonlj12/keel/discussions) · Feedback form: [feedback form link]
+
 ## The framework
 
-The site tracks the scenario that Kulveit et al. (2025) call **gradual disempowerment** ([Kulveit et al., "Gradual Disempowerment," arXiv 2501.16946](https://arxiv.org/abs/2501.16946)). Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. As AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. The site's author has written a short introduction to the argument ([Richardson, "No Robot Uprising Required"](https://richardsonlj.substack.com/p/no-robot-uprising-required)).
+KEEL tracks the scenario that Kulveit et al. (2025) call **gradual disempowerment** ([Kulveit et al., "Gradual Disempowerment," arXiv 2501.16946](https://arxiv.org/abs/2501.16946)). Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. As AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. KEEL's author has written a short introduction to the argument ([Richardson, "No Robot Uprising Required"](https://richardsonlj.substack.com/p/no-robot-uprising-required)).
 
-The site uses one word for this throughout: **leverage**, the bargaining power people have because systems need their work, taxes or attention.
+KEEL uses one word for this throughout: **leverage**, the bargaining power people have because systems need their work, taxes or attention.
 
 These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.
 
 ### Releases and stages
 
-The site is built in steps. **Releases** decide which indicators are on the site. **Stages** decide how far each release has gone.
+KEEL is built in steps. **Releases** decide which indicators KEEL covers. **Stages** decide how far each release has gone.
 
 **Releases.**
 
@@ -36,11 +37,11 @@ A fourth row, **human deferral and oversight**, runs across all three domains. I
 
 **The rows are inspired by Chooi, Lee and Li (2026).** Their paper, ["Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics"](https://aclanthology.org/2026.evaleval-1.36/), proposes three layers that they call exposure, erosion and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two. The table shows how they line up.
 
-| This site's row | Chooi, Lee and Li's term | How they relate |
+| KEEL's row | Chooi, Lee and Li's term | How they relate |
 |---|---|---|
 | **Adoption:** AI entering a system (E2, E3) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it. We agree, and the adoption row's pages say so. |
 | **Displacement:** a whole system depending less on human participation (E1, G1, C1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
-| Not measured | **Erosion:** individuals losing the ability to do a task without AI | None of the site's indicators measures individual capability. This is the largest gap between the site and the paper. |
+| Not measured | **Erosion:** individuals losing the ability to do a task without AI | None of KEEL's indicators measures individual capability. This is the largest gap between KEEL and the paper. |
 | **Lock-in:** reduced dependence becoming hard to restore (empty for now) | **Lock-in:** the institutional infrastructure for human agency dismantled, for example a profession that no longer trains juniors | Close to the paper's meaning. |
 
 We also do not use the paper's second axis, level of analysis (individual, institutional, civilizational). Our indicators are national totals. The paper's own warning applies: "disempowerment" at different levels may be different things sharing a name.
@@ -57,7 +58,7 @@ Concentrated wealth or political influence is not by itself evidence that reduce
 - **Persistence:** a departure from baseline that does not reverse after shocks over a stated number of periods.
 - **Rising switching costs:** a growing capacity of groups that profit from AI to block a return to human decision making.
 
-Rising switching costs is one of the lock-in signs Chooi, Lee and Li list. Persistence is the site's own proposal. If no test is adopted, the row will be renamed "Concentration of influence" rather than overclaim. Until then, every lock-in cell reads "No public measure yet."
+Rising switching costs is one of the lock-in signs Chooi, Lee and Li list. Persistence is KEEL's own proposal. If no test is adopted, the row will be renamed "Concentration of influence" rather than overclaim. Until then, every lock-in cell reads "No public measure yet."
 
 ### The oversight row
 
@@ -112,7 +113,7 @@ A reading says what the data did. It does not say why.
 Each reading goes through these steps:
 
 1. A script computes a **proposed** reading from the data and the rule fixed in advance.
-2. Jeremy Richardson, the site's author, confirms or overrides it, with a short rationale. Only confirmed readings appear as current.
+2. Jeremy Richardson, KEEL's author, confirms or overrides it, with a short rationale. Only confirmed readings appear as current.
 3. Every reading is stored with its date, so each indicator page can show its history.
 
 Charts update automatically. Readings change only on review.
@@ -159,17 +160,17 @@ E1 will gain an industry comparison in Release 2: labor share in industries wher
 
 - Where a source publishes standard errors (a measure of how much an estimate would vary from sample to sample), the chart shows them as bands. The Census Bureau's Business Trends and Outlook Survey (BTOS), used for E2, is one. The threshold rule will use them.
 - Monthly series with seasonal patterns (Stack Exchange, Wikipedia) are compared over 12-month periods or year over year.
-- A move inside a series' normal noise never counts as crossing a threshold.
+- A move inside a series' usual month-to-month variation never counts as crossing a threshold.
 
 ### Breaks, markers and revisions
 
 - **Series breaks.** When a source changes its definition or method so that values before and after are not comparable, the chart marks the date and does not join the two parts. Examples: the change to the Census AI question on 17 November 2025 (E2), Wikimedia's improved bot detection in 2025 (C1), and changes in the Anthropic Economic Index release format (E3).
 - **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart), GitHub Copilot's launch and Stack Overflow policy events (C1), and the Census question wording that began on 19 October 2026 (E2).
-- **Revisions.** Official statistics are revised. The site uses the latest revised data. A revision that would change a reading is treated like new data and goes to review.
+- **Revisions.** Official statistics are revised. KEEL uses the latest revised data. A revision that would change a reading is treated like new data and goes to review.
 
 ## Thresholds and the retrospective (coming in Stages 2 and 3)
 
-**The rule comes first.** In Stage 2, a mechanical rule for each kind of comparison will be written, reviewed, fixed in advance and dated. The bands for each indicator then follow from the rule. They are not hand-picked after looking at the data. The author and the AI assistant that built the site have already seen the 2023 to 2026 data, so fixing hand-picked thresholds would not be enough.
+**The rule comes first.** In Stage 2, a mechanical rule for each kind of comparison will be written, reviewed, fixed in advance and dated. The bands for each indicator then follow from the rule. They are not hand-picked after looking at the data. The author and the AI assistant that built KEEL have already seen the 2023 to 2026 data, so fixing hand-picked thresholds would not be enough.
 
 **The candidate rule for long-running series** compares the change over an indicator's window with the spread of same-length changes in 2010 to 2019:
 
@@ -221,7 +222,7 @@ Every indicator page states two things:
 - **Warning sign:** which way a movement would be consistent with people losing leverage.
 - **Alternative explanations:** the most plausible other explanations of the same data, including a reassuring movement that hides displacement and an alarming one with a cause other than AI.
 
-These indicators show whether the conditions for disempowerment are present. They do not show that it is happening.
+These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.
 
 ### Welfare and influence are different things
 
@@ -229,7 +230,7 @@ People can be better off materially while losing influence, and the reverse. Cho
 
 ### Diagnostics, not targets
 
-These indicators are diagnostics. The site does not recommend that any policy aim to move one of these numbers. When a measure becomes a target, it stops being a good measure (Goodhart's law). Chooi, Lee and Li give the same warning about disempowerment metrics.
+These indicators are diagnostics. KEEL does not recommend that any policy aim to move one of these numbers. When a measure becomes a target, it stops being a good measure (Goodhart's law). Chooi, Lee and Li give the same warning about disempowerment metrics.
 
 ### The cultural gap
 
@@ -239,7 +240,7 @@ The next candidate is survey data on how far people use AI as a go-between for i
 
 ## Critiques we take seriously
 
-**David Krueger (2025)**, a coauthor of the gradual disempowerment paper, warns that many proposed metrics do not separate empowering uses of AI from disempowering ones. Heavy AI use can look like progress while people lose real agency. The site responds in three ways:
+**David Krueger (2025)**, a coauthor of the gradual disempowerment paper, warns that many proposed metrics do not separate empowering uses of AI from disempowering ones. Heavy AI use can look like progress while people lose real agency. KEEL responds in three ways:
 
 - It keeps adoption (E2, E3) apart from displacement.
 - It adds a note on augmentation versus replacement (AI helping people work, against AI doing the work instead of them) wherever adoption is shown.
@@ -247,14 +248,14 @@ The next candidate is survey data on how far people use AI as a go-between for i
 
 **Beren Millidge (2025)** argues that gradual disempowerment might not be so bad. Most people already have little individual influence over large systems. AI governance could be better than human governance. Capital income and transfers could sustain living standards. He calls the outcome highly uncertain. His argument is why every economic page separates welfare from influence: material gains are real, but they answer a different question.
 
-**P. O. Jedlicka (2026)** argues that gradual disempowerment scenarios do not explain how societies actually respond, and assume that technology dictates outcomes. In Jedlicka's view they underrate people acting together and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason for the site's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
+**P. O. Jedlicka (2026)** argues that gradual disempowerment scenarios do not explain how societies actually respond, and assume that technology dictates outcomes. In Jedlicka's view they underrate people acting together and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason for KEEL's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
 
 **The authors' own caveats.**
 
 - Kulveit et al. concede that some outcomes of the scenario are ambiguous. For example, an AI-run state could bring large benefits.
 - Chooi, Lee and Li say that showing what caused a change is hard throughout, that most metrics in this area can only describe and compare, and that leading indicators are hard to validate before the outcomes they predict have happened.
 
-The site's indicators are descriptive in exactly this sense.
+KEEL's indicators are descriptive in exactly this sense.
 
 ## What comes later
 
@@ -299,6 +300,6 @@ The framework comes from [Kulveit et al. (2025)](https://arxiv.org/abs/2501.1694
 - [Herdağdelen, Joren and Tamkin (2026), "How AI agents shape experts' judgment calls"](https://www.anthropic.com/research/agents-judgment-calls)
 - [Imas and Schaal (2026), "Has AI impacted the labor market yet?"](https://aleximas.substack.com/p/has-ai-impacted-the-labor-market)
 
-Every figure on the site is checked against its primary source before publication.
+Every figure KEEL publishes is checked against its primary source before publication.
 
-This site is built with assistance from Claude (Anthropic). One indicator (E3) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.
+KEEL is built with assistance from Claude (Anthropic). One indicator (E3) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.

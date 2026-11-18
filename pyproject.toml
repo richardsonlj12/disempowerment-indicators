@@ -17,5 +17,5 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["live: hits the network"]
-addopts = "-m 'not live'"
+markers = ["live: hits the network", "release_gate: blocks release (Task 12), not development; run with pytest -m release_gate"]
+addopts = "-m 'not live and not release_gate'"
