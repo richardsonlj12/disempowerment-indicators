@@ -1,5 +1,7 @@
 # Release 1, Stage 1 — Data Site Implementation Plan
 
+> **Note (2026-11-18): indicator codes were renumbered after this plan was written.** Old to new: E2 to EA1, E3 to EA2, E1 to ED1, G1 to GD1, C1 to CD1 (Release 2: E4 to EL1, G2 to GA1, G3 to GL1, C2 to CD2). This plan keeps the old codes as history.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Publish the Release 1 data site: five indicator pages (E1, E2, E3, G1, C1) with live public data, interactive charts, explanatory text and caveats; a summary grid in which every reading shows "Not yet reviewed"; the oversight row; the counter-evidence panel; and methodology, archive and about pages — refreshed weekly by GitHub Actions and deployed to GitHub Pages.

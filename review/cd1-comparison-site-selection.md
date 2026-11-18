@@ -1,8 +1,11 @@
 Approved by the owner on 2026-11-17: ONLY the four primary comparison sites (diy, travel, rpg, scifi). A seven-site robustness set (adding gaming, worldbuilding and judaism at 300 or more questions a month) was considered and not adopted, partly to limit API cost. The screen tables below are kept as history. Leave-one-out checks over the four sites remain possible. Criterion 1 uses open_beta_date < 2015-01-01 because the API's launch_date is unreliable; criterion 4 means not a language site and not an advice/professional site.
 
-# C1 comparison group proposal (pre-registered selection criteria)
+Note (2026-11-18): this indicator was called C1 when this record was written; it is now CD1.
 
-Indicator: C1, Human knowledge-commons activity. Contrast: year-over-year difference-in-differences of monthly new-question counts, Stack Overflow vs. non-programming Stack Exchange sites.
+
+# CD1 comparison group proposal (pre-registered selection criteria)
+
+Indicator: CD1, Human knowledge-commons activity. Contrast: year-over-year difference-in-differences of monthly new-question counts, Stack Overflow vs. non-programming Stack Exchange sites.
 
 ## Data-hygiene statement
 Only the site list/metadata (/2.3/sites) and 2019 question totals (fromdate=2019-01-01 00:00 UTC, todate=2019-12-31 23:59:59 UTC, filter=total) were retrieved. No count dated after 2019-12-31 was requested, viewed or computed. API calls: 19 (2 sites calls, one failed on a bad filter, plus 17 totals), anonymous, User-Agent set as specified.

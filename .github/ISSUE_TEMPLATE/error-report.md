@@ -6,7 +6,7 @@ title: "Error: "
 
 **Page**
 
-Which page has the error? Give the section too, if you can.
+Which page has the error, for example "Labor share of income, nonfarm business (ED1)" or "Firm AI adoption (EA1)"? Give the section too, if you can.
 
 **What's wrong**
 

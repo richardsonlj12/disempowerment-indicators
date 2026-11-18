@@ -1,5 +1,8 @@
 # Source reading notes
 
+Note (2026-11-18): indicator codes were renumbered. Old to new: E2 to EA1, E3 to EA2, E1 to ED1, G1 to GD1, C1 to CD1 (Release 2: E4 to EL1, G2 to GA1, G3 to GL1, C2 to CD2). Text below uses the new codes.
+
+
 Source-reading gate (design Sec. 7b), done 2026-11-17 before the methodology page was drafted. Each source was read from the original. For each one: what it says, what the site relies on, and any limits on how the site may cite it. Figures cited on the site are also logged in `review/figure-verification.md`.
 
 | Source | Read from | Status |
@@ -44,15 +47,15 @@ Jay Chooi, Jaeho Lee and Jasmine Li, "Measuring AI-Induced Disempowerment: A Fra
 - The case against a composite score.
 - The Goodhart warning, which supports the "diagnostics, not targets" statement.
 - Leading and lagging labels.
-- The support for comparison designs (Metric 4) as backing for E1, G1 and the C1 contrast.
+- The support for comparison designs (Metric 4) as backing for ED1, GD1 and the CD1 contrast.
 
 **Where the site departs from the paper.** The methodology page credits the layers as the site's own adaptation.
 
-1. **Exposure.** The paper's exposure layer means AI already changing outcomes. The site's exposure row means AI entering a system and how far it has gone (firm adoption, E2; depth of use, E3). The paper itself treats adoption as an instrumental indicator, not a measure of exposure in its own sense. So the site's exposure row is closer to the paper's "AI inputs" than to its Layer 1.
+1. **Exposure.** The paper's exposure layer means AI already changing outcomes. The site's exposure row means AI entering a system and how far it has gone (firm adoption, EA1; depth of use, EA2). The paper itself treats adoption as an instrumental indicator, not a measure of exposure in its own sense. So the site's exposure row is closer to the paper's "AI inputs" than to its Layer 1.
 2. **Erosion.** The paper's erosion layer is about individual capability: can a person still do the task without AI? The site's erosion row asks something different, following Kulveit et al.: is a system's dependence on human participation falling? Its measures are labor share, the labor-based share of taxes, and activity on human knowledge commons. None of the site's Release 1 indicators measures individual capability loss. This is the largest departure.
 3. **Lock-in.** The paper defines lock-in as dismantled institutional infrastructure for human agency. Its examples are expertise pipelines, rising switching costs and legal architectures that presuppose AI. The site's lock-in row asks whether reduced dependence is becoming hard to restore. That is close to the paper. The row is empty in Release 1 because no operational test has been adopted (design Sec. 4.1). One candidate test, rising switching costs, is among the paper's examples. The other, persistence, is the site's own proposal.
 4. **Level of analysis.** The site works mostly at the national, aggregate level and does not use the paper's individual / institutional / civilizational axis. The oversight row draws on individual-level experimental evidence (Herdağdelen et al.).
-5. **Metrics.** The site implements none of the six metrics as specified. E1 and G1 are simpler national versions of the ideas behind Metric 4: no firm-level SEC data, no exposure-weighted contrast yet, and the labor tax share in place of tax relative to AI profits. The E1 industry comparison planned for Release 2 moves closer to Metric 4.
+5. **Metrics.** The site implements none of the six metrics as specified. ED1 and GD1 are simpler national versions of the ideas behind Metric 4: no firm-level SEC data, no exposure-weighted contrast yet, and the labor tax share in place of tax relative to AI profits. The ED1 industry comparison planned for Release 2 moves closer to Metric 4.
 
 ## Moon & Boudreaux (2026), RAND
 
@@ -124,7 +127,7 @@ The per-decision figures on the page (92, 82, 81 and 90 percent) are match rates
 **Limits on citing it.**
 
 - It is a single experiment, not a time series, so it cannot fill the row.
-- It is authored at Anthropic, which also publishes E3's data. The site is built with assistance from Claude, and the agent in the study is Claude. The oversight row's citation should state the Anthropic authorship.
+- It is authored at Anthropic, which also publishes EA2's data. The site is built with assistance from Claude, and the agent in the study is Claude. The oversight row's citation should state the Anthropic authorship.
 
 ## Imas (2026)
 
@@ -139,7 +142,7 @@ Alex Imas (written with Jacob Schaal), "Has AI impacted the labor market yet?", 
 - Names counterforces: "messy" jobs that resist automation, new firms, and a "relational sector," where "human involvement in the role is part of the value," which "may expand as labor flows to existing relational jobs (e.g., healthcare, education)."
 - Does not discuss labor share.
 
-**What the site relies on.** The relational-sector idea, as the rival reading for E1. If work moves into relational jobs, labor's share of income could hold steady even while people's bargaining position changes, so a flat labor share is not proof that leverage is intact. The post states the relational-sector idea only briefly. The fuller argument that labor's share could stay stable after AGI is in Imas and Trammell's Dwarkesh Podcast conversation (2026-06-04, listed in the bibliography), which was not part of this reading. Site prose therefore attributes the rival reading to Imas's relational-sector argument without claiming more detail than this post gives.
+**What the site relies on.** The relational-sector idea, as the rival reading for ED1. If work moves into relational jobs, labor's share of income could hold steady even while people's bargaining position changes, so a flat labor share is not proof that leverage is intact. The post states the relational-sector idea only briefly. The fuller argument that labor's share could stay stable after AGI is in Imas and Trammell's Dwarkesh Podcast conversation (2026-06-04, listed in the bibliography), which was not part of this reading. Site prose therefore attributes the rival reading to Imas's relational-sector argument without claiming more detail than this post gives.
 
 **Limits on citing it.** The site cites no figures from this post. It reports figures from many studies, and any of them would have to be checked against the study itself before use (design Sec. 7b).
 
@@ -163,6 +166,6 @@ Read for one question from the owner (Batch C): did the paper link automation an
 
 - The authors call these "early, descriptive indicators" and not causal estimates. Patterns attenuate when controlling for education, show some trends that predate generative AI, and are stronger in the ADP sample than in national survey benchmarks.
 - The paper uses the Index's occupation-level automation shares as a fixed exposure measure. It does not test whether a rising automation share over time predicts later job losses, so a warning-sign line built on it is KEEL's inference.
-- The Index measure is from Claude usage, the same one-vendor data as E3, with the same representativeness limits.
+- The Index measure is from Claude usage, the same one-vendor data as EA2, with the same representativeness limits.
 
-**What the site relies on.** Only the two E3 passages marked [DRAFT FOR OWNER], pending the owner's approval. No figure from the paper is quoted on a page.
+**What the site relies on.** Only the two EA2 passages marked [DRAFT FOR OWNER], pending the owner's approval. No figure from the paper is quoted on a page.
