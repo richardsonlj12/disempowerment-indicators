@@ -23,7 +23,7 @@
     },
     "stackexchange": {
       "status": "failed",
-      "error": "SourceError: https://api.stackexchange.com/2.3/questions returned 400: {\"error_id\":502,\"error_message\":\"Violation of backoff parameter\",\"error_name\":\"throttle_violation\"}",
+      "error": "SourceError: Stack Exchange anonymous quota exhausted with 683 site-months still to fetch; completed months are cached in /Users/jeremyrichardson/Claude Code/gradual-disempowerment/disempowerment-indicators/.claude/worktrees/release1-stage1/data/_cache/stackexchange. Run again after the quota resets (daily).",
       "since": "2026-11-18"
     }
   }
