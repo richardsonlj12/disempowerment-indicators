@@ -8,6 +8,7 @@ Source-reading gate (design Sec. 7b), done 2026-11-17 before the methodology pag
 | Moon & Boudreaux (2026), RAND RR-A4817-1 | RAND PDF, 39 pages (the HTML page blocks scripted requests; the PDF was retrieved through a web fetch and its text extracted) | Read in full (body, limitations, findings and recommendations; appendix mathematics skimmed) |
 | Herdağdelen, Joren & Tamkin (2026) | Anthropic Research page and the full paper PDF | Read in full; figures checked against the paper |
 | Imas (2026) | Substack post, full text visible (no paywall) | Read in full; quotations checked against the raw page text |
+| Brynjolfsson, Chandar & Chen (August 2026), "Canaries in the Coal Mine?" | Stanford Digital Economy Lab PDF (latest version); text extracted | Abstract, introduction, Sec. 1.2, Sec. 2.5 (Fact 5), Table 3 and Online Appendix F headings read (Batch C, 2026-11-18); not read in full |
 
 Nothing is listed as unread. The owner also supplied copies of the Chooi et al. and RAND PDFs. Their SHA-1 checksums match the copies retrieved from the public URLs, so both readings are of the published originals.
 
@@ -143,3 +144,25 @@ Alex Imas (written with Jacob Schaal), "Has AI impacted the labor market yet?", 
 **Limits on citing it.** The site cites no figures from this post. It reports figures from many studies, and any of them would have to be checked against the study itself before use (design Sec. 7b).
 
 **Reading note.** The post was first read through a summarizing fetch tool. The raw HTML was then downloaded and converted to text, and every quotation above was checked word for word against that text.
+
+## Brynjolfsson, Chandar & Chen (August 2026)
+
+Erik Brynjolfsson, Bharat Chandar and Ruyu Chen, "Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence", Stanford Digital Economy Lab, August 2026 (updates the August 2025 paper with ADP payroll data through June 2026). https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf
+
+Read for one question from the owner (Batch C): did the paper link automation and augmentation, as measured in the Anthropic Economic Index, to where young workers' employment fell?
+
+**What it says.**
+
+- Abstract, fact (5): "Declines are concentrated in occupations where AI usage primarily substitutes for human tasks; where usage primarily complements workers, employment is flat or rising, especially for experienced workers."
+- Sec. 1.2 (p. 7): the second exposure measure is the Anthropic Economic Index, using "its classification of queries as either "automative" (substituting for labor) or "augmentative" (complementing labor)". Main results use the March 2025 release; Online Appendix F.2 pools the September 2025, January 2026 and April 2026 releases, which combine consumer and API usage. The paper now writes "automation" and "complementary usage" and keeps the Index's labels in tables and figures.
+- Sec. 2.5, "Fact 5" (pp. 17 to 18), Fig. 5: occupations with the highest automation shares show declining employment for workers aged 22 to 25; occupations with the highest augmentation shares do not, and young workers' employment is not ordered by augmentation exposure. Footnote 20: the two lowest augmentation quintiles have very low Claude usage; results are similar after dropping low-usage occupations (Figs. F.4, F.5).
+- Table 3 (p. 20): with all three Index measures entered together, only the automation coefficient is negative and significant for ages 22 to 25 (-0.098, SE 0.018, March 2025 release; -0.084, SE 0.014, pooled later releases), shrinking with age. The augmentation coefficient is positive and significant for ages 41 to 49 and 50 and over.
+- Headline (abstract): employment of 22 to 25 year olds in AI-exposed occupations is 19 percent below where it would be had it kept pace with less-exposed peers.
+
+**Limits on citing it.**
+
+- The authors call these "early, descriptive indicators" and not causal estimates. Patterns attenuate when controlling for education, show some trends that predate generative AI, and are stronger in the ADP sample than in national survey benchmarks.
+- The paper uses the Index's occupation-level automation shares as a fixed exposure measure. It does not test whether a rising automation share over time predicts later job losses, so a warning-sign line built on it is KEEL's inference.
+- The Index measure is from Claude usage, the same one-vendor data as E3, with the same representativeness limits.
+
+**What the site relies on.** Only the two E3 passages marked [DRAFT FOR OWNER], pending the owner's approval. No figure from the paper is quoted on a page.

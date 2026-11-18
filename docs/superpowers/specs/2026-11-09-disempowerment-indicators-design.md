@@ -1,16 +1,18 @@
-# Disempowerment Indicators — Design (v1)
+# KEEL design (v1): Indicators of gradual disempowerment
 
-*Drafted 2026-11-09. Approved by owner 2026-11-12. **Revision 2, 2026-11-12:** incorporates an independent review and the owner's decisions on it (see Sec. 11). Revision 2 approved by owner 2026-11-17. **Revision 3, 2026-11-17:** terminology and page changes from the owner's review of the Stage 1 prose (see Sec. 11, Revision 3).*
+*Drafted 2026-11-09. Approved by owner 2026-11-12. **Revision 2, 2026-11-12:** incorporates an independent review and the owner's decisions on it (see Sec. 11). Revision 2 approved by owner 2026-11-17. **Revision 3, 2026-11-17:** terminology and page changes from the owner's review of the Stage 1 prose (see Sec. 11a). **Revision 4, 2026-11-18:** project name, repository rename and final wording from the owner's review (see Sec. 11a, Revision 4).*
 
 ## 1. Intent
 
+**Name:** **KEEL**, with the subtitle **Indicators of gradual disempowerment** *(Revision 4, owner decision)*. The acronym expands to "Key Evidence on Eroding Leverage"; the expansion appears once, on the About page, not in the title. Public prose calls the project "KEEL", not "the site". Repository: `richardsonlj12/keel`; website: `https://richardsonlj12.github.io/keel/`.
+
 A public website that tracks whether society is drifting toward **gradual disempowerment** — the scenario described by Kulveit et al. (2025, [arXiv 2501.16946](https://arxiv.org/abs/2501.16946); [gradual-disempowerment.ai](https://gradual-disempowerment.ai)) in which economies, states and cultures stop depending on human participation (labor, taxes, attention, consent), and so lose the implicit pressure that keeps them serving people. No dramatic takeover; a slow loss of human leverage.
 
-The site turns that argument into **indicators built from free public data**, explains why each was chosen, lets visitors explore the data, and states — as a dated, human-reviewed judgment — what each indicator is telling us now and how that reading has changed since ChatGPT's launch (Q4 2022).
+KEEL turns that argument into **indicators built from free public data**, explains why each was chosen, lets visitors explore the data, and states — as a dated, human-reviewed judgment — what each indicator is telling us now and how that reading has changed since ChatGPT's launch (Q4 2022).
 
 Why it matters: no one has yet published data that operationalizes the paper's proposed metrics (Sec. 6.2). Announced efforts (AI Objectives Institute observatory, a Metaculus-linked index) have released nothing public as of Nov 2026. A careful, transparent tracker is itself a contribution.
 
-The site is built to **iterate**: a small, defensible first release, then additions (Sec. 7a, Sec. 8).
+KEEL is built to **iterate**: a small, defensible first release, then additions (Sec. 7a, Sec. 8).
 
 ### Audience, in priority order
 1. **AI-safety researchers** — will scrutinize method, sources, attribution and thresholds.
@@ -51,9 +53,9 @@ Every page therefore leads with the finding and keeps full method one click/scro
 - **Public data only**, with licenses that permit republication. Avoid: OpenSecrets API (closed to new users), EIU, Gallup microdata, ADP, Lightcast, S&P.
 - **Secrets** (e.g., FRED API key, Stack Exchange key if used) live only in GitHub Actions Secrets, never in code or commits.
 - The owner is learning the workflow; keep the stack small and explain choices.
-- **Disclosure:** the site is built with assistance from Claude (Anthropic), and one indicator (E3) uses Anthropic data. The About page and the E3 page say so.
+- **Disclosure:** KEEL is built with assistance from Claude (Anthropic), and one indicator (E3) uses Anthropic data. The About page and the E3 page say so.
 
-## 4. How the site interprets data
+## 4. How KEEL interprets data
 
 ### 4.1 The scorecard grid
 Three **layers** (rows) × three **domains** (columns), plus one cross-cutting row:
@@ -71,10 +73,10 @@ Each indicator sits in one cell. Empty or thin cells are shown honestly as "no p
 
 No composite score. Cells are not averaged.
 
-**The rows are inspired by Chooi, Lee & Li (2026)** ([ACL Anthology](https://aclanthology.org/2026.evaleval-1.36/)), whose layers are exposure, erosion and lock-in. *(Revision 3, owner decision.)* The site's rows ask different questions, so the first two are renamed, and the methodology page carries a crosswalk table and credits the paper as the inspiration:
+**The rows are inspired by Chooi, Lee & Li (2026)** ([ACL Anthology](https://aclanthology.org/2026.evaleval-1.36/)), whose layers are exposure, erosion and lock-in. *(Revision 3, owner decision.)* KEEL's rows ask different questions, so the first two are renamed, and the methodology page carries a crosswalk table and credits the paper as the inspiration:
 - **Adoption** (E2, E3) ≈ what the paper treats as adoption measures that "might serve as instrumental indicators" of disempowerment, outside its three layers.
 - **Displacement** (E1, G1, C1) ≈ the displacement half of the paper's **exposure** layer (AI displacing human participation), measured for whole systems, following Kulveit et al.
-- The paper's **erosion** layer (individual capability loss) is not measured by the site.
+- The paper's **erosion** layer (individual capability loss) is not measured by KEEL.
 - **Lock-in** ≈ the paper's lock-in.
 
 Internal layer keys in config and code stay `exposure`, `erosion`, `lockin`; `registry.layer_label()` gives the display names.
@@ -123,7 +125,7 @@ Each indicator states its **warning sign** *(renamed from "direction assumption"
 
 **AI link** — *strong / moderate / weak* — *(renamed from "AI-attribution badge", then from "AI-specificity" in Revision 3; config field `ai_link`)* says how confidently a series' movement can be connected to AI rather than other causes. "Strong" for a series that *is* about AI (E2, E3, G2) means only that it measures AI directly; it does **not** mean strong evidence of harm or that it shows disempowerment. Every indicator page says so where the rating first appears.
 
-**How the AI link is assigned.** It is a structured judgment, not a calculation, and the site says so. Each indicator is scored against four published criteria:
+**How the AI link is assigned.** It is a structured judgment, not a calculation, and KEEL says so. Each indicator is scored against four published criteria:
 1. **Directness** — does the series measure AI itself (e.g., firms using AI), or a broad outcome AI is one cause of (e.g., labor share)?
 2. **Comparison group** — is there an AI-exposed vs. less-exposed contrast that holds other causes roughly constant?
 3. **Timing** — did the change begin or accelerate after generative AI spread (late 2022), rather than continuing an earlier trend?
@@ -154,7 +156,7 @@ Rule of thumb: **strong** = direct measure, or a comparison group plus timing th
 ### 4.5 Readings are dated human judgments
 - Scripts compute a **proposed** reading from data and the frozen rule.
 - The owner **confirms or overrides** it, with a one-to-three sentence rationale. Only confirmed readings appear as "current".
-- Every reading is stored with its date, so the site can show history. Charts update automatically; readings change only on review.
+- Every reading is stored with its date, so KEEL can show history. Charts update automatically; readings change only on review.
 - Retrospective readings are labeled as such ("computed retrospectively on [date] with rule frozen [date]") and kept distinct from readings made in real time.
 - **Review cadence:** a scheduled **quarterly review** of all current readings. Between reviews, the automation **opens a GitHub issue** whenever a computed proposal differs from the confirmed reading. Each indicator page shows the date of its last review.
 - **What happens when data updates automatically:**
@@ -174,9 +176,9 @@ Rule of thumb: **strong** = direct measure, or a comparison group plus timing th
 - **Warning sign** and **Alternative explanations** on every indicator page, as sub-headings of "What would change our reading" *(renamed in Revision 3)*. Alternative explanations are the most plausible other explanations of the same data, including a reassuring movement that hides displacement and an alarming one with a cause other than AI. Examples: E1 — labor share could hold steady while work shifts into low-leverage sectors (Imas and Schaal's "relational sector" argument), so a flat line is not proof that leverage is intact. G1 — a state can co-opt citizens through transfers (the rentier pattern), so G1 is the most direct public measure of state dependence, not a guarantee. C1 — falling Wikipedia pageviews may reflect AI *intermediation* (people still consume its content, through chatbots) rather than human disengagement.
 - **Welfare-vs-influence note** on every economic page: people can be better off materially while losing leverage, and vice versa.
 - **Augmentation-versus-replacement note** wherever adoption is shown *(renamed in Revision 3 so it does not collide with the Displacement row)*; E3 turns this note into data.
-- **Diagnostics, not targets:** the methodology page states that the site does not recommend optimizing any series; policy aimed at moving one number would break its value as a signal (Goodhart's law).
+- **Diagnostics, not targets:** the methodology page states that KEEL does not recommend optimizing any series; policy aimed at moving one number would break its value as a signal (Goodhart's law).
 - **The cultural gap is named:** C1 and C2 measure content and activity, not human capacity, attention or reliance. The methodology page says so and names AI-as-intermediary survey data (Pew, Reuters Institute Digital News Report) as the next candidate.
-- Language *(Revision 3)*: every page carries "These indicators show whether the conditions for disempowerment are present. They do not show that it is happening."
+- Language *(Revision 3)*: every page carries "These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening." *(Revision 4: "whether" replaces "that", and G1's extra ", or that it is not" is dropped; `tests/test_content.py` checks every indicator page and the methodology for the exact sentence pair and fails if the old wording appears anywhere in `content/`.)*
 
 ## 5. v1 indicators
 
@@ -203,7 +205,7 @@ Plus the **counter-evidence panel** (not an indicator; no reading), curated (Tie
   - **Why firm-weighted** is explained on the page: (1) the BTOS national estimate is firm-weighted, the official free biweekly series with standard errors that can be tracked automatically; measures weighted by employment, or drawn from other surveys, report substantially higher adoption (cited qualitatively from a Federal Reserve Board note; no specific figure is quoted because its weighting is described inconsistently across sources); (2) firm-weighting measures breadth across separate businesses, which fits the Adoption row; (3) limitation: it understates how many workers encounter AI, because larger firms adopt more.
   - **By firm size view:** Census publishes the same estimate for seven employment size classes from the November 2025 question onward (series `btos_ai_use_by_size`).
   - **19 October 2026 wording:** from that collection the question says "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)" (Census cites Executive Order 14434). Respondents saw the new wording. In that first period "Do not know" rose from 9.6 to 13.9 percent and "No" fell, while "Yes" was essentially unchanged (24.6 to 24.2 percent) and the standard error rose (0.27 to 0.61); the same period started a new questionnaire version. It is **not a series break**; it is a labeled chart marker, to be revisited at Stage 2 once more periods are published. "Do not know" ranged 9.1–11.2 percent from November 2025 through mid-October 2026. Neutral tone.
-- **E3 How AI is used: automation vs. augmentation:** *(Owner decision 2026-11-12.)* The only free public data on *how* AI is used — the share of tasks handed over entirely (automation) vs. done together (augmentation), among conversations **categorized** into one of five patterns *(Revision 3: "categorized", not "classified")*; the nearest public proxy for Kulveit's suggested metric, the fraction of major corporate decisions made primarily by AI systems, but **not** that measure. Placed in the Adoption row as how much of the work is handed to AI. Caveats stated prominently on the page: **one vendor, one product** (Claude; users are not a representative sample of AI users; "a minority of AI use" removed in Revision 3 for lack of a primary source); first release window December 2024 – January 2025 (confirmed); a rising automation share may reflect Anthropic's own product changes (e.g., agentic tools) rather than society delegating more; releases are irregular and schemas change, so releases are harmonized and changes documented; no pre-AI baseline exists. **Conflict-of-interest disclosure:** the data is published by Anthropic, and the site is built with assistance from Claude. Leading.
+- **E3 How AI is used: automation vs. augmentation:** *(Owner decision 2026-11-12.)* The only free public data on *how* AI is used — the share of tasks handed over entirely (automation) vs. done together (augmentation), among conversations **categorized** into one of five patterns *(Revision 3: "categorized", not "classified")*; the nearest public proxy for Kulveit's suggested metric, the fraction of major corporate decisions made primarily by AI systems, but **not** that measure. Placed in the Adoption row as how much of the work is handed to AI. Caveats stated prominently on the page: **one vendor, one product** (Claude; users are not a representative sample of AI users; "a minority of AI use" removed in Revision 3 for lack of a primary source); first release window December 2024 – January 2025 (confirmed); a rising automation share may reflect Anthropic's own product changes (e.g., agentic tools) rather than society delegating more; releases are irregular and schemas change, so releases are harmonized and changes documented; no pre-AI baseline exists. **Conflict-of-interest disclosure:** the data is published by Anthropic, and KEEL is built with assistance from Claude. Leading.
 - **G1 Labor-based share of tax revenue:** *(Corrected 2026-11-17 from verified data; earlier wording said "rising".)* The OECD average has not fallen (48.5% in 2010, peak 50.5% in 2020, 49.2% in 2023). The US quarterly series, which drives the reading, fell from an average of 66.9% in 2022 to 63.2% in 2026Q2 but remains inside its 2010–19 range (62.3–66.9%). Overall the evidence does not currently point toward disempowerment; the US decline is worth watching. Show it prominently; it's the most direct public measure of the state-dependence argument. Alternative explanation: rentier co-optation (Sec. 4.6); the page also cites *The Intelligence Curse* (Drago & Laine 2025). The OECD share is slightly above its 2010 level (it dipped below in some years). OECD data lag two to three years (OECD average to 2023, US to 2024). Lagging.
 - **C1 Human knowledge-commons activity:** Recompute counts from the APIs; don't cite press figures (they conflict). Stack Overflow's yearly question count peaked in 2016 and began falling in 2017, rose briefly in 2020, then fell more steeply from 2021–22 *(corrected 2026-11-17 from verified data; earlier wording said the decline began about 2020)* — show that. **Comparison group:** a set of non-programming Stack Exchange sites, chosen by criteria written in advance (e.g., long history, high volume, low expected AI substitutability) and fixed before results are viewed; the Stack Overflow vs. comparison-site comparison addresses the pre-ChatGPT decline. Caveat: AI affects the comparison sites too, so the measure is *relative* change. Annotate Wikimedia's bot-reclassification break (the improved classification exists only from March 2025; earlier months were not reprocessed). Identify the client with a User-Agent as Wikimedia requires; respect rate limits. Alternative explanation for Wikipedia: people reading its content through AI (Sec. 4.6). Leading.
   - *(Revision 3, owner decisions.)* **Only four comparison sites** (Home Improvement, Travel, Role-playing Games, Science Fiction & Fantasy), approved 2026-11-17.
@@ -232,9 +234,9 @@ All latest figures above come from the research report (private research folder)
    - **"Data and calculation"** *(Revision 3)*: source and series, units, frequency, date range, and the formula in plain words.
    - Method: comparison type, baseline, window rule, threshold rule and resulting bands, sensitivity table, AI link scores on the four criteria, data source(s) with links, license, last fetched, series breaks, caveats.
    - Download the data (CSV).
-3. **Methodology:** the framework (rows inspired by Chooi et al., with a crosswalk table; releases and stages defined; the lock-in definition or its absence; the oversight row; scales; AI link rubric; comparisons; uncertainty), the frozen threshold rule and revision log, retrospective method, sensitivity approach, critiques the site takes seriously (Krueger, Millidge, Jedlicka, the authors' own caveats), the "diagnostics, not targets" statement, the named cultural gap, and what's planned for later.
+3. **Methodology:** the framework (rows inspired by Chooi et al., with a crosswalk table; releases and stages defined; the lock-in definition or its absence; the oversight row; scales; AI link rubric; comparisons; uncertainty), the frozen threshold rule and revision log, retrospective method, sensitivity approach, critiques KEEL takes seriously (Krueger, Millidge, Jedlicka, the authors' own caveats), the "diagnostics, not targets" statement, the named cultural gap, and what's planned for later.
 4. **Archive:** all earlier retrospective snapshots, past "what the data is telling us" statements, and superseded threshold rules, each dated. Linked from the summary and every indicator page.
-5. **About:** purpose, author, how to cite, how to report errors (GitHub issues), and the disclosure that the site is built with assistance from Claude (Anthropic).
+5. **About:** purpose, author, how to cite, how to give feedback and report errors (Sec. 11a, Revision 4: GitHub Issues, GitHub Discussions and an owner-made feedback form), and the disclosure that KEEL is built with assistance from Claude (Anthropic).
 
 ## 7. Architecture
 
@@ -254,7 +256,7 @@ Public sources ──► Python fetch scripts ──► data/ (tidy CSV + metada
 
 ## 7a. Releases and stages
 
-Two dimensions: **releases** decide *which indicators* are on the site; **stages** decide *how far* each release has gone through the review gates.
+Two dimensions: **releases** decide *which indicators* KEEL covers; **stages** decide *how far* each release has gone through the review gates.
 
 **Releases** *(owner decision 2026-11-12)*
 - **Release 1:** E1, E2, E3, G1, C1 (with the Stack Exchange comparison group), the oversight row ("no public measure yet"), and the counter-evidence panel. Every domain has an indicator; the lock-in row reads "no public measure yet".
@@ -284,7 +286,7 @@ Nothing reaches the public site without passing the relevant checks. Procedures 
 
 **Independent second check:** before each stage goes live, a fresh AI reviewer with no access to our conversation reads the pages, method and code and tries to find errors, overclaims and one-sided framing (acting as a skeptical AI-safety researcher). Its findings are triaged by the owner before release.
 
-**Corrections policy:** errors found after publication are fixed openly with a dated correction note on the affected page; the public can report errors via GitHub issues.
+**Corrections policy:** errors found after publication are fixed openly with a dated correction note on the affected page; the public can report errors via GitHub Issues (the error-report template) and give feedback in GitHub Discussions or the feedback form.
 
 ## 8. Later versions
 
@@ -402,3 +404,18 @@ The owner reviewed the Release 1 pages and methodology on 2026-11-17, with a jar
 - **Oversight row name:** stays "Human deferral and oversight" everywhere (methodology, `config/curated/oversight.yaml`, `config/indicators.yaml` `oversight.row_label`).
 
 Sec. 10 and Sec. 11 above are kept as history; their older terms (exposure/erosion rows, AI-specificity, direction assumption, rival reading, welfare signals) describe earlier revisions.
+
+### Revision 4 (2026-11-18): name, repository and final wording
+
+Owner decisions after the final read of the Release 1 pages:
+
+- **Name:** the project is **KEEL**, subtitle **Indicators of gradual disempowerment** (Sec. 1). The expansion "Key Evidence on Eroding Leverage" appears once, on the About page. Page prose and this document say "KEEL" where they meant the project ("the site"); "site" stays where it means web pages generally or a third-party site (for example, a Stack Exchange site).
+- **Repository rename:** `richardsonlj12/disempowerment-indicators` → `richardsonlj12/keel`; website `https://richardsonlj12.github.io/keel/`; HTTP User-Agent `keel-indicators/0.1 (+https://github.com/richardsonlj12/keel)`; Python package name `keel-indicators` (the import name `indicators` is unchanged).
+- **Closing line:** every indicator page and the methodology carry "These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening." It replaces "that it is happening" and G1's ", or that it is not" (Sec. 4.6); an automated test enforces it.
+- **C1 warning sign:** names coding: "Stack Overflow's activity falling further behind the comparison sites than in its 2012 to 2019 history would be consistent with people turning from human knowledge communities to AI for coding help."
+- **"Normal" wording:** loose uses of "normal" replaced with what is meant: E1 "by more than it typically varied in 2010 to 2019 (the exact rule is fixed in Stage 2)"; methodology "a series' usual month-to-month variation"; C1 "than in its 2012 to 2019 history". Stack Exchange's own term "normal" (a site out of beta) is kept in quotation marks with a gloss, and C1's planned "normal divergence" range is glossed in plain words.
+- **E3 sample size:** the page states how many conversations each Economic Index release analysed (1 million for each of the first four; 1 million across Claude.ai and the API together for March 2026; not reported for June 2026), and that a large sample reduces noise but does not make one product's users representative of all AI users. Draft additions linking E3 to the Stanford "Canaries in the Coal Mine?" findings await the owner's approval.
+- **E2:** the 17 November 2025 break description adds Census's cognitive-testing finding and its decision to start a new time series.
+- **OECD attribution (ruling R15):** no licence or restriction annotation was found in the DF_RSOECD dataflow metadata, so G1 and the OECD series metadata carry "Source: OECD, Revenue Statistics 2025".
+- **Feedback mechanism:** "Report an error" (GitHub Issues with an error-report template), "Give feedback" (GitHub Discussions, enabled when the repository goes public in Task 11) and a feedback form made by the owner. The links appear in the methodology's feedback note and at the foot of every indicator page. Until the owner supplies the form URL, the pages carry a `[feedback form link]` placeholder, and a `release_gate` test (excluded from the default test run) blocks release in Task 12 until it is replaced.
+- **Plan:** Task 9b (choose the project name) and Task 10b (owner revises the page summary tables after Task 10 renders them, before deploy) were added to the implementation plan.
