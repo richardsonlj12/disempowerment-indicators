@@ -451,3 +451,68 @@ def test_csv_links_relative(repo):
     assert "](../data/labor_share_nfb.csv)" in text
     assert "](../data/labor_share_nfb_trend.csv)" in text
     assert "](../archive.qmd)" in text
+
+
+# ---- summary layout (owner-requested)
+
+def test_layer_definitions_in_registry():
+    from indicators import registry as r
+    assert r.LAYER_DEFINITIONS == {
+        "exposure": "Is AI entering the system, and how far?",
+        "erosion": "Is the system's dependence on human participation falling, and by how much?",
+        "lockin": "Is that reduced dependence becoming hard to restore?",
+    }
+    assert r.CROSS_CUTTING_DEFINITION == (
+        "Are people handing decisions to AI? This applies across all three domains.")
+
+
+def test_row_headers_have_accessible_definitions(repo):
+    pages.build(repo, today=TODAY)
+    text = _index(repo)
+    for label, tip in (("Adoption", "Is AI entering the system, and how far?"),
+                       ("Displacement", "Is the system's dependence on human participation falling, and by how much?"),
+                       ("Lock-in", "Is that reduced dependence becoming hard to restore?"),
+                       ("Cross-cutting", "Are people handing decisions to AI? This applies across all three domains.")):
+        m = re.search(r'::: \{\.keel-rowhead\}\n\[\*\*' + re.escape(label) + r'\*\*\]\{([^}]*)\}\[([^\]]*)\]\{([^}]*)\}\n:::', text)
+        assert m, label
+        assert 'tabindex="0"' in m.group(1)
+        tip_id = re.search(r'aria-describedby="([^"]+)"', m.group(1)).group(1)
+        assert m.group(2) == tip
+        assert f"#{tip_id}" in m.group(3) and 'role="tooltip"' in m.group(3)
+
+
+def test_cross_cutting_row_has_title_then_content(repo):
+    pages.build(repo, today=TODAY)
+    text = _index(repo)
+    i = text.index("**Cross-cutting**")
+    j = text.index("::: {.keel-oversight}")
+    assert i < j
+    assert text[j:].split("\n", 2)[1].startswith("**Human deferral and oversight**")
+
+
+def test_counter_evidence_directly_after_oversight_inside_grid(repo):
+    pages.build(repo, today=TODAY)
+    text = _index(repo)
+    ov = text.index("::: {.keel-oversight}")
+    after = text[text.index("\n:::\n", ov) + len("\n:::\n"):]
+    assert after.lstrip().startswith(":::: {.keel-counter}")
+    start = text.index(":::: {.keel-counter}")
+    assert text.index("## Counter-evidence", start) - start < 60
+    assert text.index("Inclusion criteria", start) > start
+    assert "Two sets of labels" not in text[ov:text.index("archive.qmd")]
+
+
+def test_data_are_telling_us_title(repo):
+    pages.build(repo, today=TODAY)
+    text = _index(repo)
+    assert 'title="What the data are telling us"' in text
+    assert "data is telling" not in text
+
+
+def test_about_the_labels_callout_under_indicators_heading(repo):
+    pages.build(repo, today=TODAY)
+    text = _index(repo)
+    m = re.search(r'^## Indicators\[\^1\^\[ About the labels\]\{\.visually-hidden\}\]\(#about-the-labels\)\n\n'
+                  r'::: \{#about-the-labels \.callout-note collapse="true" title="About the labels"\}\n'
+                  r'\*\*Two sets of labels\.\*\*', text, re.M)
+    assert m

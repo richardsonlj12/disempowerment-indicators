@@ -27,6 +27,15 @@ LAYER_LABELS: dict[str, str] = {
     "lockin": "Lock-in",
 }
 
+# One-sentence definitions shown as hover/focus tooltips on the summary grid's row headers.
+LAYER_DEFINITIONS: dict[str, str] = {
+    "exposure": "Is AI entering the system, and how far?",
+    "erosion": "Is the system's dependence on human participation falling, and by how much?",
+    "lockin": "Is that reduced dependence becoming hard to restore?",
+}
+CROSS_CUTTING_LABEL = "Cross-cutting"
+CROSS_CUTTING_DEFINITION = "Are people handing decisions to AI? This applies across all three domains."
+
 SCALE_STATES: dict[str, set[str]] = {
     "exposure": {"low", "rising", "pervasive", "no_signal", "not_yet_reviewed"},
     "baseline": {"within", "above", "below", "far_above", "far_below",

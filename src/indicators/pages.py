@@ -446,14 +446,29 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
     cells = {(c.layer, c.domain): c for c in grid}
     out = ["These indicators show whether the conditions for disempowerment are present. "
            "They do not show whether it is happening. [How the indicators work](methodology.qmd).", "",
-           "::: {.callout-note title=\"What the data is telling us\"}",
+           "::: {.callout-note title=\"What the data are telling us\"}",
            "Readings begin after the threshold rule is reviewed and frozen (Stages 2 and 3). "
            "Until then every indicator shows Not yet reviewed, with its latest data.",
-           ":::", "", "## Indicators", "", ":::: {.keel-grid}", "::: {.keel-corner}", "&nbsp;", ":::"]
+           ":::", ""]
+
+    exposure = [i.id for i in indicators if i.scale == "exposure"]
+    baselines = "; ".join(f"{i.id}: {baseline_text(i)}" for i in indicators if i.scale == "baseline")
+    baseline = [i.id for i in indicators if i.scale == "baseline"]
+    labels = reg.STATE_LABELS
+    out += ["## Indicators[^1^[ About the labels]{.visually-hidden}](#about-the-labels)", "",
+            "::: {#about-the-labels .callout-note collapse=\"true\" title=\"About the labels\"}",
+            "**Two sets of labels.** "
+            f"Adoption indicators ({_and(exposure)}) will be read as {labels['low']}, {labels['rising']} or "
+            f"{labels['pervasive']}. Indicators read against a baseline ({_and(baseline)}) will be read as "
+            f"{labels['within']}, {labels['above']}, {labels['below']}, {labels['far_above']} or "
+            f"{labels['far_below']}, each against its own baseline ({baselines}). Either can also read "
+            f"{labels['no_signal']}. The AI link badge (Strong, Moderate or Weak) says how clearly a movement in a "
+            "series can be connected to AI rather than to other causes. See the [methodology](methodology.qmd).",
+            ":::", "", "::::: {.keel-grid}", "::: {.keel-corner}", "&nbsp;", ":::"]
     for d in DOMAINS:
         out += [f"::: {{.keel-colhead}}\n**{d.capitalize()}**\n:::"]
     for layer in LAYERS:
-        out += [f"::: {{.keel-rowhead}}\n**{reg.layer_label(layer)}**\n:::"]
+        out += [_rowhead(reg.layer_label(layer), reg.LAYER_DEFINITIONS[layer], "tip-" + reg.layer_label(layer).lower().replace(" ", "-"))]
         for d in DOMAINS:
             cell = cells.get((layer, d))
             ids = [i for i in (cell.indicator_ids if cell else []) if i in by_id]
@@ -475,22 +490,11 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
         cite.append(f"Nearest evidence: [{item['label']}]({_url(item['source_url'])}), {item['source_name']}, "
                     f"{fmt_date(item['date'])}. {item['metric']}: {item['value']} {item['unit']}. "
                     "One study, not a time series.")
-    out += ["::: {.keel-oversight}",
-            f"**{oversight['row_label']}** · {oversight['label']}", "", *cite, ":::", "::::", ""]
+    out += [_rowhead(reg.CROSS_CUTTING_LABEL, reg.CROSS_CUTTING_DEFINITION, "tip-cross"),
+            "::: {.keel-oversight}",
+            f"**{oversight['row_label']}**", "", oversight["label"], "", *cite, ":::"]
 
-    exposure = [i.id for i in indicators if i.scale == "exposure"]
-    baselines = "; ".join(f"{i.id}: {baseline_text(i)}" for i in indicators if i.scale == "baseline")
-    baseline = [i.id for i in indicators if i.scale == "baseline"]
-    labels = reg.STATE_LABELS
-    out += ["**Two sets of labels.** "
-            f"Adoption indicators ({_and(exposure)}) will be read as {labels['low']}, {labels['rising']} or "
-            f"{labels['pervasive']}. Indicators read against a baseline ({_and(baseline)}) will be read as "
-            f"{labels['within']}, {labels['above']}, {labels['below']}, {labels['far_above']} or "
-            f"{labels['far_below']}, each against its own baseline ({baselines}). Either can also read "
-            f"{labels['no_signal']}. The AI link badge (Strong, Moderate or Weak) says how clearly a movement in a "
-            "series can be connected to AI rather than to other causes. See the [methodology](methodology.qmd).", ""]
-
-    out += ["## Counter-evidence", "",
+    out += [":::: {.keel-counter}", "## Counter-evidence", "",
             "Signals that point away from disempowerment, held to the same standard as the indicators.", ""]
     for item in counter_items:
         value = item["value"]
@@ -499,9 +503,15 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
                    f"{KIND_LABELS.get(item.get('kind'), 'Item')}; dated {fmt_date(item['date'])}).{measured} "
                    f"Source: [{item['source_name']}]({_url(item['source_url'])}).")
     out += ["", "::: {.callout-note collapse=\"true\" title=\"Inclusion criteria\"}",
-            " ".join(str(counter_header["inclusion_criteria"]).split()), ":::", "",
+            " ".join(str(counter_header["inclusion_criteria"]).split()), ":::", "::::", ":::::", "",
             "Earlier snapshots and superseded rules will be kept in the [Archive](archive.qmd).", ""]
     return "\n".join(out)
+
+
+def _rowhead(label: str, definition: str, tip_id: str) -> str:
+    """Row header with a hover/focus tooltip: a focusable label plus a described-by tooltip span."""
+    return (f"::: {{.keel-rowhead}}\n[**{label}**]{{.keel-tip tabindex=\"0\" aria-describedby=\"{tip_id}\"}}"
+            f"[{definition}]{{#{tip_id} .keel-tipbody role=\"tooltip\"}}\n:::")
 
 
 def _and(ids: list[str]) -> str:

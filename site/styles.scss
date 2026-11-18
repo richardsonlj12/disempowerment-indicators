@@ -14,6 +14,12 @@ body {
   --keel-c7: #50606f;
   --keel-border: rgba(110, 110, 110, 0.45);
   --keel-soft: rgba(110, 110, 110, 0.08);
+  // Counter-evidence panel: a darker neutral than the grid cells (body text and links >= 4.5:1).
+  --keel-counter-bg: #d3d7dc;
+  --keel-counter-text: #1b1f23;
+  --keel-counter-link: #0a4a9c;
+  --keel-tip-bg: #1b1f23;
+  --keel-tip-text: #ffffff;
 }
 
 body.quarto-dark {
@@ -27,6 +33,11 @@ body.quarto-dark {
   --keel-c7: #b4c2d0;
   --keel-border: rgba(200, 200, 200, 0.4);
   --keel-soft: rgba(200, 200, 200, 0.07);
+  --keel-counter-bg: #14171a;
+  --keel-counter-text: #e6e9ec;
+  --keel-counter-link: #8ec1ff;
+  --keel-tip-bg: #f1f3f5;
+  --keel-tip-text: #14171a;
 }
 
 // Long URLs and table cells wrap instead of widening the page at phone width.
@@ -79,7 +90,77 @@ body.quarto-dark {
 }
 
 .keel-oversight {
+  grid-column: 2 / -1;
+}
+
+// Counter-evidence: part of the grid's width, set apart by a darker neutral background.
+.keel-counter {
   grid-column: 1 / -1;
+  background: var(--keel-counter-bg);
+  color: var(--keel-counter-text);
+  border: 1px solid var(--keel-border);
+  border-radius: 0.4rem;
+  padding: 0.75rem 1rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  h2 {
+    margin-top: 0;
+    color: inherit;
+    border-bottom: 0;
+  }
+  a:not(.btn) {
+    color: var(--keel-counter-link);
+    text-decoration: underline;
+  }
+  .callout {
+    color: var(--keel-counter-text);
+    margin-bottom: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Row-header definitions: shown on hover and keyboard focus (also on tap, which focuses the label).
+.keel-rowhead {
+  position: relative;
+}
+
+.keel-tip {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.keel-tipbody {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  width: 16rem;
+  max-width: 80vw;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.35rem;
+  background: var(--keel-tip-bg);
+  color: var(--keel-tip-text);
+  font-size: 0.85rem;
+  line-height: 1.35;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  // Hidden visually but still exposed to assistive tech via aria-describedby.
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.keel-rowhead:hover .keel-tipbody,
+.keel-tip:focus + .keel-tipbody,
+.keel-tip:focus-visible + .keel-tipbody {
+  opacity: 1;
+  visibility: visible;
 }
 
 .keel-cell-caption {
@@ -116,6 +197,9 @@ body.quarto-dark {
   }
   .keel-rowhead {
     padding-top: 1rem;
+  }
+  .keel-oversight {
+    grid-column: 1 / -1;
   }
   .keel-cell-caption {
     display: block;
