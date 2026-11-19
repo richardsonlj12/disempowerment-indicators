@@ -71,7 +71,8 @@
         ]
       ]
     },
-    "URL": "https://www.census.gov/hfp/btos/downloads/AI%20Question%20Wording%20Updates.pdf"
+    "URL": "https://www.census.gov/hfp/btos/downloads/AI%20Question%20Wording%20Updates.pdf",
+    "publisher": "U.S. Census Bureau"
   },
   {
     "id": "chooi2026",
@@ -891,7 +892,7 @@
         ]
       ]
     },
-    "URL": "https://www.anthropic.com/news/anthropic-economic-index-insights-from-claude-sonnet-3-7"
+    "URL": "https://www.anthropic.com/research/anthropic-economic-index-insights-from-claude-sonnet-3-7"
   },
   {
     "id": "appel2025",
@@ -910,16 +911,16 @@
         "given": "Alex"
       },
       {
+        "family": "Stern",
+        "given": "Michael"
+      },
+      {
         "family": "McCain",
         "given": "Miles"
       },
       {
         "family": "Neylon",
         "given": "Tyler"
-      },
-      {
-        "family": "Stern",
-        "given": "Michael"
       }
     ],
     "title": "Anthropic Economic Index Report: Uneven Geographic and Enterprise AI Adoption",
@@ -982,7 +983,7 @@
     "URL": "https://www.anthropic.com/research/anthropic-economic-index-january-2026-report"
   },
   {
-    "id": "massenkoff2026b",
+    "id": "massenkoff2026a",
     "type": "webpage",
     "author": [
       {
@@ -1020,7 +1021,7 @@
     "URL": "https://www.anthropic.com/research/economic-index-march-2026-report"
   },
   {
-    "id": "massenkoff2026a",
+    "id": "massenkoff2026b",
     "type": "webpage",
     "author": [
       {
@@ -1089,10 +1090,10 @@
   {
     "id": "eo14434",
     "type": "legislation",
-    "title": "Exec. Order No. 14434",
+    "title": "Exec. Order No. 14,434",
     "container-title": "Fed. Reg.",
     "volume": "91",
-    "page": "63129",
+    "page": "63,129",
     "issued": {
       "date-parts": [
         [
@@ -1207,7 +1208,16 @@
         ]
       ]
     },
-    "URL": "https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned"
+    "URL": "https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned",
+    "last-modified": {
+      "date-parts": [
+        [
+          2026,
+          10,
+          25
+        ]
+      ]
+    }
   },
   {
     "id": "stackoverflow2023",

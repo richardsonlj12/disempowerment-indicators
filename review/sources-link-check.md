@@ -40,11 +40,11 @@ Summary: OK: 40 · owner browser check: 7 · broken: 0
 | oecd_revenue_statistics | <https://data-explorer.oecd.org/?df[ds]=DisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS> | OK | 200 | redirected to https://data-explorer.oecd.org/?df%5Bds%5D=DisseminateFinalDMZ&df%5Bid%5D=DSD_REV_COMP_OECD%40DF_RSOECD&df%5Bag%5D=OECD.CTP.TPS |
 | stackexchange_api | <https://api.stackexchange.com/docs/questions> | OK | 200 |  |
 | wikimedia_analytics_api | <https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/> | OK | 200 |  |
-| anthropic2025 | <https://www.anthropic.com/news/anthropic-economic-index-insights-from-claude-sonnet-3-7> | OK | 200 | redirected to https://www.anthropic.com/research/anthropic-economic-index-insights-from-claude-sonnet-3-7 |
+| anthropic2025 | <https://www.anthropic.com/research/anthropic-economic-index-insights-from-claude-sonnet-3-7> | OK | 200 |  |
 | appel2025 | <https://www.anthropic.com/research/anthropic-economic-index-september-2025-report> | OK | 200 |  |
 | appel2026 | <https://www.anthropic.com/research/anthropic-economic-index-january-2026-report> | OK | 200 |  |
-| massenkoff2026b | <https://www.anthropic.com/research/economic-index-march-2026-report> | OK | 200 |  |
-| massenkoff2026a | <https://www.anthropic.com/research/economic-index-june-2026-report> | OK | 200 |  |
+| massenkoff2026a | <https://www.anthropic.com/research/economic-index-march-2026-report> | OK | 200 |  |
+| massenkoff2026b | <https://www.anthropic.com/research/economic-index-june-2026-report> | OK | 200 |  |
 | bls2026 | <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> | owner browser check | 403 | blocked or unavailable to scripts |
 | eo14434 | <https://www.federalregister.gov/documents/2026/10/02/2026-20321/inaugurating-the-era-of-super-intelligence> | OK | 200 |  |
 | census2026 | <https://www.census.gov/hfp/btos/downloads/BTOS%20Content%20V5%20Core%20and%20SI%20Instrument%20-%20Cycle%202-Tagged.pdf> | OK | 200 |  |

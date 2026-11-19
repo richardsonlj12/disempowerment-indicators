@@ -267,14 +267,24 @@ def test_book_format():
 
 
 def test_executive_order_format():
-    """Legal form, as the CSL chicago-author-date (18th ed., with Bluebook) style prints it."""
-    e = {"id": "eo14434", "type": "legislation", "title": "Exec. Order No. 14434", "container-title": "Fed. Reg.",
-         "volume": "91", "page": "63129", "issued": {"date-parts": [[2026, 10, 2]]},
+    """Bluebook legal form (the CSL 18th-edition style follows Bluebook): numbers with commas, the
+    Federal Register date with an abbreviated month."""
+    e = {"id": "eo14434", "type": "legislation", "title": "Exec. Order No. 14,434", "container-title": "Fed. Reg.",
+         "volume": "91", "page": "63,129", "issued": {"date-parts": [[2026, 10, 2]]},
          "URL": "https://www.federalregister.gov/d/2026-20321"}
     assert bib.missing_fields(e) == []
-    assert bib.format_entry(e) == ("Exec. Order No. 14434, 91 Fed. Reg. 63129 (2026). "
+    assert bib.format_entry(e) == ("Exec. Order No. 14,434, 91 Fed. Reg. 63,129 (Oct. 2, 2026). "
                                    "[https://www.federalregister.gov/d/2026-20321](https://www.federalregister.gov/d/2026-20321).")
-    assert bib.in_text(e) == "Exec. Order No. 14434"
+    assert bib.in_text(e) == "Exec. Order No. 14,434"
+    sept = dict(e, issued={"date-parts": [[2026, 9, 29]]})
+    assert "(Sept. 29, 2026)" in bib.format_entry(sept)
+
+
+def test_webpage_last_modified():
+    e = {"id": "m2022", "type": "webpage", "author": [{"literal": "Makyen"}], "title": "Policy",
+         "container-title": "Meta Stack Overflow", "issued": {"date-parts": [[2022, 12, 5]]},
+         "last-modified": {"date-parts": [[2026, 10, 25]]}, "URL": "https://e.org/q"}
+    assert "“Policy.” Meta Stack Overflow, December 5, last modified October 25, 2026. [" in bib.format_entry(e)
 
 
 def test_dataset_format_with_access_date_and_license():
@@ -344,12 +354,25 @@ def test_same_authors_same_year_get_letter_suffixes():
 
 
 def test_same_in_text_citation_gets_letter_suffixes_even_with_different_coauthors():
-    """Two works that would both be cited "(Doe et al. 2026)" are told apart by letters, in title order."""
+    """Two works that would both be cited "(Doe et al. 2026)" are told apart by letters, in the order they
+    appear in the reference list (so "a" is listed first)."""
     a = {"id": "x", "type": "webpage", "author": [_person("Doe", "J"), _person("Roe", "K"), _person("Poe", "L")],
          "title": "Zeta", "container-title": "S", "issued": {"date-parts": [[2026, 1, 2]]}, "URL": "https://e.org/z"}
     b = {"id": "y", "type": "webpage", "author": [_person("Doe", "J"), _person("Moe", "K"), _person("Hoe", "L")],
          "title": "Alpha", "container-title": "S", "issued": {"date-parts": [[2026, 3, 4]]}, "URL": "https://e.org/a"}
     assert bib.year_suffixes([a, b]) == {"y": "a", "x": "b"}
+    # list order (author names) wins over title order: "K Moe" is listed before "K Roe" whatever the titles
+    a2, b2 = dict(a, title="Alpha"), dict(b, title="Zeta")
+    assert bib.year_suffixes([a2, b2]) == {"y": "a", "x": "b"}
+
+
+def test_letter_a_is_listed_first(sources_md, entries):
+    suffixes = bib.year_suffixes(entries)
+    order = re.findall(r"^::: \{#([\w-]+) \.keel-ref\}$", sources_md, flags=re.M)
+    for key, letter in suffixes.items():
+        if letter == "b":
+            first = next(k for k, v in suffixes.items() if v == "a" and k[:-1] == key[:-1])
+            assert order.index(first) < order.index(key), (first, key)
 
 
 # ------------------------------------------------------------------ the Sources page
@@ -369,7 +392,8 @@ def _anchors(text):
 
 def test_intro_opening_and_no_style_name_on_the_page(sources_md):
     """Owner request (2026-11-18): the Sources page does not name the citation style."""
-    assert sources_md.startswith("Works and datasets cited on KEEL. Each entry has")
+    assert sources_md.startswith("Works and datasets cited on KEEL. Every entry was checked against the original publication before it was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure)).")
+    assert "Each entry has a stable link" in sources_md
     assert "Chicago" not in sources_md
     assert "Chicago" not in (ROOT / "site" / "sources.qmd").read_text(encoding="utf-8")
 

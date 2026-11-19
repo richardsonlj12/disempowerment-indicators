@@ -66,11 +66,17 @@ def test_ea2_has_no_inline_disclosure_paragraph():
     assert "**Disclosure.**" not in (CONTENT / "indicators" / "EA2.md").read_text(encoding="utf-8")
 
 
-@pytest.mark.parametrize("path", ALL_CONTENT, ids=_ids(ALL_CONTENT))
+PLURAL_DATA_PAGES = ALL_CONTENT + sorted((ROOT / "site").glob("*.qmd")) + [ROOT / "config" / "indicators.yaml"]
+
+
+@pytest.mark.parametrize("path", PLURAL_DATA_PAGES, ids=lambda p: p.relative_to(ROOT).as_posix())
 def test_data_is_plural(path):
-    """Owner wording rule: "these data", not "this data"."""
+    """Owner wording rule: "these data", plural verbs ("the data are"). Fixed phrases such as "data source"
+    are not affected."""
     text = path.read_text(encoding="utf-8").lower()
     assert "this data " not in text and "this data." not in text
+    for singular in ("data is ", "data says ", "data shows ", "data does ", "data was ", "data has "):
+        assert singular not in text, (path.name, singular)
 
 
 @pytest.mark.release_gate

@@ -18,7 +18,7 @@ The scorecard is a grid. Its columns are three **domains**: economic, government
 
 A fourth row, **human deferral and oversight**, runs across all three domains. It asks whether people are deferring to AI's judgment.
 
-**The rows are inspired by [Chooi et al. (2026)](sources.qmd#chooi2026).** Their paper, "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics", proposes three layers that they call exposure, erosion and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two.
+**The rows are inspired by [Chooi et al. (2026)](sources.qmd#chooi2026).** Their paper, "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics," proposes three layers that they call exposure, erosion and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two.
 
 ::: {.callout-note collapse="true" title="How KEEL's rows line up with Chooi, Lee and Li"}
 | KEEL's row | Chooi, Lee and Li's term | How they relate |
@@ -53,19 +53,19 @@ Rising switching costs is one of the lock-in signs Chooi, Lee and Li list. Persi
 
 #### Oversight
 
-The mechanism at the center of the gradual disempowerment argument is decisions moving from people to AI. No public time series measures this. The oversight row therefore reads "No public measure yet" and cites the only current evidence we know of: an experiment by [Herdağdelen et al. (2026a)](sources.qmd#herdagdelen2026a), "How AI agents shape experts' judgment calls".
+The mechanism at the center of the gradual disempowerment argument is decisions moving from people to AI. No public time series measures this. The oversight row therefore reads "No public measure yet" and cites the only current evidence we know of: an experiment by [Herdağdelen et al. (2026a)](sources.qmd#herdagdelen2026a), "How AI agents shape experts' judgment calls."
 
 **The study.** Professional analysts worked on a data analysis with an AI coding agent. On four analytical decisions, a coin flip set which option the agent was set to favor. Across those decisions, the 50 analysts in the study went with the agent's favored option 86 percent of the time, against 50 percent by chance. Many repeated the agent's arguments when explaining their choices without crediting it.
 
 **Its limits.** It is one experiment, in one task, with one agent, and the authors list these limits themselves. The agent in the study was Claude. The study is authored at Anthropic, which also publishes the data behind EA2 and makes Claude. It is not a time series and cannot fill the row.
 
-[Moon and Boudreaux (2026)](sources.qmd#moon2026), of the RAND Corporation, propose a formal way to track the same mechanism in "A Formal Model of How Artificial Intelligence Erodes Human Agency": the number and makeup of the groups whose agreement decides an outcome, and whether AI is entering those groups or shaping the options they see. If a public, repeatable measure of deferral appears, it will fill this row.
+[Moon and Boudreaux (2026, RAND Corporation)](sources.qmd#moon2026) propose a formal way to track the same mechanism in "A Formal Model of How Artificial Intelligence Erodes Human Agency": the number and makeup of the groups whose agreement decides an outcome, and whether AI is entering those groups or shaping the options they see. If a public, repeatable measure of deferral appears, it will fill this row.
 
 [Back to top](#)
 
 ## How to read an indicator {#how-to-read-an-indicator}
 
-A **reading** is the short label given to what an indicator's data is doing, such as "Rising" or "Within baseline." For now KEEL shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see [Releases and stages](#releases-and-stages)).
+A **reading** is the short label given to what an indicator's data are doing, such as "Rising" or "Within baseline." For now KEEL shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see [Releases and stages](#releases-and-stages)).
 
 ### Reading labels
 
@@ -107,7 +107,7 @@ Each indicator's baseline period is stated on its page: 2010 to 2019 for ED1 and
 Each indicator page's summary table shows a reading in separate rows:
 
 1. **Description.** The magnitude: the number behind the reading, in the indicator's own units, naming the baseline it is measured against.
-2. **Current reading.** What the data is doing, using the labels above. From Stage 3, an interpretation line appears under it: what the movement would mean if AI were driving it, written from the indicator's warning sign.
+2. **Current reading.** What the data are doing, using the labels above. From Stage 3, an interpretation line appears under it: what the movement would mean if AI were driving it, written from the indicator's warning sign.
 3. **AI link.** The AI link rating, in its own row further down the table.
 
 A reading says what the data did. It does not say why.
@@ -163,8 +163,8 @@ ED1 will gain an industry comparison in Release 2: labor share in industries whe
 
 #### Breaks, markers and revisions
 
-- **Series breaks.** When a source changes its definition or method so that values before and after are not comparable, the chart marks the date and does not join the two parts. Examples: the change to the Census AI question on 17 November 2025 (EA1) [(U.S. Census Bureau 2025)](sources.qmd#census2025), Wikimedia's improved bot detection in 2025 (CD1) [(Miller 2025)](sources.qmd#miller2025), and changes in the Anthropic Economic Index release format (EA2).
-- **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart) [(OpenAI 2022)](sources.qmd#openai2022), GitHub Copilot's launch and Stack Overflow policy events (CD1) ([Friedman 2021](sources.qmd#friedman2021); [Dohmke 2022](sources.qmd#dohmke2022); [Makyen 2022](sources.qmd#makyen2022)), and the Census question wording that began on 19 October 2026 (EA1) [(U.S. Census Bureau 2026)](sources.qmd#census2026).
+- **Series breaks.** When a source changes its definition or method so that values before and after are not comparable, the chart marks the date and does not join the two parts. Examples: the change to the Census AI question on 17 November 2025 (EA1; [U.S. Census Bureau 2025](sources.qmd#census2025)), Wikimedia's improved bot detection in 2025 (CD1; [Miller 2025](sources.qmd#miller2025)), and changes in the Anthropic Economic Index release format (EA2).
+- **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart; [OpenAI 2022](sources.qmd#openai2022)), GitHub Copilot's launch and Stack Overflow policy events (CD1; [Friedman 2021](sources.qmd#friedman2021); [Dohmke 2022](sources.qmd#dohmke2022); [Makyen 2022](sources.qmd#makyen2022); [“Dear Stack Overflow, Inc.” 2023](sources.qmd#stackoverflow2023)), and the Census question wording that began on 19 October 2026 (EA1; [U.S. Census Bureau 2026](sources.qmd#census2026)).
 - **Revisions.** Official statistics are revised. KEEL uses the latest revised data. A revision that would change a reading is treated like new data and goes to review.
 
 EA1's two Census changes are treated differently because they did different things: the 17 November 2025 change altered what the question asks and produced a level shift, and Census started a new series, so it is a break; the 19 October 2026 change replaced the term "AI" with "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)" and the "Yes" share was essentially unchanged, so it is a labeled marker, to be revisited in Stage 2.
@@ -316,7 +316,7 @@ Later versions are planned under four headings: method, harder indicators of AI'
 
 ## Sources and disclosure {#sources}
 
-Every work and dataset cited on KEEL is listed, with links, on the [Sources](sources.qmd) page.
+Every work and dataset cited on KEEL is listed, with links, on the [Sources](sources.qmd) page. Every entry was checked against the original publication before it was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure)).
 
 Every figure KEEL publishes is checked against its primary source before publication.
 

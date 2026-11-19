@@ -28,8 +28,8 @@ This indicator sits in the **Adoption** row, as a measure of how much of the wor
   - 27 March 2025: 1 million conversations [(Anthropic 2025)](../sources.qmd#anthropic2025).
   - 15 September 2025: 1 million conversations [(Appel et al. 2025)](../sources.qmd#appel2025).
   - 15 January 2026: 1 million conversations [(Appel et al. 2026)](../sources.qmd#appel2026).
-  - 24 March 2026: 1 million conversations sampled from Claude.ai and Anthropic's API; the report does not say how many came from Claude.ai [(Massenkoff et al. 2026b)](../sources.qmd#massenkoff2026b).
-  - 26 June 2026: not reported. Anthropic says it now samples a slice of conversations every day [(Massenkoff et al. 2026a)](../sources.qmd#massenkoff2026a).
+  - 24 March 2026: 1 million conversations sampled from Claude.ai and Anthropic's API; the report does not say how many came from Claude.ai [(Massenkoff et al. 2026a)](../sources.qmd#massenkoff2026a).
+  - 26 June 2026: not reported. Anthropic says it now samples a slice of conversations every day [(Massenkoff et al. 2026b)](../sources.qmd#massenkoff2026b).
 
 **The denominator.** Some conversations do not fit any of the five patterns, and Anthropic labels them "none" or "not classified." KEEL leaves those out, so the automation and augmentation shares always add up to 100. Some of Anthropic's report headlines count every conversation in the denominator, including those that fit no pattern. For example, the September 2025 report puts automation at about 49 percent of Claude.ai conversations [(Appel et al. 2025)](../sources.qmd#appel2025). Counting only the conversations that fit one of the five patterns, the same release gives 51.1 percent. Both are correct for their own denominators. KEEL uses the second version so that a change in how many conversations fit no pattern does not move the series.
 

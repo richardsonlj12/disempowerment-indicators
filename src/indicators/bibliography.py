@@ -10,7 +10,8 @@ citations come from `in_text`. Rules applied (sources in references/README.md):
 - In-text citations: one author "Krueger 2025"; two "Moon and Boudreaux 2026"; three or more, the
   first author and "et al." ("Chooi et al. 2026"; CSL: et-al-min 3, et-al-use-first 1).
 - Same in-text citation (same first author or authors, same year): letter suffixes (2026a, 2026b) in
-  title order, so every in-text citation points to one entry.
+  reference-list order (authors, then title), so "a" is listed first and every in-text citation points
+  to one entry.
 - Dates: the year follows the authors. Where the source gives a month and day (preprints, web pages,
   blog posts and reports), the month and day follow the container without repeating the year:
   "2026. ... Anthropic Research, October 27." A month without a day is not shown.
@@ -19,8 +20,9 @@ citations come from `in_text`. Rules applied (sources in references/README.md):
   name says so, then a comma and any publisher.
 - Titles of standalone works (reports, books) in italics; titles of parts (articles, posts, chapters,
   datasets) in quotation marks. A work with no author starts with its title.
-- Executive orders in legal (Bluebook) form, as the CSL style prints them: "Exec. Order No. 14434,
-  91 Fed. Reg. 63129 (2026)."
+- Executive orders in Bluebook legal form (the CSL style follows Bluebook): "Exec. Order No. 14,434,
+  91 Fed. Reg. 63,129 (Oct. 2, 2026)."
+- A web page revised after publication may carry ", last modified [Month Day, Year]" after its date.
 - Page ranges condensed per CMOS 9.64. A DOI, when present, is the link shown; otherwise the URL.
 - Datasets (the Data sources section) carry "n.d.", the access date and the license.
 
@@ -58,6 +60,7 @@ REQUIRED = {
 MONTHS = ("January", "February", "March", "April", "May", "June", "July", "August", "September",
           "October", "November", "December")
 SECTIONS = (("References", "references"), ("Data sources", "data-sources"))
+BLUEBOOK_MONTHS = ("Jan.", "Feb.", "Mar.", "Apr.", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec.")
 ET_AL_MIN, ET_AL_USE_FIRST = 7, 3  # reference list (CMOS 18)
 
 OK = "OK"
@@ -177,6 +180,14 @@ def month_day(issued: dict | None) -> str | None:
     return None
 
 
+def bluebook_date(issued: dict) -> str:
+    """'Oct. 2, 2026' (Bluebook month abbreviations), or the year when no day is known."""
+    parts = issued["date-parts"][0]
+    if len(parts) >= 3:
+        return f"{BLUEBOOK_MONTHS[parts[1] - 1]} {parts[2]}, {parts[0]}"
+    return str(parts[0])
+
+
 def _year(entry: dict) -> str:
     issued = entry.get("issued")
     return str(issued["date-parts"][0][0]) if issued else "n.d."
@@ -238,7 +249,7 @@ def in_text(entry: dict, suffixes: dict[str, str] | None = None) -> str:
 
 
 def year_suffixes(entries: list[dict]) -> dict[str, str]:
-    """Letter suffixes for works that would share an in-text citation, in title order."""
+    """Letter suffixes for works that would share an in-text citation, in reference-list order."""
     groups: dict[tuple, list[dict]] = {}
     for e in entries:
         if e["type"] in ("dataset", "legislation") or not e.get("issued"):
@@ -247,7 +258,7 @@ def year_suffixes(entries: list[dict]) -> dict[str, str]:
     out = {}
     for group in groups.values():
         if len(group) > 1:
-            for i, e in enumerate(sorted(group, key=lambda x: sort_text(x["title"]))):
+            for i, e in enumerate(sorted(group, key=lambda x: sort_text(f"{format_names(x['author'])} {x['title']}"))):
                 out[e["id"]] = "abcdefghijklmnopqrstuvwxyz"[i]
     return out
 
@@ -289,7 +300,7 @@ def format_entry(entry: dict, suffixes: dict[str, str] | None = None) -> str:
 
     if t == "legislation":
         text = (f"{title}, {_md(entry['volume'])} {_md(entry['container-title'])} {entry['page']} "
-                f"({_year(entry)}).")
+                f"({bluebook_date(entry['issued'])}).")
         return text + (f" {_link(link[0])}." if link else "")
 
     year = _year(entry) + (suffixes or {}).get(entry["id"], "")
@@ -310,7 +321,9 @@ def format_entry(entry: dict, suffixes: dict[str, str] | None = None) -> str:
         site = _md(entry["container-title"])
         if t == "post-weblog":
             site = f"*{site}*" + ("" if "blog" in entry["container-title"].lower() else " (blog)")
-        parts.append(_end(_join(site, _md(entry["publisher"]) if entry.get("publisher") else None, md)))
+        modified = full_date(entry.get("last-modified"))
+        parts.append(_end(_join(site, _md(entry["publisher"]) if entry.get("publisher") else None, md,
+                                f"last modified {modified}" if modified else None)))
     elif t == "report":
         parts.append(f"*{title}*.")
         elements = [_md(entry[f]) for f in ("collection-title", "number") if entry.get(f)]
@@ -365,7 +378,9 @@ def sort_text(text: str) -> str:
 # ------------------------------------------------------------------ the Sources page
 
 INTRO = (
-    "Works and datasets cited on KEEL. Each entry has a stable "
+    "Works and datasets cited on KEEL. Every entry was checked against the original publication before it "
+    "was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure)). "
+    "Each entry has a stable "
     "link: for example, `sources.html#kulveit2025`. Data sources give the date KEEL last checked "
     "the page and the license of the data."
 )

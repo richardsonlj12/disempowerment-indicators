@@ -18,7 +18,7 @@ Kulveit et al. apply the same logic to AI. If AI shifts income from wages toward
 
 This indicator is the most direct public measure we found of that state-dependence argument. It sits in the **Displacement** row, as the core mechanism for the government domain. It is a **lagging** indicator, one that moves late: tax structures change slowly.
 
-**What the data says now.** The OECD context points away from disempowerment. Across OECD countries, the labor-based share of tax revenue is slightly above its 2010 level. It was 48.53 percent in 2010, peaked at 50.54 percent in 2020, and was 49.20 percent in 2023, the latest year with an OECD average. It dipped below the 2010 level in some years in between.
+**What the data say now.** The OECD context points away from disempowerment. Across OECD countries, the labor-based share of tax revenue is slightly above its 2010 level. It was 48.53 percent in 2010, peaked at 50.54 percent in 2020, and was 49.20 percent in 2023, the latest year with an OECD average. It dipped below the 2010 level in some years in between.
 
 The US quarterly series drives this indicator's reading. It has fallen since 2022: it averaged 66.85 percent in 2022 and was 63.21 percent in the second quarter of 2026 (data as of 17 November 2026). That is still inside the range it moved through in 2010 to 2019 (62.30 to 66.88 percent).
 

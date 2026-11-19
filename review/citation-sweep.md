@@ -51,7 +51,7 @@ Summary: 16 direct source links replaced (11 converted to citations, 5 removed w
 | Federal Reserve Board note comparing measures; employment-weighted measures report higher adoption | converted: "[(Allen 2026)]" |
 | Census testing found businesses answered "No"; level shift; new series | converted: "[(U.S. Census Bureau 2025)]" |
 | New term "Super Intelligence or SI ..." from 19 October 2026 | added: "[(U.S. Census Bureau 2026)]" *new* |
-| Census cites Executive Order 14434 | added: link to "[Executive Order 14434]" *new* (`eo14434`, verified in the Federal Register) and to the BTOS page entry (`census_btos`; the owner confirmed the sentence in a browser, 2026-11-17) |
+| Census cites Executive Order 14434 | added: "([U.S. Census Bureau, n.d.]; [Exec. Order No. 14,434])" *new* (`census_btos`, whose page sentence the owner confirmed in a browser on 2026-11-17; `eo14434`, verified in the Federal Register) |
 | Firm-size shares, "Do not know" shares, standard errors | data |
 | No estimates for 6 October to 16 November 2025 during a federal funding lapse | data (Census data dictionary; `review/figure-verification.md`); "Data and calculation" now links the BTOS entry |
 
@@ -65,8 +65,8 @@ Summary: 16 direct source links replaced (11 converted to citations, 5 removed w
 | 27 March 2025 | added: "[(Anthropic 2025)]" *new* |
 | 15 September 2025 | added: "[(Appel et al. 2025)]" *new* |
 | 15 January 2026 | added: "[(Appel et al. 2026)]" *new* |
-| 24 March 2026 | added: "[(Massenkoff et al. 2026b)]" *new* |
-| 26 June 2026, daily sampling | added: "[(Massenkoff et al. 2026a)]" *new* |
+| 24 March 2026 | added: "[(Massenkoff et al. 2026a)]" *new* |
+| 26 June 2026, daily sampling | added: "[(Massenkoff et al. 2026b)]" *new* |
 | September 2025 report puts automation at about 49 percent | added: "[(Appel et al. 2025)]" |
 | 51.1 percent over classified conversations | data |
 | Breaks (layout, plans, calendar months, Cowork) | data (release data documentation); "Data and calculation" links the dataset entry |
@@ -124,7 +124,9 @@ Summary: 16 direct source links replaced (11 converted to citations, 5 removed w
 
 ## Owner decisions
 
-1. Goodhart's law (methodology): leave uncited as a common saying, or cite an original (Goodhart 1975, or Strathern 1997 for the "measure becomes a target" wording) once verified.
-2. Rentier-state pattern and co-optation (GD1): leave as general political-science background, or cite a verified work (for example Ross 2001, "Does Oil Hinder Democracy?", *World Politics*); not added because no such work was read in this batch.
-3. FRED index version of the labor share (ED1): verify on FRED in a browser (the series page for the index) and add it as a data-source entry, or leave as a data-handling note.
+The four claims below stay uncited until the owner decides (fix round 1 instruction). The independent reviewer suggested sources, recorded here and not yet verified or added:
+
+1. Goodhart's law (methodology): reviewer's suggestion: Chooi et al. 2026, p. 234 (which cites Goodhart 1984), or Strathern 1997 for the "measure becomes a target" wording.
+2. Rentier-state pattern (GD1, line 15) and co-optation (GD1, line 48): reviewer's suggestion: Kulveit et al. 2025, sec. 4.1, which discusses rentier states (citing Beblawi and Luciani 1987) and loyalty secured through distribution.
+3. FRED index version of the labor share (ED1): reviewer's suggestion: FRED series PRS85006173 (index, 2017 = 100), as a data-source entry.
 4. "OECD, Revenue Statistics 2025" (GD1): keep linked to the dataset entry, or add the publication as its own reference entry.
