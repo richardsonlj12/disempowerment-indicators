@@ -4,7 +4,7 @@ warning_sign: A rising automation share would be consistent with tasks moving fr
 data_sources:
   - name: Anthropic Economic Index (Hugging Face)
     url: https://huggingface.co/datasets/Anthropic/EconomicIndex
-calculation: Of the Claude.ai conversations that fit one of five ways of working with the AI, the percent that fit the two automation patterns. The augmentation share is the rest, so the two add up to 100. Anthropic sorts the conversations into patterns; KEEL adds up the shares.
+calculation: Of the Claude.ai conversations that fit one of five ways of working with the AI, the percent in each pattern. The automation share is the two automation patterns added together; the augmentation share is the other three, so the two add up to 100. Conversations that fit no pattern, a few percent, are left out and shown in the data table. Anthropic sorts the conversations into patterns; KEEL rescales the shares so the five add to 100, adds them into the two totals, and charts all five over time.
 coverage: Worldwide (Claude.ai users) · irregular releases · from a December 2024 sample
 ---
 

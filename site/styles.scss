@@ -417,9 +417,24 @@ text.keel-grouplabel {
 }
 // Data table: tinted column bands so the patterns visibly sum into the two totals.
 .keel-datatable-stacked {
+  font-size: 0.8rem;
+  table {
+    min-width: 0;
+  }
+  // Whole words only in the headings (outranks the site-wide "#quarto-document-content th" rule).
+  #quarto-document-content & th {
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
+  }
+  th,
+  td {
+    padding: 0.2rem 0.45rem;
+  }
   thead th {
     position: static;
     vertical-align: bottom;
+    white-space: normal;
   }
   .keel-fam {
     text-align: center;
@@ -444,8 +459,19 @@ text.keel-grouplabel {
     border-left: 2px solid var(--bs-border-color);
   }
   td.keel-fam-0,
-  td.keel-fam-1 {
+  td.keel-fam-1,
+  td.keel-leftout {
     text-align: right;
+  }
+  .keel-leftout {
+    color: var(--bs-secondary-color);
+  }
+  th.keel-leftout.keel-fam {
+    border-bottom: 2px solid var(--bs-border-color);
+  }
+  .keel-datatable-note {
+    margin: 0.4rem 0 0;
+    font-style: italic;
   }
 }
 body.quarto-dark .keel-datatable-stacked {

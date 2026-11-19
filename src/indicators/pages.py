@@ -76,7 +76,13 @@ CHART_VIEWS: dict[str, list[dict]] = {
     ],
     "EA2": [
         {"label": "Collaboration patterns", "kind": "stacked", "series": ["aei_patterns"],
-         "also": ["aei_automation_share", "aei_augmentation_share"],
+         "also": ["aei_automation_share", "aei_augmentation_share", "aei_uncategorized_share"],
+         # Shown in the data table only, on its own denominator (percent of all conversations).
+         "leftOut": {"series": "aei_uncategorized_share", "heading": "Left out",
+                     "label": "Not categorized",
+                     "note": "Not categorized: the percent of conversations that fit none of the five "
+                             "patterns, as Anthropic publishes it. They are left out of every other column, "
+                             "which is why the patterns add up to 100."},
          "families": [
              {"name": "Automation", "groups": ["directive", "feedback_loop"]},
              {"name": "Augmentation", "groups": ["task_iteration", "learning", "validation"]},
@@ -334,7 +340,8 @@ def notices(ind, views, series, today: date) -> str:
 def chart_spec(ind, views, series, markers, group_labels) -> dict:
     spec_series = {}
     for v in views:
-        for sid in v["series"] + v.get("band", []):
+        left_out = [v["leftOut"]["series"]] if v.get("leftOut") else []
+        for sid in v["series"] + v.get("band", []) + left_out:
             if sid in spec_series:
                 continue
             entry = {"available": sid in series, "file": f"{sid}.csv", "label": SERIES_LABELS.get(sid)}
@@ -651,7 +658,8 @@ def build(repo_root: Path, today: date | None = None) -> None:
     latest_text = {}
     for ind in indicators:
         views = [dict(v) for v in CHART_VIEWS.get(ind.id, [{"label": "Level", "kind": "level", "series": ind.series}])]
-        series = _load_series(data_dir, list(dict.fromkeys(ind.series + [s for v in views for s in v["series"]])))
+        drawn = [s for v in views for s in v["series"] + v.get("also", [])]
+        series = _load_series(data_dir, list(dict.fromkeys(ind.series + drawn)))
         for v in views:
             v["available"] = all(s in series for s in v["series"] + v.get("band", []))
         trend_files = set()

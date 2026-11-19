@@ -44,6 +44,9 @@ AUGMENTATION = ("task iteration", "learning", "validation")
 EXCLUDED = ("none", "not_classified")
 PATTERNS = AUTOMATION + AUGMENTATION  # stacking order, bottom to top
 PATTERN_KEYS = {p: p.replace(" ", "_") for p in PATTERNS}  # group labels in aei_patterns
+# Share of conversations that fit no pattern ("none" plus "not_classified"). Left out of the
+# totals above, but kept as its own series so its size stays visible (owner, 2026-11-19).
+UNCATEGORIZED = "uncategorized"  # as published by Anthropic (percent), not rescaled
 
 RAW_HEADER = [
     "geo_id", "geography", "date_start", "date_end", "platform_and_product",
@@ -143,7 +146,8 @@ NOTES = (
     "Percent of categorized Claude.ai conversations, those that fit one of the five patterns (Anthropic's labels \"none\" and \"not classified\" excluded, so the two "
     "shares sum to 100), global, one row per sample, dated by the first day of the sample window (column period "
     "names the window, sample_end its last day, release the release date). The series aei_patterns gives the five "
-    "pattern shares on the same denominator. Mapping (Anthropic's categorisation in the 2025-09-15 "
+    "pattern shares on the same denominator. The series aei_uncategorized_share gives the conversations labelled "
+    "none or not classified as Anthropic publishes them (not rescaled; the first release's six summary rows add to only 84.2 percent); they are left out of every other series. Mapping (Anthropic's categorisation in the 2025-09-15 "
     "enrichment code and the 2026-06-26 data documentation): automation = directive + feedback loop; "
     "augmentation = validation + task iteration + learning. "
     "Release mappings: "
@@ -178,12 +182,17 @@ def _check_labels(labels, schema: dict, release: str) -> None:
 
 
 def _normalize(values: dict[str, float], schema: dict, release: str) -> dict[str, float]:
-    """The five pattern shares as percent of classifiable conversations (they add to 100)."""
+    """The five pattern shares as percent of classifiable conversations (they add to 100), plus the
+    uncategorized share as percent of all conversations."""
     _check_labels(values, schema, release)
     total = sum(values[k] for k in PATTERNS)
     if total <= 0:
         raise SourceError(f"{release}: no classifiable conversations")
-    return {k: values[k] / total * 100 for k in PATTERNS}
+    out = {k: values[k] / total * 100 for k in PATTERNS}
+    # As Anthropic publishes it, not rescaled: the first release's six rows add to only 84.2, the
+    # others to 100 within rounding.
+    out[UNCATEGORIZED] = sum(v for k, v in values.items() if k not in PATTERNS)
+    return out
 
 
 def _from_interaction_csv(release: str, schema: dict) -> dict[str, dict[str, float]]:
@@ -288,15 +297,20 @@ def _check_listing() -> None:
 
 
 def _committed(data_dir: Path) -> dict[str, dict[str, float]] | None:
-    """Previously fetched pattern shares by sample start date, or None if the file is missing."""
+    """Previously fetched pattern and uncategorized shares by sample start date, or None if either
+    file is missing."""
     path = Path(data_dir) / "aei_patterns.csv"
-    if not path.exists():
+    other = Path(data_dir) / "aei_uncategorized_share.csv"
+    if not path.exists() or not other.exists():
         return None
     old = pd.read_csv(path, parse_dates=["date"], dtype={"group": str})
     by_key = {v: k for k, v in PATTERN_KEYS.items()}
     out: dict[str, dict[str, float]] = {}
     for d, g, v in zip(old["date"], old["group"], old["value"]):
         out.setdefault(d.strftime("%Y-%m-%d"), {})[by_key.get(g, g)] = float(v)
+    unc = pd.read_csv(other, parse_dates=["date"])
+    for d, v in zip(unc["date"], unc["value"]):
+        out.setdefault(d.strftime("%Y-%m-%d"), {})[UNCATEGORIZED] = float(v)
     return out
 
 
@@ -318,7 +332,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         for start, end, period in schema["samples"]:
             info[start] = (end, period, release_date)
             starts.append(start)
-        if committed and all(set(committed.get(d, {})) == set(PATTERNS) for d in starts):
+        if committed and all(set(committed.get(d, {})) == {*PATTERNS, UNCATEGORIZED} for d in starts):
             for d in starts:
                 shares[d] = committed[d]
             continue
@@ -340,6 +354,8 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         })
         return describe(assign_segments(df, BREAKS))
 
+    uncategorized = pd.DataFrame({"date": pd.to_datetime(dates), "value": [float(shares[d][UNCATEGORIZED]) for d in dates]})
+    uncategorized = describe(assign_segments(uncategorized, BREAKS))
     long = pd.DataFrame(
         [{"date": d, "group": PATTERN_KEYS[p], "value": float(shares[d][p])} for p in PATTERNS for d in dates]
     )
@@ -369,4 +385,6 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         (total(AUTOMATION), meta("aei_automation_share", "Automation share of categorized Claude.ai conversations", "primary")),
         (total(AUGMENTATION), meta("aei_augmentation_share", "Augmentation share of categorized Claude.ai conversations", "context")),
         (long, meta("aei_patterns", "Share of each collaboration pattern in categorized Claude.ai conversations", "context")),
+        (uncategorized, meta("aei_uncategorized_share",
+                             "Share of Claude.ai conversations that fit no pattern (left out of the totals)", "context")),
     ]

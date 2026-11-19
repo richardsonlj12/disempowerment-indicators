@@ -297,6 +297,22 @@ def test_aei_patterns_add_up_to_the_totals():
 
 
 @responses.activate
+def test_aei_uncategorized_share_kept_as_its_own_series():
+    _mock_aei()
+    unc, meta = _aei()["aei_uncategorized_share"]
+    validate_frame(unc)
+    assert meta.role == "context" and "left out" in meta.title
+    by_date = unc.set_index(unc["date"].dt.strftime("%Y-%m-%d"))["value"]
+    assert set(by_date.index) == set(EXPECTED)
+    # As Anthropic publishes it, not rescaled: August 2025 none 3.86088 + not_classified 0.00010.
+    assert by_date["2025-08-04"] == pytest.approx(3.86099, abs=1e-4)
+    assert by_date["2026-04-01"] == pytest.approx(2.58, abs=1e-9)  # monthly: collaboration_none_pct
+    # The first release's six rows add to only 84.2; its published "none" (2.90) is kept as given.
+    assert by_date["2024-12-16"] == pytest.approx(2.90130, abs=1e-4)
+    assert by_date.between(0, 10).all()
+
+
+@responses.activate
 def test_aei_monthly_patterns_must_match_published_totals():
     text = _aei_text("release_2026_06_26").replace("collaboration_directive_pct,31.72", "collaboration_directive_pct,35.72")
     _mock_aei({"release_2026_06_26": text})

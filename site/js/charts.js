@@ -492,13 +492,16 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   const list = element("ul", "keel-chart-notes");
   list.append(element("li", null, `Each bar is one sample, centred on the middle of its sample window and drawn the same width so it stays visible. The number above each bar is its ${firstName} share; the dashed line marks 50 percent. Dotted lines separate the method groups: compare bars only within a group.`));
   wrap.append(list);
-  wrap.append(stackedTable(spec, view, samples, name, groupOf));
+  wrap.append(stackedTable(spec, view, samples, name, groupOf, data));
   groupTip(wrap);
   return wrap;
 }
 
-// Data table for the stacked view: the groups under their family headings, then each family's total.
-function stackedTable(spec, view, samples, name, groupOf) {
+// Data table for the stacked view: the groups under their family headings, then each family's total,
+// then (if the view names one) the share left out of the totals, on its own denominator.
+function stackedTable(spec, view, samples, name, groupOf, data) {
+  const leftOut = view.leftOut && data[view.leftOut.series]
+    ? new Map(data[view.leftOut.series].map(d => [+d.date, d.value])) : null;
   const meta = spec.series[view.series[0]];
   const cls = (i, start) => `keel-fam-${i}${start ? " keel-fam-start" : ""}`;
   const details = element("details", "keel-datatable keel-datatable-stacked");
@@ -534,6 +537,14 @@ function stackedTable(spec, view, samples, name, groupOf) {
     h.scope = "col";
     sub.append(h);
   });
+  if (leftOut) {
+    const h = element("th", "keel-fam keel-fam-start keel-leftout", view.leftOut.heading);
+    h.scope = "colgroup";
+    top.append(h);
+    const sh = element("th", "keel-fam-start keel-leftout", view.leftOut.label);
+    sh.scope = "col";
+    sub.append(sh);
+  }
   thead.append(top, sub);
   table.append(thead);
   const body = element("tbody");
@@ -554,10 +565,15 @@ function stackedTable(spec, view, samples, name, groupOf) {
       td.append(element("strong", null, fmtValue(total, meta.units)));
       tr.append(td);
     });
+    if (leftOut) {
+      const v = leftOut.get(+s.date);
+      tr.append(element("td", "keel-fam-start keel-leftout", v == null ? "–" : fmtValue(v, meta.units)));
+    }
     body.append(tr);
   }
   table.append(body);
   scroller.append(table);
   details.append(scroller);
+  if (leftOut) details.append(element("p", "keel-datatable-note", view.leftOut.note));
   return details;
 }
