@@ -41,11 +41,12 @@
     });
   });
 
-  // A tap or click anywhere outside the row headers closes an open tooltip. On phones a tap on
-  // plain text (such as the heading above the grid) does not move focus, so without this the
-  // tooltip stayed open until the reader tapped something focusable (owner's iPhone check).
+  // A tap or click anywhere except the label word or its open tooltip closes the tooltip. On phones
+  // a tap on plain text or white space does not move focus, so without this the tooltip stayed
+  // open until the reader tapped something focusable. The row-header box is full width on phones,
+  // so the test is the label and tooltip themselves, not the box (owner's iPhone check).
   document.addEventListener("pointerdown", function (e) {
-    if (e.target.closest && e.target.closest(".keel-rowhead")) return;
+    if (e.target.closest && e.target.closest(".keel-tip, .keel-tipbody")) return;
     document.querySelectorAll(".keel-rowhead").forEach(function (r) {
       r.classList.add("keel-tip-dismissed");
     });
