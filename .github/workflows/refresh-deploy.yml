@@ -15,6 +15,10 @@ concurrency:
   group: refresh-deploy
   cancel-in-progress: false
 
+# Triggers:
+#   schedule / manual run: refresh -> build -> deploy
+#   push to main:          build -> deploy (refresh is skipped)
+#   refresh job failure:   build is skipped, so nothing deploys
 jobs:
   refresh:
     # Only the schedule and a manual run refresh data; a push to main just rebuilds and deploys.
@@ -89,11 +93,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pages: read
     steps:
       - uses: actions/checkout@v4
         with:
-          # The refresh job's data commit, or the pushed commit when refresh was skipped.
-          ref: ${{ needs.refresh.outputs.sha || github.sha }}
+          # The refresh job's data commit, or the latest main when refresh was skipped (push).
+          ref: ${{ needs.refresh.outputs.sha || github.ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -114,6 +119,8 @@ jobs:
 
   deploy:
     needs: build
+    # Also runs when refresh was skipped (push to main), where a plain needs would still pass.
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       pages: write
