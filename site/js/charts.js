@@ -464,7 +464,9 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
     width,
     height: Math.round(Math.min(420, Math.max(300, width * 0.55))),
     marginLeft: 44, marginTop: 30, marginBottom: 44,
-    x: {type: "utc", domain: [x0, x1], label: "Sample date", labelAnchor: "center", labelArrow: "none"},
+    // Every tick names its year (owner, 2026-11-19); quarterly ticks, half-yearly on narrow screens.
+    x: {type: "utc", domain: [x0, x1], label: "Sampling date", labelAnchor: "center", labelArrow: "none",
+      ticks: d3.utcMonth.every(narrow ? 6 : 3), tickFormat: d3.utcFormat("%b\n%Y")},
     y: {domain: [0, 100], ticks: [0, 25, 50, 75, 100], tickFormat: d => `${d}%`, grid: true, label: null},
     marks,
     ariaLabel: `${spec.chartTitle}: ${view.label}`,
@@ -495,15 +497,29 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   wrap.append(row);
   const list = element("ul", "keel-chart-notes");
   list.append(element("li", null, `Each bar is one sample, centred on the middle of its sample window and drawn the same width so it stays visible. The number on each bar is its ${firstName} share: the height of the ${firstName} patterns at the bottom of the bar, printed where the ${view.families[1].name.toLowerCase()} patterns begin. The dashed line marks 50 percent. Dotted lines separate the method groups: compare bars only within a group.`));
+  if (view.groupsLink) list.append(groupsLinkItem(view.groupsLink));
   wrap.append(list);
   wrap.append(stackedTable(spec, view, samples, name, groupOf, data));
   groupTip(wrap);
   return wrap;
 }
 
+// "Method groups A to D are defined under Method groups." with a link to the page section.
+function groupsLinkItem(href, tag = "li") {
+  const item = element(tag);
+  const a = element("a", null, "Method groups");
+  a.href = href;
+  item.append(document.createTextNode("The method groups A to D are defined under "), a, document.createTextNode("."));
+  return item;
+}
+
 // Data table for the stacked view: the groups under their family headings, then each family's total,
 // then (if the view names one) the share left out of the totals, on its own denominator.
 function stackedTable(spec, view, samples, name, groupOf, data) {
+  const dateKey = d => d.toISOString().slice(0, 10);
+  const footnotes = Object.entries(view.footnotes || {})
+    .filter(([key]) => samples.some(s => dateKey(s.date) === key))
+    .map(([key, text], i) => ({key, text, n: i + 1, id: `${spec.id}-note-${i + 1}`}));
   const leftOut = view.leftOut && data[view.leftOut.series]
     ? new Map(data[view.leftOut.series].map(d => [+d.date, d.value])) : null;
   const meta = spec.series[view.series[0]];
@@ -555,6 +571,15 @@ function stackedTable(spec, view, samples, name, groupOf, data) {
   for (const s of samples) {
     const tr = element("tr");
     const th = element("th", null, s.period);
+    const note = footnotes.find(f => f.key === dateKey(s.date));
+    if (note) {
+      const sup = element("sup");
+      const a = element("a", null, String(note.n));
+      a.href = `#${note.id}`;
+      a.setAttribute("aria-label", `Note ${note.n}`);
+      sup.append(a);
+      th.append(sup);
+    }
     th.scope = "row";
     const g = element("td");
     const label = element("span", null, groupOf(s.segment).name);
@@ -579,5 +604,16 @@ function stackedTable(spec, view, samples, name, groupOf, data) {
   scroller.append(table);
   details.append(scroller);
   if (leftOut) details.append(element("p", "keel-datatable-note", view.leftOut.note));
+  for (const f of footnotes) {
+    const p = element("p", "keel-datatable-note");
+    p.id = f.id;
+    p.append(element("sup", null, String(f.n)), document.createTextNode(" " + f.text));
+    details.append(p);
+  }
+  if (view.groupsLink) {
+    const p = element("p", "keel-datatable-note");
+    p.append(groupsLinkItem(view.groupsLink, "span"));
+    details.append(p);
+  }
   return details;
 }

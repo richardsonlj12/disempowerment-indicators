@@ -254,6 +254,18 @@ def test_e3_page_has_caveat_and_disclosure(repo):
     assert 'title="Caveat"' not in text
 
 
+def test_ea2_method_groups_sit_inside_method_with_anchor(repo):
+    """Owner, 2026-11-19: the full group definitions are part of Method; the chart links to them."""
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "EA2")
+    method, after = text.index("## Method\n"), text.index("## Caveats")
+    anchor = text.index("### Method groups {#method-groups}")
+    assert method < anchor < after
+    assert "- **Group D: release of 26 June 2026" in text[anchor:after]
+    assert "[Method groups](#method-groups)" in text  # pointer from What it shows
+    assert '"groupsLink": "#method-groups"' in text
+
+
 def test_every_indicator_page_ends_with_feedback_line(repo):
     """Owner decision (2026-11-19): the feedback line is the last line, after the downloads."""
     pages.build(repo, today=TODAY)

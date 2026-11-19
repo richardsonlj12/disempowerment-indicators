@@ -56,6 +56,10 @@ SECTIONS = (
     "Data and calculation",
     "Caveats",
 )
+# Optional content sections, placed inside the generated Method section as level-3 headings with
+# these anchors (EA2's method groups, owner 2026-11-19; the chart and data table link to them).
+OPTIONAL_SECTIONS = ("Method groups",)
+OPTIONAL_ANCHORS = {"Method groups": "method-groups"}
 KIND_LABELS = {"policy": "Policy pushback", "data_signal": "Data signal"}
 PUBLIC_CONFIG = ("indicators.yaml", "readings.yaml", "chart_markers.yaml", "cd1_comparison_sites.yaml",
                  "curated/counter_evidence.yaml", "curated/oversight.yaml")
@@ -89,6 +93,17 @@ CHART_VIEWS: dict[str, list[dict]] = {
          ],
          "groupNames": {"directive": "Directive", "feedback_loop": "Feedback loop",
                         "task_iteration": "Task iteration", "learning": "Learning", "validation": "Validation"},
+         # Where the full method-group definitions are (the "Method groups" content section).
+         "groupsLink": "#method-groups",
+         # Footnotes on data-table rows, by sample date (owner, 2026-11-19; checked against the release
+         # README, the Handa et al. paper and Anthropic's blog chart).
+         "footnotes": {
+             "2024-12-16": "The first release's table is incomplete. In the December 2024 file, the five "
+                           "patterns and “none” add up to 84.2 percent. Anthropic does not say what the "
+                           "rest is. KEEL's figures for that sample, like Anthropic's own published chart, use "
+                           "only the five patterns, so they are unaffected; the “Not categorized” figure "
+                           "for that sample is as published and may be understated.",
+         },
          # One per segment (method group); text checked against Anthropic's data documentation, 2026-11-19.
          "methodGroups": [
              {"name": "A", "tip": "Group A: Anthropic's first two reports. KEEL reads the summary table each "
@@ -195,7 +210,7 @@ def split_content(text: str) -> tuple[dict, dict[str, str]]:
     missing = [s for s in SECTIONS if s not in sections]
     if missing:
         raise ValueError(f"content page is missing sections: {missing}")
-    unknown = [s for s in sections if s not in SECTIONS]
+    unknown = [s for s in sections if s not in SECTIONS + OPTIONAL_SECTIONS]
     if unknown:
         raise ValueError(f"content page has unknown sections: {unknown}")
     return front, sections
@@ -510,7 +525,9 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
         "%%DOESNT_SHOW%%": section(SECTIONS[2]),
         "%%CHANGE%%": section(SECTIONS[3]),
         "%%DATA_AND_CALCULATION%%": section(SECTIONS[4]).rstrip() + "\n" + sources_and_dates(ind, series, cites),
-        "%%METHOD%%": method_section(ind, series, markers, cites, marker_keys),
+        "%%METHOD%%": method_section(ind, series, markers, cites, marker_keys) + "".join(
+            f"\n\n### {name} {{#{OPTIONAL_ANCHORS[name]}}}\n\n{sections[name]}"
+            for name in OPTIONAL_SECTIONS if name in sections),
         "%%CAVEATS%%": section(SECTIONS[5]),
         "%%DOWNLOADS%%": downloads(views, series, trend_files),
         "%%FEEDBACK%%": FEEDBACK_LINE,
