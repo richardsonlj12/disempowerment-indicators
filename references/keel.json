@@ -1259,5 +1259,26 @@
     },
     "DOI": "10.1353/wp.2001.0011",
     "URL": "https://www.cambridge.org/core/journals/world-politics/article/abs/does-oil-hinderdemocracy/67665D8D240C8F43CD4A2DCB35894071"
+  },
+  {
+    "id": "cbo2023",
+    "type": "report",
+    "author": [
+      {
+        "literal": "Congressional Budget Office"
+      }
+    ],
+    "title": "The Budget and Economic Outlook: 2023 to 2033",
+    "publisher": "Congressional Budget Office",
+    "issued": {
+      "date-parts": [
+        [
+          2023,
+          2
+        ]
+      ]
+    },
+    "number": "58848",
+    "URL": "https://www.cbo.gov/publication/58848"
   }
 ]

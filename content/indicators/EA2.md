@@ -1,5 +1,5 @@
 ---
-summary: In conversations with one AI product, Claude, this tracks how often people hand a task over entirely (automation) versus work on it together with the AI (augmentation). It is the only free public data on how AI is used, and it covers one vendor.
+summary: In conversations with one AI product, Claude, this tracks how often people hand a task over entirely (automation) versus work on it together with the AI (augmentation). It is free, public, released a few times a year, and covers one vendor.
 warning_sign: A rising automation share would be consistent with tasks moving from people to AI.
 data_sources:
   - name: Anthropic Economic Index (Hugging Face)

@@ -32,7 +32,7 @@ This indicator sits in the **Displacement** row for the cultural domain. It is a
 - **Role-playing Games:** questions about tabletop role-playing games, including rules, game design and running a group.
 - **Science Fiction & Fantasy:** questions about science fiction and fantasy books, films and shows, including plot, canon and interpretation.
 
-**The comparison sites were chosen in advance.** The author approved them on 17 November 2026, under criteria fixed before any post-2019 counts were requested or viewed:
+**The comparison sites were chosen in advance.** The author approved them on 17 November 2026, under criteria fixed before any post-2019 counts for the candidate comparison sites were requested or viewed:
 
 - **Launched before 2015**, to give a long history before generative AI.
 - **At least 400 new questions a month in 2019**, so monthly counts are not too noisy.

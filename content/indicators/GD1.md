@@ -20,7 +20,7 @@ This indicator is the most direct public measure we found of that state-dependen
 
 **What the data say now.** Across OECD countries, the labor-based share of tax revenue was 48.53 percent in 2010, peaked at 50.54 percent in 2020, and was 49.20 percent in 2023, the latest year with an OECD average.
 
-The US quarterly series drives this indicator's reading. It has fallen since 2022: it averaged 66.85 percent in 2022 and was 63.21 percent in the second quarter of 2026 (data as of 17 November 2026). That is inside the range it moved through in 2010 to 2019 (62.30 to 66.88 percent). The reading itself is not yet reviewed.
+The US quarterly series drives this indicator's reading. It has fallen since 2022: it averaged 66.85 percent in 2022, a year when federal individual income tax receipts were the highest share of GDP since 1913, partly because of large capital gains realized in 2021 and 2022 [(Congressional Budget Office 2023, 21–24)](../sources.qmd#cbo2023), and was 63.21 percent in the second quarter of 2026 (data as of 17 November 2026). That is inside the range it moved through in 2010 to 2019 (62.30 to 66.88 percent). The reading itself is not yet reviewed.
 
 ## What it shows
 

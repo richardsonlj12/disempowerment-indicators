@@ -4,7 +4,7 @@ KEEL measures whether the conditions for gradual disempowerment are present, usi
 
 ## What KEEL measures {#what-keel-measures}
 
-KEEL tracks the scenario that [Kulveit et al. (2025)](sources.qmd#kulveit2025) call **gradual disempowerment**. Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. As AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. KEEL's author has written a short introduction to the argument [(Richardson 2026)](sources.qmd#richardson2026).
+KEEL tracks the scenario that [Kulveit et al. (2025)](sources.qmd#kulveit2025) call **gradual disempowerment**. Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. If AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. KEEL's author has written a short introduction to the argument [(Richardson 2026)](sources.qmd#richardson2026).
 
 KEEL uses one word for this throughout: **leverage**, the bargaining power people have because systems need their work, taxes or attention.
 
@@ -149,7 +149,7 @@ EA1 and EA2 are rated strong because they measure AI directly. That is not stron
 
 ### Comparison groups
 
-A comparison group can separate an AI-related change from other causes. Human knowledge-commons activity (CD1) has one: Stack Overflow is compared with four non-programming Stack Exchange sites, the **comparison sites**, chosen under criteria fixed before any post-2019 counts were viewed. The main measure is a **relative-activity index**, shown with a **leave-one-out band** so a reader can see whether the result depends on any single site. Because AI affects the comparison sites too, the index measures relative change and likely understates any AI effect. It is not a causal estimate. The [CD1 page](indicators/CD1.qmd) lists the sites and explains how the index and the band are computed.
+A comparison group can separate an AI-related change from other causes. Human knowledge-commons activity (CD1) has one: Stack Overflow is compared with four non-programming Stack Exchange sites, the **comparison sites**, chosen under criteria fixed before any post-2019 counts for the candidate comparison sites were viewed. The main measure is a **relative-activity index**, shown with a **leave-one-out band** so a reader can see whether the result depends on any single site. Because AI affects the comparison sites too, the index measures relative change and likely understates any AI effect. It is not a causal estimate. The [CD1 page](indicators/CD1.qmd) lists the sites and explains how the index and the band are computed.
 
 ED1 will gain an industry comparison in Release 2: labor share in industries where AI can do much of the work, against industries where it can do little, using published exposure scores.
 
