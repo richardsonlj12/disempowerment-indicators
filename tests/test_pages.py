@@ -15,7 +15,7 @@ from indicators import pages
 
 ROOT = Path(__file__).resolve().parent.parent
 RELEASE1 = {"ED1", "EA1", "EA2", "GD1", "CD1"}
-TABLE_ROWS = ["Summary", "Current reading", "Grid position", "AI link", "Leading or lagging",
+TABLE_ROWS = ["Summary", "Description", "Current reading", "Grid position", "AI link", "Leading or lagging",
               "Warning sign", "Data source(s)", "Calculation", "Coverage"]
 INTERNAL_KEYS = ["structural", "ai_native", "exposure", "erosion", "lockin", "tier"]
 RETIRED_TERMS = ["AI-specificity", "rival", "direction assumption", "takeaway"]
@@ -130,22 +130,38 @@ def test_title_contains_full_indicator_name(repo):
     assert _front_matter(_page(repo, "ED1"))["title"] == "Labor share of income (ED1)"
 
 
-def test_summary_table_has_nine_rows_in_order(repo):
+def test_summary_table_has_ten_rows_in_order(repo):
     pages.build(repo, today=TODAY)
     for ind_id in RELEASE1:
-        assert [r for r, _ in _table(_page(repo, ind_id))][:9] == TABLE_ROWS, ind_id
+        assert [r for r, _ in _table(_page(repo, ind_id))][:10] == TABLE_ROWS, ind_id
 
 
-def test_reading_rendered_in_three_lines(repo):
+def test_description_row_is_second_and_holds_magnitude(repo):
     pages.build(repo, today=TODAY)
-    rows = dict(_table(_page(repo, "ED1")))
-    lines = rows["Current reading"].split("<br>")
-    assert len(lines) == 3
-    assert "Not yet reviewed" in lines[0]
-    assert lines[1].endswith("against its 2010 to 2019 trend") and "percent" in lines[1]
-    assert lines[2].strip().startswith("AI link: Weak")
-    e2_lines = dict(_table(_page(repo, "EA1")))["Current reading"].split("<br>")
-    assert "own recent path" in e2_lines[1]
+    table = _table(_page(repo, "ED1"))
+    assert table[1][0] == "Description"
+    desc = table[1][1]
+    assert desc.endswith("against its 2010 to 2019 trend") and "percent" in desc
+    assert "own recent path" in dict(_table(_page(repo, "EA1")))["Description"]
+
+
+def test_current_reading_is_label_only_without_ai_link(repo):
+    pages.build(repo, today=TODAY)
+    cell = dict(_table(_page(repo, "ED1")))["Current reading"]
+    assert cell.strip() == "**Not yet reviewed**"
+    assert "AI link" not in cell
+
+
+def test_interpretation_on_second_line_without_ai_link(repo):
+    with open(repo / "config" / "readings.yaml", "a", encoding="utf-8") as f:
+        f.write("  - {indicator_id: ED1, state: below, date: 2026-11-18, kind: current, "
+                "interpretation: 'If AI-driven, consistent with workers losing leverage'}\n")
+    pages.build(repo, today=TODAY)
+    cell = dict(_table(_page(repo, "ED1")))["Current reading"]
+    lines = cell.split("<br>")
+    assert len(lines) == 2 and lines[0].strip().startswith("**")
+    assert lines[1].strip() == "If AI-driven, consistent with workers losing leverage"
+    assert "AI link" not in cell
 
 
 def test_data_sources_render_as_links(repo):
@@ -343,9 +359,9 @@ def _add_c1_index(repo):
 def test_c1_baseline_is_its_2012_to_2019_history(repo):
     _add_c1_index(repo)
     pages.build(repo, today=TODAY)
-    lines = dict(_table(_page(repo, "CD1")))["Current reading"].split("<br>")
-    assert lines[1].endswith("against its 2012 to 2019 history")
-    assert "61.5 (index, 2019 = 100)" in lines[1]
+    desc = dict(_table(_page(repo, "CD1")))["Description"]
+    assert desc.endswith("against its 2012 to 2019 history")
+    assert "61.5 (index, 2019 = 100)" in desc
     text = _page(repo, "CD1")
     method = text[text.index("## Method"):text.index("## Caveats")]
     assert "its 2012 to 2019 history" in method and "2010" not in method
@@ -353,13 +369,13 @@ def test_c1_baseline_is_its_2012_to_2019_history(repo):
 
 def test_no_baseline_clause_without_a_value(repo):
     pages.build(repo, today=TODAY)
-    line = dict(_table(_page(repo, "CD1")))["Current reading"].split("<br>")[1]
+    line = dict(_table(_page(repo, "CD1")))["Description"]
     assert line == "Latest value not yet available (data still being collected)"
 
 
 def test_magnitude_line_names_the_series(repo):
     pages.build(repo, today=TODAY)
-    line = dict(_table(_page(repo, "EA2")))["Current reading"].split("<br>")[1]
+    line = dict(_table(_page(repo, "EA2")))["Description"]
     assert line.startswith("Automation share of categorized Claude.ai conversations, latest value:")
 
 

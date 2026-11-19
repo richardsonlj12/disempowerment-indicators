@@ -207,26 +207,27 @@ def latest_value_parts(ind: reg.Indicator, series: dict) -> list[str]:
     return [meta.title, fmt_value(latest[0], meta.units), fmt_period(latest[1], meta.frequency)]
 
 
-def reading_lines(ind: reg.Indicator, reading: reg.Reading, series: dict) -> list[str]:
-    """The three-line reading: state label; magnitude naming the baseline (no baseline clause while
-    there is no value); interpretation with the AI link."""
-    label = reg.STATE_LABELS[reading.state]
+def reading_parts(ind: reg.Indicator, reading: reg.Reading, series: dict) -> tuple[str, str, str | None]:
+    """(bold state label, magnitude, interpretation or None) for the summary table. The magnitude names
+    the baseline (no baseline clause while there is no value) and goes in the Description row; the
+    label and any interpretation go in the Current reading row. The AI link has its own row."""
+    label = f"**{reg.STATE_LABELS[reading.state]}**"
     value = latest_value_text(ind, series)
     magnitude = reading.magnitude or (value if value == NO_VALUE else f"{value}, against {baseline_text(ind)}")
-    interpretive = f"AI link: {ind.ai_link.capitalize()}"
-    if reading.interpretation:
-        interpretive += f". {reading.interpretation}"
-    return [f"**{label}**", magnitude, interpretive]
+    return label, magnitude, reading.interpretation or None
 
 
 def summary_table(ind, front, reading, series) -> str:
     primary = series.get(ind.primary_series)
     through = (f"data through {fmt_period(primary[1].data_through, primary[1].frequency)}"
                if primary else "data through: not yet available (data still being collected)")
+    label, magnitude, interpretation = reading_parts(ind, reading, series)
+    current = "<br>".join(_cell(x) for x in (label, interpretation) if x)
     sources = "<br>".join(f"[{_cell(s['name'])}]({_url(s['url'])})" for s in front["data_sources"])
     rows = [
         ("Summary", reg.content_summary(front)),
-        ("Current reading", "<br>".join(_cell(x) for x in reading_lines(ind, reading, series))),
+        ("Description", magnitude),
+        ("Current reading", current),
         ("Grid position", f"{reg.layer_label(ind.layer)} · {ind.domain.capitalize()}"),
         ("AI link", f"{ind.ai_link.capitalize()}. A draft rating, to be reviewed in Stage 2; the four criteria are under "
                     "[Method](#method)."),
