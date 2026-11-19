@@ -62,7 +62,9 @@ PUBLIC_CONFIG = ("indicators.yaml", "readings.yaml", "chart_markers.yaml", "cd1_
 
 # Chart views per indicator. kind: level (one series at a time, selector when several; standard
 # errors as a band; optional dashed 2010-19 trend), deviation (from the 2010-19 trend), band (line
-# plus a shaded range from two other series), multi (all series together, groups expanded).
+# plus a shaded range from two other series), multi (all series together, groups expanded), stacked
+# (one bar per sample on a time axis, split into groups that add to 100; EA2, owner review 2026-11-19).
+# "also": series offered for download with the view but not drawn.
 CHART_VIEWS: dict[str, list[dict]] = {
     "ED1": [
         {"label": "Level", "kind": "level", "series": ["labor_share_nfb", "profit_share"], "trend": True},
@@ -73,8 +75,26 @@ CHART_VIEWS: dict[str, list[dict]] = {
         {"label": "By firm size", "kind": "multi", "series": ["btos_ai_use_by_size"]},
     ],
     "EA2": [
-        {"label": "Automation and augmentation shares", "kind": "multi",
-         "series": ["aei_automation_share", "aei_augmentation_share"]},
+        {"label": "Collaboration patterns", "kind": "stacked", "series": ["aei_patterns"],
+         "also": ["aei_automation_share", "aei_augmentation_share"],
+         "families": [
+             {"name": "Automation", "groups": ["directive", "feedback_loop"]},
+             {"name": "Augmentation", "groups": ["task_iteration", "learning", "validation"]},
+         ],
+         "groupNames": {"directive": "Directive", "feedback_loop": "Feedback loop",
+                        "task_iteration": "Task iteration", "learning": "Learning", "validation": "Validation"},
+         # One per segment (method group); text checked against Anthropic's data documentation, 2026-11-19.
+         "methodGroups": [
+             {"name": "A", "tip": "Group A: Anthropic's first two reports. KEEL reads the summary table each "
+                                  "published. Claude.ai Free and Pro plans."},
+             {"name": "B", "tip": "Group B: from September 2025 Anthropic published the underlying data, and "
+                                  "KEEL computes the shares from the five pattern rows. One-week samples, "
+                                  "Free and Pro plans."},
+             {"name": "C", "tip": "Group C: as group B, but Claude.ai now includes the Max plan as well as "
+                                  "Free and Pro. One-week sample."},
+             {"name": "D", "tip": "Group D: whole calendar months, from conversations sampled every day. "
+                                  "Claude.ai now includes Cowork."},
+         ]},
     ],
     "GD1": [
         {"label": "Level", "kind": "level",
@@ -182,11 +202,18 @@ def _load_series(data_dir: Path, series_ids: list[str]) -> dict[str, tuple]:
     return out
 
 
-def _latest(frame) -> tuple[float, str] | None:
+def _latest(frame) -> tuple[float, str, str | None] | None:
+    """(value, ISO date, period label or None). Series sampled over a stated window (EA2) carry a
+    `period` column naming it, which is shown instead of the date."""
     if frame is None or frame.empty or "group" in frame.columns:
         return None
     row = frame.sort_values("date").iloc[-1]
-    return float(row["value"]), row["date"].date().isoformat()
+    label = row["period"] if "period" in frame.columns and row["period"] else None
+    return float(row["value"]), row["date"].date().isoformat(), label
+
+
+def _when(latest: tuple, meta: SeriesMeta) -> str:
+    return latest[2] or fmt_period(latest[1], meta.frequency)
 
 
 # ------------------------------------------------------------------ pieces
@@ -201,7 +228,7 @@ def latest_value_text(ind: reg.Indicator, series: dict) -> str:
     if latest is None:
         return NO_VALUE
     meta = primary[1]
-    return f"{meta.title}, latest value: {fmt_value(latest[0], meta.units)} ({fmt_period(latest[1], meta.frequency)})"
+    return f"{meta.title}, latest value: {fmt_value(latest[0], meta.units)} ({_when(latest, meta)})"
 
 
 def latest_value_parts(ind: reg.Indicator, series: dict) -> list[str]:
@@ -211,7 +238,7 @@ def latest_value_parts(ind: reg.Indicator, series: dict) -> list[str]:
     if latest is None:
         return [NO_VALUE]
     meta = primary[1]
-    return [meta.title, fmt_value(latest[0], meta.units), fmt_period(latest[1], meta.frequency)]
+    return [meta.title, fmt_value(latest[0], meta.units), _when(latest, meta)]
 
 
 def reading_parts(ind: reg.Indicator, reading: reg.Reading, series: dict) -> tuple[str, str, str | None]:
@@ -240,7 +267,7 @@ def summary_table(ind, front, reading, series, cites: bibliography.Citations) ->
         latest_data = _cell(magnitude)
     else:  # series name / value against the baseline / when KEEL last fetched it (owner, 2026-11-19)
         meta = primary[1]
-        value = reading.magnitude or (f"{fmt_value(latest[0], meta.units)} ({fmt_period(latest[1], meta.frequency)}), "
+        value = reading.magnitude or (f"{fmt_value(latest[0], meta.units)} ({_when(latest, meta)}), "
                                       f"against {baseline_text(ind)}")
         latest_data = "<br>".join(_cell(x) for x in (meta.title, value, f"Data last fetched {fmt_date(meta.fetched_at)}"))
     sources = "<br>".join(_data_link(_cell(s["name"]), s["url"], cites, "../") for s in front["data_sources"])
@@ -341,12 +368,12 @@ def chart_block(spec: dict, trend_files: set[str]) -> str:
     return "\n".join([
         "```{ojs}",
         "//| echo: false",
-        'import { TIMEFRAMES, loadData, themeChanges, viewInput, seriesInput, logInput, renderChart } from "../js/charts.js"',
+        'import { timeframeInput, loadData, themeChanges, viewInput, seriesInput, logInput, renderChart } from "../js/charts.js"',
         f"keelSpec = ({payload})",
         "keelData = loadData(d3, keelSpec)",
         "keelTheme = themeChanges()",
         "viewof keelView = viewInput(Inputs, keelSpec)",
-        'viewof keelTimeframe = Inputs.radio(TIMEFRAMES.map(t => t.label), {label: "Timeframe", value: "All"})',
+        "viewof keelTimeframe = timeframeInput(Inputs, keelSpec)",
         "viewof keelSeries = seriesInput(Inputs, keelSpec, keelView)",
         "viewof keelLog = logInput(Inputs, keelSpec, keelView)",
         "renderChart(Plot, d3, keelSpec, keelData, {view: keelView, timeframe: keelTimeframe, "
@@ -385,9 +412,12 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
             if meta.title not in titles:
                 titles.append(meta.title)
     if grouped:
-        lines.append("- **Series breaks.** The chart does not join the line across a break.")
+        joined = ("The chart groups the points between breaks; compare only within a group."
+                  if all(v.get("kind") == "stacked" for v in CHART_VIEWS.get(ind.id, []))
+                  else "The chart does not join the line across a break.")
+        lines.append(f"- **Series breaks.** {joined}")
         for (d, note), titles in sorted(grouped.items()):
-            lines.append(f"    - {fmt_date(d)} ({' and '.join(sorted(titles))}): {note}")
+            lines.append(f"    - {fmt_date(d)} ({_and(sorted(titles))}): {note}")
     else:
         lines.append("- **Series breaks.** None recorded.")
     if markers:
@@ -417,7 +447,7 @@ def sources_and_dates(ind, series, cites: bibliography.Citations) -> str:
 def downloads(views, series, trend_files) -> str:
     wanted = []
     for v in views:
-        for sid in v["series"] + v.get("band", []):
+        for sid in v["series"] + v.get("band", []) + v.get("also", []):
             if sid not in wanted:
                 wanted.append(sid)
     lines = []

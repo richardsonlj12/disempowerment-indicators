@@ -77,6 +77,12 @@ export function seriesInput(Inputs, spec, viewLabel) {
   return Inputs.select(choices, {label: "Series", format: id => seriesName(spec, id), value: choices[0], width: 420});
 }
 
+// No timeframe choice when every view is a stacked-bar view (EA2: seven samples since December 2024).
+export function timeframeInput(Inputs, spec) {
+  if (spec.views.every(v => v.kind === "stacked")) return hidden("All");
+  return Inputs.radio(TIMEFRAMES.map(t => t.label), {label: "Timeframe", value: "All"});
+}
+
 export function logInput(Inputs, spec, viewLabel) {
   const view = findView(spec, viewLabel);
   if (!view.log_option) return hidden(false);
@@ -197,6 +203,7 @@ export function renderChart(Plot, d3, spec, data, opts) {
   if (!view.available) {
     return message("Data still being collected. This view will appear once the download from the source is complete.");
   }
+  if (view.kind === "stacked") return renderStacked(Plot, d3, spec, data, view, opts);
   const colors = palette();
   const tf = TIMEFRAMES.find(t => t.label === opts.timeframe) || TIMEFRAMES[0];
   const start = tf.start ? utc(tf.start) : null;
@@ -333,4 +340,224 @@ export function renderChart(Plot, d3, spec, data, opts) {
   if (list.childElementCount) wrap.append(list);
   wrap.append(dataTable(spec, plotted, view, ids, legendItems[0].label));
   return wrap;
+}
+
+// ------------------------------------------------------------------ stacked bars (EA2)
+// One bar per sample on a time axis, centred on the middle of its sample window, split into groups
+// that add to 100 and stacked family by family (owner review, 2026-11-19). Segments between breaks are
+// labelled as method groups, with a definition on hover, focus or tap.
+
+// Warm for the first family (automation), cool for the second (augmentation); light and dark themes.
+const STACK_COLORS = {
+  light: [["#b5562f", "#e3a079"], ["#1f5f7a", "#4f93ad", "#9cc6d6"]],
+  dark: [["#e07a50", "#f0b996"], ["#3d8fb0", "#6fb2cb", "#b4dbe8"]],
+};
+const BAR_HALF_DAYS = 11; // bars are drawn 22 days wide whatever the sample length, so each stays visible
+const DAY = 864e5;
+
+// A small tooltip for the method-group labels in the chart and the data table.
+function groupTip(figure) {
+  const tip = element("div", "keel-grouptip");
+  tip.setAttribute("role", "tooltip");
+  tip.hidden = true;
+  figure.append(tip);
+  const show = el => {
+    tip.textContent = el.getAttribute("data-tip");
+    tip.hidden = false;
+    const f = figure.getBoundingClientRect(), b = el.getBoundingClientRect();
+    tip.style.left = `${Math.max(0, Math.min(b.left - f.left, f.width - tip.offsetWidth))}px`;
+    tip.style.top = `${b.bottom - f.top + 6}px`;
+  };
+  const target = e => e.target.closest && e.target.closest("[data-tip]");
+  figure.addEventListener("mouseover", e => { const t = target(e); if (t) show(t); else tip.hidden = true; });
+  figure.addEventListener("mouseleave", () => { tip.hidden = true; });
+  figure.addEventListener("focusin", e => { const t = target(e); if (t) show(t); });
+  figure.addEventListener("focusout", () => { tip.hidden = true; });
+  figure.addEventListener("keydown", e => { if (e.key === "Escape") tip.hidden = true; });
+  document.addEventListener("pointerdown", e => {
+    const t = figure.contains(e.target) && target(e);
+    if (t) show(t); else tip.hidden = true;
+  });
+}
+
+function markTip(el, text) {
+  el.setAttribute("data-tip", text);
+  el.setAttribute("tabindex", "0");
+  el.classList.add("keel-grouplabel");
+}
+
+function renderStacked(Plot, d3, spec, data, view, opts) {
+  const id = view.series[0];
+  const meta = spec.series[id];
+  const rows = data[id] || [];
+  if (!rows.length) return message("No data yet.");
+  const order = view.families.flatMap(f => f.groups);
+  const theme = STACK_COLORS[currentTheme()];
+  const colorOf = Object.fromEntries(view.families.flatMap((f, i) => f.groups.map((g, j) => [g, theme[i][j]])));
+  const name = g => view.groupNames[g] || g;
+  const groupOf = seg => view.methodGroups[seg] || {name: String(seg + 1), tip: ""};
+  const fmtDay = d3.utcFormat("%-d %B %Y");
+  const asDate = v => (v instanceof Date ? v : utc(String(v)));
+
+  // One record per sample, in date order, with its window and its group values.
+  const samples = [];
+  for (const d of [...rows].sort((a, b) => a.date - b.date)) {
+    let s = samples.find(x => +x.date === +d.date);
+    if (!s) {
+      const end = asDate(d.sample_end);
+      s = {date: d.date, end, mid: new Date((+d.date + +end) / 2), period: d.period, release: asDate(d.release),
+        segment: d.segment ?? 0, values: {}};
+      samples.push(s);
+    }
+    s.values[d.group] = d.value;
+  }
+  const pieces = [];
+  for (const s of samples) {
+    let y = 0;
+    for (const g of order) {
+      const v = s.values[g] ?? 0;
+      pieces.push({x1: new Date(+s.mid - BAR_HALF_DAYS * DAY), x2: new Date(+s.mid + BAR_HALF_DAYS * DAY), y1: y, y2: y + v,
+        group: g, value: v, period: s.period, release: s.release});
+      y += v;
+    }
+    s.first = view.families[0].groups.reduce((t, g) => t + (s.values[g] ?? 0), 0);
+  }
+  const firstName = view.families[0].name.toLowerCase();
+  const firsts = samples.filter((s, i) => i === 0 || s.segment !== samples[i - 1].segment);
+  const separators = firsts.slice(1).map(s => {
+    const prev = samples[samples.indexOf(s) - 1];
+    return new Date((+prev.end + +s.date) / 2);
+  });
+  const x0 = new Date(+samples[0].mid - 40 * DAY), x1 = new Date(+samples.at(-1).mid + 40 * DAY);
+
+  const full = Math.max(280, opts.width || 640);
+  const width = full >= 640 ? full - 170 : full; // room for the legend on the right on wide screens
+  // Narrow charts: group labels shorten to "A", "B"..., and a share label too close to the one before
+  // it is raised a line so the two do not overlap.
+  const narrow = width < 560;
+  const groupText = s => (narrow ? "" : "Group ") + groupOf(s.segment).name;
+  const pxPerDay = (width - 64) / ((+x1 - +x0) / DAY);
+  let raisedAny = false;
+  samples.forEach((s, i) => {
+    const prev = samples[i - 1];
+    s.raise = !!prev && !prev.raise && (+s.mid - +prev.mid) / DAY * pxPerDay < 34;
+    raisedAny = raisedAny || s.raise;
+  });
+  const tipText = d => `${name(d.group)}, sampled ${d.period}\n${fmtValue(d.value, meta.units)} (released ${fmtDay(d.release)})`;
+  const marks = [
+    Plot.ruleX(separators, {stroke: "currentColor", strokeOpacity: 0.6, strokeDasharray: "2,3"}),
+    Plot.rect(pieces, {x1: "x1", x2: "x2", y1: "y1", y2: "y2", fill: d => colorOf[d.group], ...(Plot.tip ? {} : {title: tipText})}),
+    Plot.ruleY([50], {stroke: "currentColor", strokeDasharray: "4,3", strokeWidth: 1.5}),
+    Plot.text(samples.filter(s => !s.raise), {x: "mid", y: 100, text: s => s.first.toFixed(1), dy: -8, fontWeight: 700, fontSize: 11}),
+    Plot.text(samples.filter(s => s.raise), {x: "mid", y: 100, text: s => s.first.toFixed(1), dy: -22, fontWeight: 700, fontSize: 11}),
+    Plot.text(firsts, {x: s => new Date(+s.mid - BAR_HALF_DAYS * DAY), y: 100, text: groupText,
+      dy: raisedAny ? -40 : -26, textAnchor: "start", fontSize: 11}),
+  ];
+  if (Plot.tip) {
+    marks.push(Plot.tip(pieces, Plot.pointer({x: d => new Date((+d.x1 + +d.x2) / 2), y: d => (d.y1 + d.y2) / 2, title: tipText})));
+  }
+  const chart = Plot.plot({
+    width,
+    height: Math.round(Math.min(420, Math.max(300, width * 0.55))),
+    marginLeft: 44, marginTop: raisedAny ? 58 : 44, marginBottom: 44,
+    x: {type: "utc", domain: [x0, x1], label: "Sample date", labelAnchor: "center", labelArrow: "none"},
+    y: {domain: [0, 100], ticks: [0, 25, 50, 75, 100], tickFormat: d => `${d}%`, grid: true, label: null},
+    marks,
+    ariaLabel: `${spec.chartTitle}: ${view.label}`,
+    ariaDescription: `Stacked bar chart: for each sample, the share of each pattern (${order.map(name).join(", ")}), adding to 100 percent.`,
+  });
+  // Matched by text: the Plot bundled with Quarto ignores the className option.
+  chart.querySelectorAll("text").forEach(t => {
+    const s = firsts.find(x => groupText(x) === t.textContent);
+    if (s) markTip(t, groupOf(s.segment).tip);
+  });
+
+  // Legend on the right, top to bottom in stacking order (top of the bar first), by family.
+  const box = element("div", "keel-legend keel-legend-stack");
+  for (const f of [...view.families].reverse()) {
+    box.append(element("strong", "keel-legend-family", f.name));
+    for (const g of [...f.groups].reverse()) {
+      const item = element("span");
+      const swatch = element("span", "keel-legend-swatch");
+      swatch.style.background = colorOf[g];
+      item.append(swatch, document.createTextNode(name(g)));
+      box.append(item);
+    }
+  }
+  const row = element("div", "keel-chart-row");
+  row.append(chart, box);
+
+  const wrap = element("figure", "keel-chart keel-chart-stacked");
+  wrap.append(row);
+  const list = element("ul", "keel-chart-notes");
+  list.append(element("li", null, `Each bar is one sample, centred on the middle of its sample window and drawn the same width so it stays visible. The number above each bar is its ${firstName} share; the dashed line marks 50 percent. Dotted lines separate the method groups: compare bars only within a group.`));
+  wrap.append(list);
+  wrap.append(stackedTable(spec, view, samples, name, groupOf));
+  groupTip(wrap);
+  return wrap;
+}
+
+// Data table for the stacked view: the groups under their family headings, then each family's total.
+function stackedTable(spec, view, samples, name, groupOf) {
+  const meta = spec.series[view.series[0]];
+  const cls = (i, start) => `keel-fam-${i}${start ? " keel-fam-start" : ""}`;
+  const details = element("details", "keel-datatable keel-datatable-stacked");
+  details.append(element("summary", null, "Data table"));
+  const scroller = element("div", "keel-datatable-scroll");
+  const table = element("table");
+  table.append(element("caption", null, `Values plotted in this chart (${samples.length} samples), percent of classified conversations.`));
+  const thead = element("thead");
+  const top = element("tr"), sub = element("tr");
+  for (const text of ["Sampled", "Group"]) {
+    const th = element("th", null, text);
+    th.scope = "col";
+    th.rowSpan = 2;
+    top.append(th);
+  }
+  view.families.forEach((f, i) => {
+    const th = element("th", `keel-fam ${cls(i, true)}`, `${f.name} patterns`);
+    th.colSpan = f.groups.length;
+    th.scope = "colgroup";
+    top.append(th);
+    f.groups.forEach((g, j) => {
+      const h = element("th", cls(i, j === 0), name(g));
+      h.scope = "col";
+      sub.append(h);
+    });
+  });
+  const totals = element("th", "keel-fam keel-fam-start keel-fam-total", "Totals");
+  totals.colSpan = view.families.length;
+  totals.scope = "colgroup";
+  top.append(totals);
+  view.families.forEach((f, i) => {
+    const h = element("th", cls(i, i === 0), f.name);
+    h.scope = "col";
+    sub.append(h);
+  });
+  thead.append(top, sub);
+  table.append(thead);
+  const body = element("tbody");
+  for (const s of samples) {
+    const tr = element("tr");
+    const th = element("th", null, s.period);
+    th.scope = "row";
+    const g = element("td");
+    const label = element("span", null, groupOf(s.segment).name);
+    markTip(label, groupOf(s.segment).tip);
+    g.append(label);
+    tr.append(th, g);
+    view.families.forEach((f, i) => f.groups.forEach((grp, j) =>
+      tr.append(element("td", cls(i, j === 0), fmtValue(s.values[grp] ?? 0, meta.units)))));
+    view.families.forEach((f, i) => {
+      const total = f.groups.reduce((t, grp) => t + (s.values[grp] ?? 0), 0);
+      const td = element("td", cls(i, i === 0));
+      td.append(element("strong", null, fmtValue(total, meta.units)));
+      tr.append(td);
+    });
+    body.append(tr);
+  }
+  table.append(body);
+  scroller.append(table);
+  details.append(scroller);
+  return details;
 }

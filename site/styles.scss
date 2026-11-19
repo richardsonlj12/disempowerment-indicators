@@ -348,6 +348,115 @@ body.quarto-dark {
   margin-right: 0.35rem;
 }
 
+// Stacked-bar chart (EA2): legend to the right of the chart on wide screens, below it on narrow ones.
+.keel-chart-stacked {
+  position: relative;
+}
+.keel-chart-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  > svg {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+.keel-legend-stack {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0.2rem;
+  margin: 0;
+  .keel-legend-family {
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  .keel-legend-swatch {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 2px;
+  }
+  @media (max-width: 700px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    .keel-legend-family {
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+  }
+}
+// Method-group labels (chart and table) carry a definition shown on hover, focus or tap.
+.keel-grouplabel {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+text.keel-grouplabel {
+  text-decoration: underline dotted;
+}
+.keel-grouptip {
+  position: absolute;
+  z-index: 10;
+  max-width: min(20rem, 90%);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  font-style: normal;
+  line-height: 1.4;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+// Data table: tinted column bands so the patterns visibly sum into the two totals.
+.keel-datatable-stacked {
+  thead th {
+    position: static;
+    vertical-align: bottom;
+  }
+  .keel-fam {
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  .keel-fam-0 {
+    background: rgba(181, 86, 47, 0.08);
+  }
+  .keel-fam-1 {
+    background: rgba(31, 95, 122, 0.08);
+  }
+  th.keel-fam-0.keel-fam {
+    border-bottom: 2px solid #b5562f;
+  }
+  th.keel-fam-1.keel-fam {
+    border-bottom: 2px solid #1f5f7a;
+  }
+  .keel-fam-total {
+    border-bottom: 2px solid var(--bs-body-color);
+  }
+  .keel-fam-start {
+    border-left: 2px solid var(--bs-border-color);
+  }
+  td.keel-fam-0,
+  td.keel-fam-1 {
+    text-align: right;
+  }
+}
+body.quarto-dark .keel-datatable-stacked {
+  .keel-fam-0 {
+    background: rgba(224, 122, 80, 0.12);
+  }
+  .keel-fam-1 {
+    background: rgba(61, 143, 176, 0.14);
+  }
+}
+
 // Sources page: hanging indent, as in a printed reference list.
 .keel-ref {
   padding-left: 2em;

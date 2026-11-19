@@ -10,6 +10,11 @@ label, a release directory with no entry here) raises `SourceError`; nothing is 
 Definition used for every release (Anthropic's own, from the 2025-09-15 and 2026-06-26 data
 documentation): shares are percent of *classifiable* conversations, so patterns `none` and
 `not_classified` are excluded from the denominator and automation + augmentation = 100.
+
+Each point is dated by the first day of the window its conversations were sampled in, not by the
+release date, and carries a `period` label for that window, its `sample_end` and its `release`
+date (owner review, 2026-11-19). Besides the two totals, the five pattern shares are kept
+(`aei_patterns`, long format, one group per pattern) for the stacked-bar chart.
 """
 
 from __future__ import annotations
@@ -35,8 +40,10 @@ LICENSE = (
 )
 
 AUTOMATION = ("directive", "feedback loop")
-AUGMENTATION = ("validation", "task iteration", "learning")
+AUGMENTATION = ("task iteration", "learning", "validation")
 EXCLUDED = ("none", "not_classified")
+PATTERNS = AUTOMATION + AUGMENTATION  # stacking order, bottom to top
+PATTERN_KEYS = {p: p.replace(" ", "_") for p in PATTERNS}  # group labels in aei_patterns
 
 RAW_HEADER = [
     "geo_id", "geography", "date_start", "date_end", "platform_and_product",
@@ -55,12 +62,13 @@ _RAW_BASE = {
     "excluded": EXCLUDED,
 }
 
+# samples: (first day, last day, label) of each sample window the release reports.
 RELEASE_SCHEMAS: dict[str, dict] = {
     "release_2025_02_10": {
         "kind": "interaction_csv",
         "path": "release_2025_02_10/automation_vs_augmentation.csv",
         "header": ["interaction_type", "pct"],
-        "dates": ["2025-02-10"],
+        "samples": [("2024-12-16", "2024-12-23", "16–23 Dec 2024")],
         "automation": AUTOMATION,
         "augmentation": AUGMENTATION,
         "excluded": ("none",),
@@ -71,49 +79,56 @@ RELEASE_SCHEMAS: dict[str, dict] = {
         "kind": "interaction_csv",
         "path": "release_2025_03_27/automation_vs_augmentation_v2.csv",
         "header": ["interaction_type", "pct"],
-        "dates": ["2025-03-27"],
+        # Anthropic gives only "the 11 days following the launch" of Claude 3.7 Sonnet, labelled
+        # "Feb '25 - March '25" in its figure, so the point is dated by that span, not guessed days.
+        "samples": [("2025-02-01", "2025-03-31", "Feb–Mar 2025")],
         "automation": AUTOMATION,
         "augmentation": AUGMENTATION,
         "excluded": ("none",),
-        "window": "second report sample (Claude 3.7 Sonnet), Claude.ai Free and Pro, Feb-Mar 2025",
+        "window": "second report sample, the 11 days after the Claude 3.7 Sonnet launch (Anthropic's figure: "
+        "Feb '25 - March '25), Claude.ai Free and Pro",
     },
     "release_2025_09_15": {
         **_RAW_BASE,
         "path": "release_2025_09_15/data/intermediate/aei_raw_claude_ai_2025-08-04_to_2025-08-11.csv",
-        "dates": ["2025-09-15"],
+        "samples": [("2025-08-04", "2025-08-11", "4–11 Aug 2025")],
         "window": ("2025-08-04", "2025-08-11"),
     },
     "release_2026_01_15": {
         **_RAW_BASE,
         "path": "release_2026_01_15/data/intermediate/aei_raw_claude_ai_2025-11-13_to_2025-11-20.csv",
-        "dates": ["2026-01-15"],
+        "samples": [("2025-11-13", "2025-11-20", "13–20 Nov 2025")],
         "window": ("2025-11-13", "2025-11-20"),
     },
     "release_2026_03_24": {
         **_RAW_BASE,
         "path": "release_2026_03_24/data/aei_raw_claude_ai_2026-02-05_to_2026-02-12.csv",
-        "dates": ["2026-03-24"],
+        "samples": [("2026-02-05", "2026-02-12", "5–12 Feb 2026")],
         "window": ("2026-02-05", "2026-02-12"),
     },
     "release_2026_06_26": {
         "kind": "monthly_buckets",
         "path": "release_2026_06_26/data/aei_claude_ai_2026-06-26.csv",
         "header": MONTHLY_HEADER,
-        "dates": ["2026-04-01", "2026-05-01"],
+        "samples": [("2026-04-01", "2026-04-30", "April 2026"), ("2026-05-01", "2026-05-31", "May 2026")],
+        "automation": AUTOMATION,
+        "augmentation": AUGMENTATION,
+        "excluded": ("none", "not_classified"),
         "automation_metric": "collaboration_bucket_automation_pct",
         "augmentation_metric": "collaboration_bucket_augmentation_pct",
     },
 }
 
+# Dated at the first sample of each new method group, because points are dated by sample window.
 BREAKS = [
     {
-        "date": "2025-09-15",
+        "date": "2025-08-04",
         "note": "Release layout changed from a six-row interaction-type summary to the raw long-format "
         "file (patterns read from the collaboration facet, global rows); shares now recomputed "
         "from patterns.",
     },
     {
-        "date": "2026-03-24",
+        "date": "2026-02-05",
         "note": "Claude.ai population widened from 'Free and Pro' to 'Free, Pro, and Max' plans.",
     },
     {
@@ -126,8 +141,9 @@ BREAKS = [
 
 NOTES = (
     "Percent of categorized Claude.ai conversations, those that fit one of the five patterns (Anthropic's labels \"none\" and \"not classified\" excluded, so the two "
-    "shares sum to 100), global, one row per release date; the April and May 2026 monthly aggregates of the "
-    "2026-06-26 release are dated by month start. Mapping (Anthropic's categorisation in the 2025-09-15 "
+    "shares sum to 100), global, one row per sample, dated by the first day of the sample window (column period "
+    "names the window, sample_end its last day, release the release date). The series aei_patterns gives the five "
+    "pattern shares on the same denominator. Mapping (Anthropic's categorisation in the 2025-09-15 "
     "enrichment code and the 2026-06-26 data documentation): automation = directive + feedback loop; "
     "augmentation = validation + task iteration + learning. "
     "Release mappings: "
@@ -136,7 +152,8 @@ NOTES = (
     "release_2025_09_15, release_2026_01_15 and release_2026_03_24 read the raw claude_ai file, rows "
     "geo_id=GLOBAL, facet=collaboration, level=0, variable=collaboration_pct, cluster_name = the pattern; "
     "release_2026_06_26 reads the claude_ai file, rows geo_id=GLOBAL, category_name=overall, "
-    "hierarchy_level=0, metric_id collaboration_bucket_automation_pct and collaboration_bucket_augmentation_pct. "
+    "hierarchy_level=0, metric_ids collaboration_<pattern>_pct, checked against Anthropic's published "
+    "collaboration_bucket_automation_pct and collaboration_bucket_augmentation_pct (within 0.05 points). "
     "Only the Claude.ai source is used; the first-party API files are a different population and are "
     "excluded. Shares including none and not_classified in the denominator are lower (for example 49.10 "
     "percent automation for the 2025-08 sample, against 51.07 here). Releases without a conversation-level "
@@ -150,13 +167,6 @@ NOTES = (
 )  # fmt: skip
 
 
-def _shares(auto: float, aug: float, release: str) -> tuple[float, float]:
-    total = auto + aug
-    if total <= 0:
-        raise SourceError(f"{release}: no classifiable conversations")
-    return auto / total * 100, aug / total * 100
-
-
 def _check_labels(labels, schema: dict, release: str) -> None:
     known = set(schema["automation"]) | set(schema["augmentation"]) | set(schema["excluded"])
     unknown = set(labels) - known
@@ -167,22 +177,22 @@ def _check_labels(labels, schema: dict, release: str) -> None:
         raise SourceError(f"{release}: collaboration pattern(s) {sorted(missing)} absent")
 
 
-def _patterns_to_shares(values: dict[str, float], schema: dict, release: str) -> tuple[float, float]:
+def _normalize(values: dict[str, float], schema: dict, release: str) -> dict[str, float]:
+    """The five pattern shares as percent of classifiable conversations (they add to 100)."""
     _check_labels(values, schema, release)
-    return _shares(
-        sum(values[k] for k in schema["automation"]),
-        sum(values[k] for k in schema["augmentation"]),
-        release,
-    )
+    total = sum(values[k] for k in PATTERNS)
+    if total <= 0:
+        raise SourceError(f"{release}: no classifiable conversations")
+    return {k: values[k] / total * 100 for k in PATTERNS}
 
 
-def _from_interaction_csv(release: str, schema: dict) -> dict[str, tuple[float, float]]:
+def _from_interaction_csv(release: str, schema: dict) -> dict[str, dict[str, float]]:
     url = RESOLVE + schema["path"]
     rows = list(csv.reader(http.get(url, expect="csv").text.splitlines()))
     if not rows or rows[0] != schema["header"]:
         raise SourceError(f"{release}: unexpected header {rows[0] if rows else None}; expected {schema['header']}")
     values = {r[0]: float(r[1]) for r in rows[1:] if r}
-    return {schema["dates"][0]: _patterns_to_shares(values, schema, release)}
+    return {schema["samples"][0][0]: _normalize(values, schema, release)}
 
 
 def _stream_lines(url: str, keep) -> tuple[str, list[str]]:
@@ -204,7 +214,7 @@ def _stream_lines(url: str, keep) -> tuple[str, list[str]]:
         return header, [line for line in lines if keep(line)]
 
 
-def _from_raw_long(release: str, schema: dict) -> dict[str, tuple[float, float]]:
+def _from_raw_long(release: str, schema: dict) -> dict[str, dict[str, float]]:
     url = RESOLVE + schema["path"]
     header, lines = _stream_lines(
         url,
@@ -219,32 +229,43 @@ def _from_raw_long(release: str, schema: dict) -> dict[str, tuple[float, float]]
         values[row["cluster_name"]] = float(row["value"])
     if not values:
         raise SourceError(f"{release}: no global collaboration rows found")
-    return {schema["dates"][0]: _patterns_to_shares(values, schema, release)}
+    return {schema["samples"][0][0]: _normalize(values, schema, release)}
 
 
-def _from_monthly_buckets(release: str, schema: dict) -> dict[str, tuple[float, float]]:
+def _from_monthly_buckets(release: str, schema: dict) -> dict[str, dict[str, float]]:
     url = RESOLVE + schema["path"]
-    metrics = (schema["automation_metric"], schema["augmentation_metric"])
-    header, lines = _stream_lines(
-        url, lambda l: ",GLOBAL,global,overall,0," in l and "collaboration_bucket_" in l
-    )
+    buckets = (schema["automation_metric"], schema["augmentation_metric"])
+    header, lines = _stream_lines(url, lambda l: ",GLOBAL,global,overall,0,collaboration_" in l)
     if next(csv.reader([header]), None) != schema["header"]:
         raise SourceError(f"{release}: unexpected header {header!r}; expected {schema['header']}")
     months: dict[str, dict[str, float]] = {}
+    totals: dict[str, dict[str, float]] = {}
     for row in csv.DictReader(lines, fieldnames=schema["header"]):
-        if row["metric_id"] not in metrics:
-            raise SourceError(f"{release}: unknown bucket metric {row['metric_id']!r}; add a mapping")
-        months.setdefault(row["date_start"], {})[row["metric_id"]] = float(row["value"])
+        metric = row["metric_id"]
+        if metric in buckets:
+            totals.setdefault(row["date_start"], {})[metric] = float(row["value"])
+        elif metric.startswith("collaboration_") and metric.endswith("_pct") and "bucket" not in metric:
+            label = metric[len("collaboration_"):-len("_pct")]
+            label = label if label == "not_classified" else label.replace("_", " ")
+            months.setdefault(row["date_start"], {})[label] = float(row["value"])
+        else:
+            raise SourceError(f"{release}: unknown collaboration metric {metric!r}; add a mapping")
+    expected = [start for start, _, _ in schema["samples"]]
+    if sorted(months) != expected or sorted(totals) != expected:
+        raise SourceError(f"{release}: months {sorted(months)} differ from expected {expected}")
     out = {}
-    for month, got in sorted(months.items()):
-        if set(got) != set(metrics):
-            raise SourceError(f"{release}: {month} lacks one of {metrics}")
-        auto, aug = got[metrics[0]], got[metrics[1]]
-        if abs(auto + aug - 100) > 0.05:
-            raise SourceError(f"{release}: {month} buckets sum to {auto + aug}, expected 100")
-        out[month] = (auto, aug)
-    if sorted(out) != schema["dates"]:
-        raise SourceError(f"{release}: months {sorted(out)} differ from expected {schema['dates']}")
+    for month in expected:
+        shares = _normalize(months[month], schema, release)
+        got = totals[month]
+        if set(got) != set(buckets):
+            raise SourceError(f"{release}: {month} lacks one of {buckets}")
+        auto = sum(shares[k] for k in AUTOMATION)
+        if abs(auto - got[buckets[0]]) > 0.05 or abs(100 - auto - got[buckets[1]]) > 0.05:
+            raise SourceError(
+                f"{release}: {month} patterns give {auto:.2f} percent automation, but Anthropic's totals are "
+                f"{got[buckets[0]]} and {got[buckets[1]]}"
+            )
+        out[month] = shares
     return out
 
 
@@ -267,14 +288,15 @@ def _check_listing() -> None:
 
 
 def _committed(data_dir: Path) -> dict[str, dict[str, float]] | None:
-    """Previously fetched shares by series, or None if either file is missing."""
-    out = {}
-    for sid in ("aei_automation_share", "aei_augmentation_share"):
-        path = Path(data_dir) / f"{sid}.csv"
-        if not path.exists():
-            return None
-        old = pd.read_csv(path, parse_dates=["date"])
-        out[sid] = {d.strftime("%Y-%m-%d"): float(v) for d, v in zip(old["date"], old["value"])}
+    """Previously fetched pattern shares by sample start date, or None if the file is missing."""
+    path = Path(data_dir) / "aei_patterns.csv"
+    if not path.exists():
+        return None
+    old = pd.read_csv(path, parse_dates=["date"], dtype={"group": str})
+    by_key = {v: k for k, v in PATTERN_KEYS.items()}
+    out: dict[str, dict[str, float]] = {}
+    for d, g, v in zip(old["date"], old["group"], old["value"]):
+        out.setdefault(d.strftime("%Y-%m-%d"), {})[by_key.get(g, g)] = float(v)
     return out
 
 
@@ -288,24 +310,44 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
     _check_listing()
     committed = None if full else _committed(Path(data_dir))
 
-    auto_rows: dict[str, float] = {}
-    aug_rows: dict[str, float] = {}
+    shares: dict[str, dict[str, float]] = {}  # sample start -> pattern -> percent
+    info: dict[str, tuple[str, str, str]] = {}  # sample start -> (last day, period label, release date)
     for release, schema in RELEASE_SCHEMAS.items():
-        if committed and all(d in committed["aei_automation_share"] and d in committed["aei_augmentation_share"] for d in schema["dates"]):
-            for d in schema["dates"]:
-                auto_rows[d] = committed["aei_automation_share"][d]
-                aug_rows[d] = committed["aei_augmentation_share"][d]
+        release_date = release.removeprefix("release_").replace("_", "-")
+        starts = []
+        for start, end, period in schema["samples"]:
+            info[start] = (end, period, release_date)
+            starts.append(start)
+        if committed and all(set(committed.get(d, {})) == set(PATTERNS) for d in starts):
+            for d in starts:
+                shares[d] = committed[d]
             continue
-        for d, (auto, aug) in _READERS[schema["kind"]](release, schema).items():
-            auto_rows[d], aug_rows[d] = auto, aug
+        shares.update(_READERS[schema["kind"]](release, schema))
 
-    def frame(rows: dict[str, float]) -> pd.DataFrame:
-        df = pd.DataFrame({"date": pd.to_datetime(list(rows)), "value": list(rows.values())})
-        df = df.sort_values("date").reset_index(drop=True)
-        df["value"] = df["value"].astype(float)
-        return assign_segments(df, BREAKS)
+    dates = sorted(shares)
 
-    def meta(series_id: str, title: str, role: str, df: pd.DataFrame) -> SeriesMeta:
+    def describe(df: pd.DataFrame) -> pd.DataFrame:
+        keys = df["date"].dt.strftime("%Y-%m-%d")
+        df["period"] = [info[k][1] for k in keys]
+        df["sample_end"] = [info[k][0] for k in keys]
+        df["release"] = [info[k][2] for k in keys]
+        return df
+
+    def total(patterns: tuple[str, ...]) -> pd.DataFrame:
+        df = pd.DataFrame({
+            "date": pd.to_datetime(dates),
+            "value": [float(sum(shares[d][p] for p in patterns)) for d in dates],
+        })
+        return describe(assign_segments(df, BREAKS))
+
+    long = pd.DataFrame(
+        [{"date": d, "group": PATTERN_KEYS[p], "value": float(shares[d][p])} for p in PATTERNS for d in dates]
+    )
+    long["date"] = pd.to_datetime(long["date"])
+    long = describe(assign_segments(long, BREAKS))
+    data_through = max(info[d][0] for d in dates)
+
+    def meta(series_id: str, title: str, role: str) -> SeriesMeta:
         return SeriesMeta(
             series_id=series_id,
             indicator_id="EA2",
@@ -316,15 +358,15 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
             source_url=DATASET_URL,
             license=LICENSE,
             fetched_at=fetched_at,
-            data_through=df["date"].max().strftime("%Y-%m-%d"),
+            data_through=data_through,  # last day of the latest sample window
             max_lag_days=270,  # irregular releases; generous
             breaks=[dict(b) for b in BREAKS],
             notes=NOTES,
             role=role,
         )
 
-    auto_df, aug_df = frame(auto_rows), frame(aug_rows)
     return [
-        (auto_df, meta("aei_automation_share", "Automation share of categorized Claude.ai conversations", "primary", auto_df)),
-        (aug_df, meta("aei_augmentation_share", "Augmentation share of categorized Claude.ai conversations", "context", aug_df)),
+        (total(AUTOMATION), meta("aei_automation_share", "Automation share of categorized Claude.ai conversations", "primary")),
+        (total(AUGMENTATION), meta("aei_augmentation_share", "Augmentation share of categorized Claude.ai conversations", "context")),
+        (long, meta("aei_patterns", "Share of each collaboration pattern in categorized Claude.ai conversations", "context")),
     ]

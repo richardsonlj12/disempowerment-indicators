@@ -184,14 +184,25 @@ def test_live_btos_may_2026_near_19_8():
 # ---------------------------------------------------------------- Economic Index
 
 EXPECTED = {
-    # date: (automation, augmentation); classifiable denominator, hand-computed in the fixtures' units
-    "2025-02-10": (42.55375, 57.44625),
-    "2025-03-27": (43.06188, 56.93812),
-    "2025-09-15": (51.06977, 48.93023),
-    "2026-01-15": (46.73940, 53.26060),
-    "2026-03-24": (45.54558, 54.45442),
-    "2026-04-01": (48.98, 51.02),
-    "2026-05-01": (48.62, 51.38),
+    # sample start: (automation, augmentation); classifiable denominator, hand-computed in the
+    # fixtures' units. April and May 2026 come from the five pattern rows (Anthropic's rounded
+    # totals are 48.98 and 48.62).
+    "2024-12-16": (42.55375, 57.44625),
+    "2025-02-01": (43.06188, 56.93812),
+    "2025-08-04": (51.06977, 48.93023),
+    "2025-11-13": (46.73940, 53.26060),
+    "2026-02-05": (45.54558, 54.45442),
+    "2026-04-01": (48.97875, 51.02125),
+    "2026-05-01": (48.61895, 51.38105),
+}
+EXPECTED_PERIODS = {
+    "2024-12-16": ("16–23 Dec 2024", "2025-02-10"),
+    "2025-02-01": ("Feb–Mar 2025", "2025-03-27"),
+    "2025-08-04": ("4–11 Aug 2025", "2025-09-15"),
+    "2025-11-13": ("13–20 Nov 2025", "2026-01-15"),
+    "2026-02-05": ("5–12 Feb 2026", "2026-03-24"),
+    "2026-04-01": ("April 2026", "2026-06-26"),
+    "2026-05-01": ("May 2026", "2026-06-26"),
 }
 
 HF = "https://huggingface.co/datasets/Anthropic/EconomicIndex/resolve/main/"
@@ -259,6 +270,41 @@ def test_aei_release_schema_mapping():
 
 
 @responses.activate
+def test_aei_points_dated_by_sample_window_with_period_and_release():
+    _mock_aei()
+    auto, _ = _aei()["aei_automation_share"]
+    for _, row in auto.iterrows():
+        key = row["date"].strftime("%Y-%m-%d")
+        assert (row["period"], row["release"]) == EXPECTED_PERIODS[key]
+        assert row["sample_end"] >= key
+
+
+@responses.activate
+def test_aei_patterns_add_up_to_the_totals():
+    _mock_aei()
+    out = _aei()
+    patterns, meta = out["aei_patterns"]
+    validate_frame(patterns)
+    assert meta.role == "context" and meta.indicator_id == "EA2"
+    assert set(patterns["group"]) == {"directive", "feedback_loop", "task_iteration", "learning", "validation"}
+    wide = patterns.pivot(index="date", columns="group", values="value")
+    assert (wide.sum(axis=1) - 100).abs().max() < 1e-9
+    auto = out["aei_automation_share"][0].set_index("date")["value"]
+    assert ((wide["directive"] + wide["feedback_loop"]) - auto).abs().max() < 1e-9
+    # Hand-checked pattern share: August 2025 directive, 38.7798 of 96.1391 classifiable
+    # (38.7798 + 10.3182 + 22.2233 + 20.3381 + 4.4797).
+    assert wide.loc[pd.Timestamp("2025-08-04"), "directive"] == pytest.approx(40.3372, abs=1e-3)
+
+
+@responses.activate
+def test_aei_monthly_patterns_must_match_published_totals():
+    text = _aei_text("release_2026_06_26").replace("collaboration_directive_pct,31.72", "collaboration_directive_pct,35.72")
+    _mock_aei({"release_2026_06_26": text})
+    with pytest.raises(SourceError, match="Anthropic's totals"):
+        aei.fetch()
+
+
+@responses.activate
 def test_aei_unknown_schema_raises_rather_than_guessing():
     # Header of a raw release renamed: must raise, not guess a mapping.
     text = _aei_text("release_2026_01_15").replace("cluster_name", "node_name", 1)
@@ -300,10 +346,10 @@ def test_aei_breaks_and_segments():
     for sid in ("aei_automation_share", "aei_augmentation_share"):
         df, meta = out[sid]
         assert meta.breaks == aei.BREAKS
-        assert {b["date"] for b in meta.breaks} == {"2025-09-15", "2026-03-24", "2026-04-01"}
+        assert {b["date"] for b in meta.breaks} == {"2025-08-04", "2026-02-05", "2026-04-01"}
         seg = df.set_index(df["date"].dt.strftime("%Y-%m-%d"))["segment"]
-        assert seg["2025-03-27"] == 0 and seg["2025-09-15"] == 1
-        assert seg["2026-01-15"] == 1 and seg["2026-03-24"] == 2
+        assert seg["2024-12-16"] == 0 and seg["2025-02-01"] == 0 and seg["2025-08-04"] == 1
+        assert seg["2025-11-13"] == 1 and seg["2026-02-05"] == 2
         assert seg["2026-04-01"] == 3 and seg["2026-05-01"] == 3
 
 
@@ -337,7 +383,7 @@ def test_aei_meta_fields_complete():
         for key in ("series_id", "title", "units", "source_name", "source_url", "license", "fetched_at", "data_through"):
             assert getattr(meta, key), key
         assert meta.max_lag_days > 0
-        assert meta.data_through == df["date"].max().strftime("%Y-%m-%d")
+        assert meta.data_through == "2026-05-31"  # last day of the latest sample window
         assert "CC-BY" in meta.license
         assert meta.source_url == "https://huggingface.co/datasets/Anthropic/EconomicIndex"
 
