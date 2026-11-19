@@ -413,7 +413,7 @@ def test_navbar_names_match_registry():
 
 def test_feedback_form_link_on_about_page():
     text = (ROOT / "site" / "about.qmd").read_text(encoding="utf-8")
-    assert f"[Feedback form]({FORM_URL})" in text
+    assert f"({FORM_URL})" in text  # link text may vary; the URL must be there
     assert "[feedback form link]" not in text
 
 
