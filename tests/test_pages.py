@@ -248,6 +248,20 @@ def test_e3_page_has_caveat_and_disclosure(repo):
     text = _page(repo, "EA2")
     assert "One vendor, one product: Claude usage only" in text
     assert "These data are published by Anthropic" in text
+    # One box, titled Disclosure, holding both (owner, 2026-11-19).
+    assert ('::: {.callout-note title="Disclosure"}\n**One vendor, one product: Claude usage only.** '
+            "These data are published by Anthropic") in text
+    assert 'title="Caveat"' not in text
+
+
+def test_every_indicator_page_ends_with_feedback_line(repo):
+    """Owner decision (2026-11-19): the feedback line is the last line, after the downloads."""
+    pages.build(repo, today=TODAY)
+    for ind_id in RELEASE1:
+        text = _page(repo, ind_id)
+        assert text.rstrip().splitlines()[-1] == pages.FEEDBACK_LINE
+        assert text.count("**Feedback.**") == 1
+        assert text.index("## Download the data") < text.index("**Feedback.**")
 
 
 def test_stale_badge_rendered_when_stale(repo):

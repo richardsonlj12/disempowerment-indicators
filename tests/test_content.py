@@ -45,20 +45,21 @@ def test_no_retired_closing_wording(path):
         assert phrase not in text, f"{path.name} still contains {phrase!r}"
 
 
-@pytest.mark.parametrize("path", INDICATOR_PAGES + [ABOUT], ids=_ids(INDICATOR_PAGES) + ["about.qmd"])
-def test_page_links_feedback_channels(path):
+def test_about_links_feedback_channels():
     """All three feedback channels are linked (link text may vary by page)."""
-    text = path.read_text(encoding="utf-8")
+    text = ABOUT.read_text(encoding="utf-8")
     assert "https://github.com/richardsonlj12/keel/issues/new?template=error-report.md" in text
     assert "https://github.com/richardsonlj12/keel/discussions" in text
     assert "https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform" in text
 
 
-@pytest.mark.parametrize("path", INDICATOR_PAGES, ids=_ids(INDICATOR_PAGES))
-def test_indicator_page_ends_with_feedback_line(path):
-    """Owner decision (2026-11-18): one line, sentence-case labels, same URLs and order."""
-    last = path.read_text(encoding="utf-8").rstrip().splitlines()[-1]
-    assert last == f"**Feedback.** {REPORT_ERROR} · {JOIN_DISCUSSION} · {SEND_PRIVATE}"
+def test_feedback_line_is_generated_not_in_content():
+    """Owner decision (2026-11-19): the feedback line is the generated last line of every indicator
+    page, so the content files must not carry their own (it landed above Data and calculation)."""
+    from indicators.pages import FEEDBACK_LINE
+    assert FEEDBACK_LINE == f"**Feedback.** {REPORT_ERROR} · {JOIN_DISCUSSION} · {SEND_PRIVATE}"
+    for path in INDICATOR_PAGES:
+        assert "**Feedback.**" not in path.read_text(encoding="utf-8"), path.name
 
 
 def test_ea2_has_no_inline_disclosure_paragraph():

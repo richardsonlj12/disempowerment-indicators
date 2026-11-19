@@ -79,5 +79,3 @@ These indicators show whether the conditions for disempowerment are present. The
 - **Two-week reference window.** The question asks about the last two weeks, so occasional use can be missed in one period and counted in the next.
 - **The 17 November 2025 break.** A reading that spans the break treats the two segments separately. Part or all of any jump at the break comes from the new wording.
 - **US only, and firms only.** The series says nothing about government or household use of AI.
-
-**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)

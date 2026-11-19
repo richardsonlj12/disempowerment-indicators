@@ -437,21 +437,25 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   const narrow = width < 560;
   const groupText = s => (narrow ? "" : "Group ") + groupOf(s.segment).name;
   const pxPerDay = (width - 64) / ((+x1 - +x0) / DAY);
-  let raisedAny = false;
+
   samples.forEach((s, i) => {
     const prev = samples[i - 1];
     s.raise = !!prev && !prev.raise && (+s.mid - +prev.mid) / DAY * pxPerDay < 34;
-    raisedAny = raisedAny || s.raise;
+
   });
   const tipText = d => `${name(d.group)}, sampled ${d.period}\n${fmtValue(d.value, meta.units)} (released ${fmtDay(d.release)})`;
   const marks = [
     Plot.ruleX(separators, {stroke: "currentColor", strokeOpacity: 0.6, strokeDasharray: "2,3"}),
-    Plot.rect(pieces, {x1: "x1", x2: "x2", y1: "y1", y2: "y2", fill: d => colorOf[d.group], ...(Plot.tip ? {} : {title: tipText})}),
+    // Behind the bars, so it shows between them and does not cross the share labels.
     Plot.ruleY([50], {stroke: "currentColor", strokeDasharray: "4,3", strokeWidth: 1.5}),
-    Plot.text(samples.filter(s => !s.raise), {x: "mid", y: 100, text: s => s.first.toFixed(1), dy: -8, fontWeight: 700, fontSize: 11}),
-    Plot.text(samples.filter(s => s.raise), {x: "mid", y: 100, text: s => s.first.toFixed(1), dy: -22, fontWeight: 700, fontSize: 11}),
+    Plot.rect(pieces, {x1: "x1", x2: "x2", y1: "y1", y2: "y2", fill: d => colorOf[d.group], ...(Plot.tip ? {} : {title: tipText})}),
+    // The first family's total sits on the bar just above where its segments end (owner, 2026-11-19),
+    // in white with a dark halo so it reads on the blue and where it overhangs a narrow bar.
+    ...[samples.filter(s => !s.raise), samples.filter(s => s.raise)].map((set, k) =>
+      Plot.text(set, {x: "mid", y: "first", text: s => s.first.toFixed(1), dy: k ? -23 : -9, fontWeight: 700, fontSize: 11,
+        fill: "white", stroke: "rgba(15, 25, 35, 0.85)", strokeWidth: 3, paintOrder: "stroke"})),
     Plot.text(firsts, {x: s => new Date(+s.mid - BAR_HALF_DAYS * DAY), y: 100, text: groupText,
-      dy: raisedAny ? -40 : -26, textAnchor: "start", fontSize: 11}),
+      dy: -12, textAnchor: "start", fontSize: 11}),
   ];
   if (Plot.tip) {
     marks.push(Plot.tip(pieces, Plot.pointer({x: d => new Date((+d.x1 + +d.x2) / 2), y: d => (d.y1 + d.y2) / 2, title: tipText})));
@@ -459,7 +463,7 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   const chart = Plot.plot({
     width,
     height: Math.round(Math.min(420, Math.max(300, width * 0.55))),
-    marginLeft: 44, marginTop: raisedAny ? 58 : 44, marginBottom: 44,
+    marginLeft: 44, marginTop: 30, marginBottom: 44,
     x: {type: "utc", domain: [x0, x1], label: "Sample date", labelAnchor: "center", labelArrow: "none"},
     y: {domain: [0, 100], ticks: [0, 25, 50, 75, 100], tickFormat: d => `${d}%`, grid: true, label: null},
     marks,
@@ -490,7 +494,7 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   const wrap = element("figure", "keel-chart keel-chart-stacked");
   wrap.append(row);
   const list = element("ul", "keel-chart-notes");
-  list.append(element("li", null, `Each bar is one sample, centred on the middle of its sample window and drawn the same width so it stays visible. The number above each bar is its ${firstName} share; the dashed line marks 50 percent. Dotted lines separate the method groups: compare bars only within a group.`));
+  list.append(element("li", null, `Each bar is one sample, centred on the middle of its sample window and drawn the same width so it stays visible. The number on each bar is its ${firstName} share: the height of the ${firstName} patterns at the bottom of the bar, printed where the ${view.families[1].name.toLowerCase()} patterns begin. The dashed line marks 50 percent. Dotted lines separate the method groups: compare bars only within a group.`));
   wrap.append(list);
   wrap.append(stackedTable(spec, view, samples, name, groupOf, data));
   groupTip(wrap);

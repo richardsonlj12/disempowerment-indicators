@@ -130,6 +130,8 @@ SERIES_LABELS = {
     "aei_augmentation_share": "Augmentation",
     "so_questions_monthly": "Stack Overflow",
 }
+# Last line of every indicator page (owner, 2026-11-19: at the very bottom, after the downloads).
+FEEDBACK_LINE = ('**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)')
 SE_NOTE = "Shaded band: plus or minus 1.96 standard errors (about a 95 percent interval), as published by the source."
 
 
@@ -322,12 +324,15 @@ def notices(ind, views, series, today: date) -> str:
         items = "\n".join(_stale_item(meta) for meta in stale)
         out.append('::: {.callout-warning title="Stale data"}\n'
                    f"{items}\n\nThe chart shows the last data received.\n:::")
+    # One "Disclosure" box holding the headline caveat (bold) and the disclosure (owner, 2026-11-19).
+    parts = []
     if ind.headline_caveat:
         caveat = ind.headline_caveat.rstrip()
-        caveat = caveat if caveat[-1:] in ".!?" else caveat + "."
-        out.append(f'::: {{.callout-important title="Caveat"}}\n**{caveat}**\n:::')
+        parts.append(f"**{caveat if caveat[-1:] in '.!?' else caveat + '.'}**")
     if ind.disclosure:
-        out.append(f'::: {{.callout-note title="Disclosure"}}\n{ind.disclosure}\n:::')
+        parts.append(ind.disclosure)
+    if parts:
+        out.append('::: {.callout-note title="Disclosure"}\n' + " ".join(parts) + "\n:::")
     waiting = [v["label"] for v in views if not v["available"]]
     if waiting:
         out.append('::: {.callout-note title="Data still being collected"}\n'
@@ -508,6 +513,7 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
         "%%METHOD%%": method_section(ind, series, markers, cites, marker_keys),
         "%%CAVEATS%%": section(SECTIONS[5]),
         "%%DOWNLOADS%%": downloads(views, series, trend_files),
+        "%%FEEDBACK%%": FEEDBACK_LINE,
     }
     text = template
     for token, value in replacements.items():
