@@ -288,6 +288,50 @@ body.quarto-dark {
   }
 }
 
+// Collapsed text version of the chart data (accessibility). Scrolls sideways on narrow screens.
+.keel-datatable {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .keel-datatable-scroll {
+    max-height: 22rem;
+    overflow: auto;
+    margin-top: 0.5rem;
+    border: 1px solid var(--bs-border-color);
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: max-content;
+    color: var(--bs-body-color);
+    margin: 0;
+  }
+  caption {
+    caption-side: top;
+    padding: 0.25rem 0.5rem;
+    font-style: italic;
+    color: var(--bs-body-color);
+  }
+  th,
+  td {
+    padding: 0.2rem 0.6rem;
+    border-bottom: 1px solid var(--bs-border-color);
+    text-align: left;
+    white-space: nowrap;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--bs-body-bg);
+  }
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
 .keel-legend {
   display: flex;
   flex-wrap: wrap;

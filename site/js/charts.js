@@ -58,7 +58,7 @@ function hidden(value) {
 export function viewInput(Inputs, spec) {
   const labels = spec.views.map(v => v.label);
   if (labels.length === 1) return hidden(labels[0]);
-  return Inputs.radio(labels, {label: "View", value: labels[0]});
+  return Inputs.radio(labels, {label: "View", value: labels.includes(spec.defaultView) ? spec.defaultView : labels[0]});
 }
 
 function findView(spec, label) {
@@ -135,6 +135,56 @@ export function fmtValue(value, units, deviation = false) {
   if (units === "percent") return `${signed}%`;
   const index = /^index \((.*)\)$/.exec(units);
   return index ? `${signed} (index, ${index[1]})` : `${signed} ${units}`;
+}
+
+const TABLE_MAX_ROWS = 120;
+
+// A text version of what the chart plots, for readers who cannot use the chart: the series and
+// timeframe currently shown, formatted as in the hover tips. Long series show the latest rows.
+function dataTable(spec, plotted, view, ids, singleLabel) {
+  const deviation = view.kind === "deviation";
+  const columns = [];
+  const rows = new Map();
+  for (const d of plotted) {
+    const label = d.label || singleLabel;
+    if (!columns.includes(label)) columns.push(label);
+    const meta = spec.series[d.id || ids[0]];
+    const key = +d.date;
+    if (!rows.has(key)) rows.set(key, {date: d.date, frequency: meta.frequency, cells: new Map()});
+    rows.get(key).cells.set(label, fmtValue(deviation ? d.deviation : d.value, meta.units, deviation));
+  }
+  const all = [...rows.values()].sort((a, b) => a.date - b.date);
+  const shown = all.slice(-TABLE_MAX_ROWS);
+  const details = element("details", "keel-datatable");
+  details.append(element("summary", null, "Data table"));
+  const scroller = element("div", "keel-datatable-scroll");
+  const table = element("table");
+  const caption = shown.length < all.length
+    ? `Values plotted in this chart. Showing the latest ${shown.length} of ${all.length} rows; choose a shorter timeframe to see other periods.`
+    : `Values plotted in this chart (${all.length} rows).`;
+  table.append(element("caption", null, caption));
+  const head = element("tr");
+  for (const text of ["Period", ...columns]) {
+    const th = element("th", null, text);
+    th.scope = "col";
+    head.append(th);
+  }
+  const thead = element("thead");
+  thead.append(head);
+  table.append(thead);
+  const body = element("tbody");
+  for (const r of shown) {
+    const tr = element("tr");
+    const th = element("th", null, fmtPeriod(r.date, r.frequency));
+    th.scope = "row";
+    tr.append(th);
+    for (const c of columns) tr.append(element("td", null, r.cells.get(c) ?? "–"));
+    body.append(tr);
+  }
+  table.append(body);
+  scroller.append(table);
+  details.append(scroller);
+  return details;
 }
 
 const utc = s => new Date(s + "T00:00:00Z");
@@ -281,5 +331,6 @@ export function renderChart(Plot, d3, spec, data, opts) {
   shownMarkers.forEach((m, i) => list.append(element("li", null, `Marker ${i + 1}, ${fmtDate(m.when)}: ${m.label}`)));
   notes.forEach(n => list.append(element("li", null, n)));
   if (list.childElementCount) wrap.append(list);
+  wrap.append(dataTable(spec, plotted, view, ids, legendItems[0].label));
   return wrap;
 }
