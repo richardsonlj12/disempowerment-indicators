@@ -119,7 +119,7 @@ jobs:
 
   deploy:
     needs: build
-    # Also runs when refresh was skipped (push to main), where a plain needs would still pass.
+    # Explicit if: the default success() would skip deploy whenever refresh was skipped (push to main).
     if: ${{ !cancelled() && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     permissions:
