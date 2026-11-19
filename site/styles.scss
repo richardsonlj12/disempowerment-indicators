@@ -289,8 +289,18 @@ body.quarto-dark {
 [id] {
   scroll-margin-top: 5rem;
 }
-// The Sources entry a citation points to is marked, so it is easy to find.
-.keel-ref:target {
-  border-left: 3px solid $primary;
-  padding-left: 0.6rem;
+// The Sources entry a citation points to is marked, so it is easy to find. The bar sits just
+// outside the entry, so the hanging indent and the text do not move.
+.keel-ref {
+  position: relative;
+}
+.keel-ref:target::before {
+  content: "";
+  position: absolute;
+  left: -0.7rem;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  border-radius: 2px;
+  background: $primary;
 }
