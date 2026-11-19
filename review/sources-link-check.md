@@ -2,7 +2,7 @@
 
 Every URL and DOI in `references/keel.json`, requested on 2026-11-18 with a browser-like User-Agent, following redirects (`python -m indicators.bibliography check-links`). "Owner browser check" means the site refused or did not answer a scripted request; the owner must open it in a browser.
 
-Summary: OK: 39 · owner browser check: 8 · broken: 0
+Summary: OK: 40 · owner browser check: 7 · broken: 0
 
 | key | URL | status | HTTP | notes |
 |---|---|---|---|---|
@@ -10,7 +10,7 @@ Summary: OK: 39 · owner browser check: 8 · broken: 0
 | allen2026 | <https://www.federalreserve.gov/econres/notes/feds-notes/monitoring-ai-adoption-in-the-u-s-economy-20260403.html> | OK | 200 |  |
 | brynjolfsson2026 | <https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf> | OK | 200 |  |
 | census2025 | <https://www.census.gov/hfp/btos/downloads/AI%20Question%20Wording%20Updates.pdf> | OK | 200 |  |
-| chooi2026 | <https://doi.org/10.18653/v1/2026.evaleval-1.36> | owner browser check | - | ConnectionError |
+| chooi2026 | <https://doi.org/10.18653/v1/2026.evaleval-1.36> | OK | 200 | redirected to https://aclanthology.org/2026.evaleval-1.36/ |
 | chooi2026 | <https://aclanthology.org/2026.evaleval-1.36/> | OK | 200 |  |
 | drago2025 | <https://intelligence-curse.ai/> | OK | 200 |  |
 | handa2025 | <https://doi.org/10.48550/arXiv.2503.04761> | OK | 200 | redirected to https://arxiv.org/abs/2503.04761 |
@@ -67,4 +67,4 @@ URLs that block scripts and that the owner opened in a browser (`OWNER_BROWSER_C
 | <https://fred.stlouisfed.org/series/W054RC1Q027SBEA> | 2026-11-18 |
 | <https://fred.stlouisfed.org/series/W782RC1Q027SBEA> | 2026-11-18 |
 
-Waiting for an owner browser check: <https://doi.org/10.18653/v1/2026.evaleval-1.36> (chooi2026, ConnectionError); <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> (bls2026, 403); <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> (makyen2022, 403).
+Waiting for an owner browser check: <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> (bls2026, 403); <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> (makyen2022, 403).
