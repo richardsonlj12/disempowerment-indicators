@@ -284,3 +284,13 @@ body.quarto-dark {
 .keel-ref p {
   margin-bottom: 0;
 }
+
+// Link targets clear the fixed navigation bar instead of sliding under it.
+[id] {
+  scroll-margin-top: 5rem;
+}
+// The Sources entry a citation points to is marked, so it is easy to find.
+.keel-ref:target {
+  border-left: 3px solid $primary;
+  padding-left: 0.6rem;
+}
