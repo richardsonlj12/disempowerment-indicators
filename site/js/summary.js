@@ -41,6 +41,18 @@
     });
   });
 
+  // A tap or click anywhere outside the row headers closes an open tooltip. On phones a tap on
+  // plain text (such as the heading above the grid) does not move focus, so without this the
+  // tooltip stayed open until the reader tapped something focusable (owner's iPhone check).
+  document.addEventListener("pointerdown", function (e) {
+    if (e.target.closest && e.target.closest(".keel-rowhead")) return;
+    document.querySelectorAll(".keel-rowhead").forEach(function (r) {
+      r.classList.add("keel-tip-dismissed");
+    });
+    var active = document.activeElement;
+    if (active && active.classList && active.classList.contains("keel-tip")) active.blur();
+  });
+
   // Entering a row header (by focus or pointer) shows its tooltip again.
   function undismiss(e) {
     var r = e.target.closest && e.target.closest(".keel-rowhead");
