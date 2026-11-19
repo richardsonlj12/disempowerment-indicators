@@ -244,6 +244,17 @@ body.quarto-dark {
     background: transparent !important;
     color: var(--bs-body-color) !important;
   }
+  // The bundled Plot draws the hover tip with fill="white" whatever the theme, which left
+  // white text on a white box in dark mode. Give the box the page background and the text
+  // the page text colour.
+  svg g[aria-label="tip"] {
+    fill: var(--bs-body-bg) !important;
+    stroke: var(--bs-body-color);
+  }
+  svg g[aria-label="tip"] text {
+    fill: var(--bs-body-color) !important;
+    stroke: none;
+  }
 }
 
 .keel-chart-message {
