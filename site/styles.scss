@@ -237,7 +237,7 @@ body.quarto-dark {
 
 // Charts.
 .keel-chart {
-  margin: 0.5rem 0 1rem;
+  margin: 0.5rem 0 0.25rem; // the italic notes and the "Data last fetched" line read as one block
   svg {
     max-width: 100%;
     height: auto;
@@ -266,10 +266,26 @@ body.quarto-dark {
   padding: 1rem;
 }
 
+// Quarto's wrapper around the chart cell adds its own bottom margin; trim it so the notes and the
+// "Data last fetched" line below sit evenly spaced.
+.cell:has(.keel-chart),
+.cell:has(.keel-chart) .cell-output-display {
+  margin-bottom: 0.25rem;
+}
+// The "Data last fetched" line right after the chart: no extra space above it.
+.cell:has(.keel-chart) + p {
+  margin-top: 0;
+}
+// Chart notes match the "Data last fetched" line under the chart: italic, one per line, no bullets
+// (owner, 2026-11-19).
 .keel-chart-notes {
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-  padding-left: 1.25rem;
+  list-style: none;
+  padding-left: 0;
+  margin: 0.75rem 0 0;
+  font-style: italic;
+  li {
+    margin-bottom: 0.25rem;
+  }
 }
 
 .keel-legend {
