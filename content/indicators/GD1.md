@@ -72,6 +72,6 @@ These indicators show whether the conditions for disempowerment are present. The
 - **Two sources, one reading.** The US quarterly series and the OECD annual series use different definitions and do not match exactly. The US series drives the reading. When the two disagree, the author decides and the rationale says so. Nothing is averaged.
 - **Revisions.** BEA revises the national accounts, and OECD revises Revenue Statistics. The figures quoted on this page are as of 17 November 2026, and the chart always shows the latest data.
 - **The OECD average is the published OECD figure.** KEEL does not recompute it, and its country coverage follows OECD's own definitions.
-- **The retrospective is not yet computed.** The retrospective applies the fixed rule to every year from the fourth quarter of 2022 onward, to show how readings would have changed since ChatGPT's release. It will be computed once and published as a dated snapshot in Stage 3.
+- **The retrospective is not yet computed.** The retrospective applies the fixed rule to every quarter from the fourth quarter of 2022 onward, to show how readings would have changed since ChatGPT's release. It will be computed once and published as a dated snapshot in Stage 3.
 
 **Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
