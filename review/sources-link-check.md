@@ -45,13 +45,13 @@ Summary: OK: 40 · owner browser check: 7 · broken: 0
 | appel2026 | <https://www.anthropic.com/research/anthropic-economic-index-january-2026-report> | OK | 200 |  |
 | massenkoff2026a | <https://www.anthropic.com/research/economic-index-march-2026-report> | OK | 200 |  |
 | massenkoff2026b | <https://www.anthropic.com/research/economic-index-june-2026-report> | OK | 200 |  |
-| bls2026 | <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> | owner browser check | 403 | blocked or unavailable to scripts |
+| bls2026 | <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> | owner browser check | 403 | blocked or unavailable to scripts; owner checked in a browser on 2026-11-18 |
 | eo14434 | <https://www.federalregister.gov/documents/2026/10/02/2026-20321/inaugurating-the-era-of-super-intelligence> | OK | 200 |  |
 | census2026 | <https://www.census.gov/hfp/btos/downloads/BTOS%20Content%20V5%20Core%20and%20SI%20Instrument%20-%20Cycle%202-Tagged.pdf> | OK | 200 |  |
 | openai2022 | <https://openai.com/index/chatgpt/> | OK | 200 |  |
 | friedman2021 | <https://github.blog/news-insights/product-news/introducing-github-copilot-ai-pair-programmer/> | OK | 200 |  |
 | dohmke2022 | <https://github.blog/news-insights/product-news/github-copilot-is-generally-available-to-all-developers/> | OK | 200 |  |
-| makyen2022 | <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> | owner browser check | 403 | blocked or unavailable to scripts |
+| makyen2022 | <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> | owner browser check | 403 | blocked or unavailable to scripts; owner checked in a browser on 2026-11-18 |
 | stackoverflow2023 | <https://openletter.mousetail.nl> | OK | 200 | redirected to https://openletter.mousetail.nl/ |
 
 ## Owner browser checks
@@ -66,5 +66,7 @@ URLs that block scripts and that the owner opened in a browser (`OWNER_BROWSER_C
 | <https://fred.stlouisfed.org/series/W055RC1Q027SBEA> | 2026-11-18 |
 | <https://fred.stlouisfed.org/series/W054RC1Q027SBEA> | 2026-11-18 |
 | <https://fred.stlouisfed.org/series/W782RC1Q027SBEA> | 2026-11-18 |
+| <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> | 2026-11-18 |
+| <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> | 2026-11-18 |
 
-Waiting for an owner browser check: <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> (bls2026, 403); <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> (makyen2022, 403).
+Waiting for an owner browser check: none.
