@@ -13,8 +13,9 @@ from indicators import bibliography as bib
 
 ROOT = Path(__file__).resolve().parent.parent
 BIB = ROOT / "references" / "keel.json"
-CSL = ROOT / "references" / "chicago-author-date-17th-edition.csl"
+CSL = ROOT / "references" / "chicago-author-date.csl"
 REFERENCE_KEY = re.compile(r"^[a-z]+\d{4}[a-z]?$")
+LEGAL_KEY = re.compile(r"^eo\d+$")  # an executive order: "eo" and its number, e.g. eo14434
 DATASET_KEY = re.compile(r"^[a-z0-9_]+$")
 
 
@@ -28,28 +29,37 @@ def entries():
 def test_bibliography_and_style_files_exist():
     assert BIB.exists()
     assert CSL.exists()
-    assert "Chicago Manual of Style 17th edition (author-date)" in CSL.read_text(encoding="utf-8")
+    assert "Chicago Manual of Style 18th edition (author-date)" in CSL.read_text(encoding="utf-8")
+    assert not (ROOT / "references" / "chicago-author-date-17th-edition.csl").exists()
 
 
 def test_keys_unique_and_well_formed(entries):
     keys = [e["id"] for e in entries]
     assert len(keys) == len(set(keys)), "duplicate keys"
     for e in entries:
-        pattern = DATASET_KEY if e["type"] == "dataset" else REFERENCE_KEY
+        pattern = {"dataset": DATASET_KEY, "legislation": LEGAL_KEY}.get(e["type"], REFERENCE_KEY)
         assert pattern.match(e["id"]), e["id"]
+
+
+def _stem(word):
+    return re.sub(r"[^a-z]", "", word.lower().translate(str.maketrans("ğçşıöüé", "gcsioue")))
 
 
 def test_reference_key_is_first_author_surname_and_year(entries):
     for e in entries:
-        if e["type"] == "dataset":
+        if e["type"] in ("dataset", "legislation"):
             continue
-        first = e["author"][0]
         year = str(e["issued"]["date-parts"][0][0])
-        if "literal" in first:  # an organization: one word of its name, e.g. census2025
-            stems = [re.sub(r"[^a-z]", "", w) for w in first["literal"].lower().split()]
+        if not e.get("author"):  # no author: consecutive words of the title, e.g. stackoverflow2023
+            words = [_stem(w) for w in e["title"].split()]
+            stems = ["".join(words[i:j]) for i in range(len(words)) for j in range(i + 1, len(words) + 1)]
+        elif "literal" in e["author"][0]:  # an organization: one word of its name, or its initials
+            name = e["author"][0]["literal"]
+            stems = [_stem(w) for w in name.split()]
+            stems.append("".join(w[0].lower() for w in name.split() if w[0].isupper() and w != "U.S."))
         else:
-            stems = [re.sub(r"[^a-z]", "", first["family"].lower().translate(str.maketrans("ğçşıöüé", "gcsioue")))]
-        assert any(re.fullmatch(rf"{re.escape(s)}{year}[a-z]?", e["id"]) for s in stems), (e["id"], stems, year)
+            stems = [_stem(e["author"][0]["family"])]
+        assert any(re.fullmatch(rf"{re.escape(s)}{year}[a-z]?", e["id"]) for s in stems if s), (e["id"], stems, year)
 
 
 def test_key_letter_matches_displayed_year_suffix(entries):
@@ -116,7 +126,7 @@ def test_oversight_citation_is_in_the_bibliography(entries):
         assert item["source_url"] in urls, item["source_url"]
 
 
-# ------------------------------------------------------------------ formatting (Chicago author-date, 17th ed.)
+# ------------------------------------------------------------------ formatting (Chicago author-date, 18th ed.)
 
 def _person(family, given):
     return {"family": family, "given": given}
@@ -132,30 +142,32 @@ def test_names_one_two_three():
     assert bib.format_names([_person("Allen", "Jeffrey S.")]) == "Allen, Jeffrey S."
 
 
-def test_names_more_than_ten_list_seven_then_et_al():
-    people = [_person(f"Name{i}", "A.") for i in range(11)]
-    out = bib.format_names(people)
-    assert out.endswith("Name6, et al.")
-    assert "Name7" not in out
-    ten = [_person(f"Name{i}", "B") for i in range(10)]
-    assert bib.format_names(ten).endswith("and B Name9.")
+def test_names_up_to_six_listed_seven_or_more_first_three_then_et_al():
+    """CMOS 18: up to six authors are all listed; seven or more, the first three and "et al."
+    (CSL chicago-author-date 18th ed.: et-al-min 7, et-al-use-first 3)."""
+    six = [_person(f"Name{i}", "B") for i in range(6)]
+    assert bib.format_names(six).endswith("and B Name5.")
+    seven = [_person(f"Name{i}", "A.") for i in range(7)]
+    out = bib.format_names(seven)
+    assert out == "Name0, A., A. Name1, A. Name2, et al."
 
 
 @pytest.mark.parametrize("pages,expected", [
     ("3-10", "3–10"), ("71-72", "71–72"), ("96-117", "96–117"), ("100-104", "100–104"),
     ("101-108", "101–8"), ("1100-1113", "1100–1113"), ("107-109", "107–9"), ("321-328", "321–28"),
     ("498-532", "498–532"), ("1087-1089", "1087–89"), ("1496-1504", "1496–504"), ("2787-2816", "2787–816"),
-    ("227-236", "227–36"),
+    ("227-236", "227–36"), ("323-359", "323–59"),
 ])
 def test_chicago_page_ranges(pages, expected):
-    """CMOS 17, 9.64 (abbreviating, or condensing, inclusive numbers)."""
+    """CMOS 9.64 (abbreviating, or condensing, inclusive numbers)."""
     assert bib.page_range(pages) == expected
 
 
-def test_full_date_repeats_the_year():
-    assert bib.full_date({"date-parts": [[2026, 10, 27]]}) == "October 27, 2026"
-    assert bib.full_date({"date-parts": [[2026, 8]]}) == "August 2026"
-    assert bib.full_date({"date-parts": [[2026]]}) is None
+def test_month_day_does_not_repeat_the_year():
+    """CMOS 18 author-date: the year follows the author; a month and day follow later without the year."""
+    assert bib.month_day({"date-parts": [[2026, 10, 27]]}) == "October 27"
+    assert bib.month_day({"date-parts": [[2026, 8]]}) is None
+    assert bib.month_day({"date-parts": [[2026]]}) is None
 
 
 def test_preprint_format():
@@ -164,72 +176,105 @@ def test_preprint_format():
          "issued": {"date-parts": [[2025, 1, 28]]}, "DOI": "10.48550/arXiv.2501.00001",
          "URL": "https://arxiv.org/abs/2501.00001"}
     assert bib.format_entry(e) == (
-        "Doe, Jane. 2025. “A Title.” Preprint, arXiv:2501.00001, January 28, 2025. "
+        "Doe, Jane. 2025. “A Title.” Preprint, arXiv, January 28. "
         "[https://doi.org/10.48550/arXiv.2501.00001](https://doi.org/10.48550/arXiv.2501.00001).")
 
 
-def test_blog_post_format_italic_blog_name_and_full_date():
+def test_blog_post_format_italic_blog_name_then_month_day():
     e = {"id": "doe2026", "type": "post-weblog", "author": [_person("Doe", "Jane")], "title": "Has It?",
          "container-title": "Some Newsletter", "issued": {"date-parts": [[2026, 9, 29]]},
          "URL": "https://example.substack.com/p/has-it"}
     assert bib.format_entry(e) == (
-        "Doe, Jane. 2026. “Has It?” *Some Newsletter* (blog). September 29, 2026. "
+        "Doe, Jane. 2026. “Has It?” *Some Newsletter* (blog), September 29. "
         "[https://example.substack.com/p/has-it](https://example.substack.com/p/has-it).")
 
 
 def test_blog_name_containing_blog_gets_no_label_and_publisher_follows():
     e = {"id": "doe2025", "type": "post-weblog", "author": [_person("Doe", "Jo")], "title": "T",
-         "container-title": "Jo's Blog", "publisher": "Org", "issued": {"date-parts": [[2025, 11, 23]]},
+         "container-title": "Jo’s Blog", "publisher": "Org", "issued": {"date-parts": [[2025, 11, 23]]},
          "URL": "https://example.org/t"}
-    assert "*Jo's Blog*, Org. November 23, 2025." in bib.format_entry(e)
+    assert "“T.” *Jo’s Blog*, Org, November 23. [" in bib.format_entry(e)
 
 
 def test_webpage_format_roman_site_name():
     e = {"id": "doe2026", "type": "webpage", "author": [_person("Doe", "Jane")], "title": "Page",
          "container-title": "Example Research", "issued": {"date-parts": [[2026, 10, 27]]},
          "URL": "https://example.com/page"}
-    assert bib.format_entry(e).startswith("Doe, Jane. 2026. “Page.” Example Research. October 27, 2026. [")
+    assert bib.format_entry(e).startswith("Doe, Jane. 2026. “Page.” Example Research, October 27. [")
 
 
-def test_report_format():
+def test_webpage_without_author_starts_with_title():
+    """CMOS 18: with no author, the title takes the author's place, and the in-text citation uses it."""
+    e = {"id": "dear2023", "type": "webpage", "title": "Dear Stack Overflow, Inc.", "container-title": "Open letter",
+         "issued": {"date-parts": [[2023, 6, 5]]}, "URL": "https://example.org/letter"}
+    assert bib.missing_fields(e) == []
+    assert bib.format_entry(e) == ("“Dear Stack Overflow, Inc.” 2023. Open letter, June 5. "
+                                   "[https://example.org/letter](https://example.org/letter).")
+    assert bib.in_text(e) == "“Dear Stack Overflow, Inc.” 2023"
+
+
+def test_report_format_without_place_of_publication():
+    """CMOS 18 no longer requires the place of publication; it is omitted even when recorded."""
     e = {"id": "moon2026", "type": "report", "author": [_person("Moon", "Alvin"), _person("Boudreaux", "Benjamin")],
          "title": "A Formal Model", "number": "RR-A4817-1", "publisher": "RAND Corporation",
          "publisher-place": "Santa Monica, CA", "issued": {"date-parts": [[2026, 4, 20]]},
          "DOI": "10.7249/RRA4817-1", "URL": "https://www.rand.org/x.html"}
     assert bib.format_entry(e) == (
-        "Moon, Alvin, and Benjamin Boudreaux. 2026. *A Formal Model*. RR-A4817-1. Santa Monica, CA: "
-        "RAND Corporation, April 20, 2026. [https://doi.org/10.7249/RRA4817-1](https://doi.org/10.7249/RRA4817-1).")
+        "Moon, Alvin, and Benjamin Boudreaux. 2026. *A Formal Model*. RR-A4817-1. "
+        "RAND Corporation, April 20. [https://doi.org/10.7249/RRA4817-1](https://doi.org/10.7249/RRA4817-1).")
 
 
 def test_report_in_series_without_publisher():
     e = {"id": "x2025", "type": "report", "author": [{"literal": "Agency"}], "title": "Updates",
          "collection-title": "Notes", "issued": {"date-parts": [[2025, 12, 3]]}, "URL": "https://example.gov/a%20b.pdf"}
-    assert bib.format_entry(e) == ("Agency. 2025. *Updates*. Notes. December 3, 2025. "
+    assert bib.format_entry(e) == ("Agency. 2025. *Updates*. Notes, December 3. "
                                    "[https://example.gov/a%20b.pdf](https://example.gov/a%20b.pdf).")
 
 
-def test_conference_paper_format():
+def test_report_with_month_only_shows_the_year_only():
+    e = {"id": "x2026", "type": "report", "author": [_person("A", "B")], "title": "Paper",
+         "publisher": "Lab", "issued": {"date-parts": [[2026, 8]]}, "URL": "https://example.edu/p.pdf"}
+    assert bib.format_entry(e) == "A, B. 2026. *Paper*. Lab. [https://example.edu/p.pdf](https://example.edu/p.pdf)."
+
+
+def test_conference_paper_format_with_editors():
     e = {"id": "chooi2026", "type": "paper-conference", "author": [_person("Chooi", "Jay")], "title": "Measuring",
          "container-title": "Proceedings of the Workshop", "page": "227-236",
+         "editor": [_person(f"Ed{i}", "E.") for i in range(9)],
          "publisher": "Association for Computational Linguistics", "publisher-place": "San Diego, CA",
          "issued": {"date-parts": [[2026, 7]]}, "DOI": "10.18653/v1/x"}
     assert bib.format_entry(e) == (
-        "Chooi, Jay. 2026. “Measuring.” In *Proceedings of the Workshop*, 227–36. San Diego, CA: "
-        "Association for Computational Linguistics. [https://doi.org/10.18653/v1/x](https://doi.org/10.18653/v1/x).")
+        "Chooi, Jay. 2026. “Measuring.” In *Proceedings of the Workshop*, edited by E. Ed0, E. Ed1, E. Ed2, et al., "
+        "227–36. Association for Computational Linguistics. [https://doi.org/10.18653/v1/x](https://doi.org/10.18653/v1/x).")
 
 
-def test_chapter_format():
+def test_editors_two():
+    assert bib.format_editors([_person("A", "B"), _person("C", "D")]) == "B A and D C"
+
+
+def test_chapter_format_with_pages():
     e = {"id": "a2026", "type": "chapter", "author": [_person("A", "B")], "title": "Policy",
-         "chapter-number": "8", "container-title": "The Report", "publisher": "Inst", "publisher-place": "Stanford, CA",
-         "issued": {"date-parts": [[2026, 4]]}, "URL": "https://example.edu/ch8.pdf"}
-    assert bib.format_entry(e) == ("A, B. 2026. “Policy.” Chap. 8 in *The Report*. Stanford, CA: Inst. "
+         "chapter-number": "8", "container-title": "The Report", "page": "323-359", "publisher": "Inst",
+         "publisher-place": "Stanford, CA", "issued": {"date-parts": [[2026, 4]]}, "URL": "https://example.edu/ch8.pdf"}
+    assert bib.format_entry(e) == ("A, B. 2026. “Policy.” Chap. 8 in *The Report*, 323–59. Inst. "
                                    "[https://example.edu/ch8.pdf](https://example.edu/ch8.pdf).")
 
 
 def test_book_format():
     e = {"id": "a2020", "type": "book", "author": [_person("A", "B")], "title": "Book",
          "publisher": "Press", "publisher-place": "City", "issued": {"date-parts": [[2020]]}}
-    assert bib.format_entry(e) == "A, B. 2020. *Book*. City: Press."
+    assert bib.format_entry(e) == "A, B. 2020. *Book*. Press."
+
+
+def test_executive_order_format():
+    """Legal form, as the CSL chicago-author-date (18th ed., with Bluebook) style prints it."""
+    e = {"id": "eo14434", "type": "legislation", "title": "Exec. Order No. 14434", "container-title": "Fed. Reg.",
+         "volume": "91", "page": "63129", "issued": {"date-parts": [[2026, 10, 2]]},
+         "URL": "https://www.federalregister.gov/d/2026-20321"}
+    assert bib.missing_fields(e) == []
+    assert bib.format_entry(e) == ("Exec. Order No. 14434, 91 Fed. Reg. 63129 (2026). "
+                                   "[https://www.federalregister.gov/d/2026-20321](https://www.federalregister.gov/d/2026-20321).")
+    assert bib.in_text(e) == "Exec. Order No. 14434"
 
 
 def test_dataset_format_with_access_date_and_license():
@@ -256,7 +301,36 @@ def test_markdown_specials_are_escaped():
 def test_title_ending_in_question_mark_takes_no_period():
     e = {"id": "a2026", "type": "webpage", "author": [_person("A", "B")], "title": "Why?",
          "container-title": "Site", "issued": {"date-parts": [[2026, 1, 2]]}, "URL": "https://e.org/"}
-    assert "“Why?” Site." in bib.format_entry(e)
+    assert "“Why?” Site, January 2." in bib.format_entry(e)
+
+
+def test_titles_use_curly_apostrophes(entries):
+    for e in entries:
+        for field in ("title", "container-title"):
+            assert "'" not in e.get(field, ""), (e["id"], field)
+
+
+def test_licenses_carry_no_provenance_notes(entries):
+    """Where a license was read is logged in review/sources-verification.md, not shown on the page."""
+    for e in entries:
+        if e["type"] == "dataset":
+            assert "README" not in e["license"] and "section" not in e["license"], e["id"]
+
+
+# ------------------------------------------------------------------ in-text citations (CMOS 18)
+
+def test_in_text_author_forms():
+    one = {"id": "a", "type": "webpage", "author": [_person("Krueger", "David")], "issued": {"date-parts": [[2025]]}}
+    two = {"id": "b", "type": "report", "author": [_person("Moon", "A"), _person("Boudreaux", "B")],
+           "issued": {"date-parts": [[2026]]}}
+    three = {"id": "c", "type": "report", "author": [_person("Chooi", "J"), _person("Lee", "J"), _person("Li", "J")],
+             "issued": {"date-parts": [[2026]]}}
+    org = {"id": "d", "type": "report", "author": [{"literal": "U.S. Census Bureau"}], "issued": {"date-parts": [[2025]]}}
+    assert bib.in_text(one) == "Krueger 2025"
+    assert bib.in_text(two) == "Moon and Boudreaux 2026"
+    assert bib.in_text(three) == "Chooi et al. 2026", "CMOS 18: three or more authors take et al. in the text"
+    assert bib.in_text(org) == "U.S. Census Bureau 2025"
+    assert bib.in_text(three, {"c": "b"}) == "Chooi et al. 2026b"
 
 
 def test_same_authors_same_year_get_letter_suffixes():
@@ -267,6 +341,15 @@ def test_same_authors_same_year_get_letter_suffixes():
     suffixes = bib.year_suffixes([b, a])
     assert suffixes == {"doe2026a": "a", "doe2026b": "b"}
     assert bib.format_entry(a, suffixes).startswith("Doe, Jane. 2026a.")
+
+
+def test_same_in_text_citation_gets_letter_suffixes_even_with_different_coauthors():
+    """Two works that would both be cited "(Doe et al. 2026)" are told apart by letters, in title order."""
+    a = {"id": "x", "type": "webpage", "author": [_person("Doe", "J"), _person("Roe", "K"), _person("Poe", "L")],
+         "title": "Zeta", "container-title": "S", "issued": {"date-parts": [[2026, 1, 2]]}, "URL": "https://e.org/z"}
+    b = {"id": "y", "type": "webpage", "author": [_person("Doe", "J"), _person("Moe", "K"), _person("Hoe", "L")],
+         "title": "Alpha", "container-title": "S", "issued": {"date-parts": [[2026, 3, 4]]}, "URL": "https://e.org/a"}
+    assert bib.year_suffixes([a, b]) == {"y": "a", "x": "b"}
 
 
 # ------------------------------------------------------------------ the Sources page
@@ -282,6 +365,13 @@ def sources_md(tmp_path, entries):
 
 def _anchors(text):
     return re.findall(r"^::: \{#([\w-]+) \.keel-ref\}$", text, flags=re.M)
+
+
+def test_intro_opening_and_no_style_name_on_the_page(sources_md):
+    """Owner request (2026-11-18): the Sources page does not name the citation style."""
+    assert sources_md.startswith("Works and datasets cited on KEEL. Each entry has")
+    assert "Chicago" not in sources_md
+    assert "Chicago" not in (ROOT / "site" / "sources.qmd").read_text(encoding="utf-8")
 
 
 def test_every_key_renders_an_anchor(sources_md, entries):
@@ -355,6 +445,19 @@ def test_link_check_report_lists_every_url(entries):
     assert "OK: " in report and "owner browser check: 0" in report and "broken: 0" in report
 
 
+def test_owner_browser_checks_listed_with_dates_and_shown_in_report():
+    for url in ("https://www.bls.gov/productivity/home.htm", "https://fred.stlouisfed.org/series/CPATAX",
+                "https://fred.stlouisfed.org/series/GDP", "https://fred.stlouisfed.org/series/W055RC1Q027SBEA",
+                "https://fred.stlouisfed.org/series/W054RC1Q027SBEA", "https://fred.stlouisfed.org/series/W782RC1Q027SBEA"):
+        assert bib.OWNER_BROWSER_CHECKED[url] == "2026-11-18"
+    r = bib.LinkResult("fred_gdp", "https://fred.stlouisfed.org/series/GDP", bib.OWNER_CHECK, None, "ReadTimeout")
+    report = bib.link_check_report([r], "2026-11-18")
+    assert "owner checked in a browser on 2026-11-18" in report
+    footer = report[report.index("## Owner browser checks"):]
+    for url, day in bib.OWNER_BROWSER_CHECKED.items():
+        assert f"| <{url}> | {day} |" in footer
+
+
 @pytest.mark.live
 @pytest.mark.release_gate
 def test_live_every_bibliography_url_resolves(entries):
@@ -364,4 +467,4 @@ def test_live_every_bibliography_url_resolves(entries):
     broken = [(r.key, r.url, r.code, r.detail) for r in results if r.status == "broken"]
     assert not broken, broken
     unchecked = {r.url for r in results if r.status == bib.OWNER_CHECK}
-    assert unchecked <= bib.OWNER_BROWSER_CHECKED, sorted(unchecked - bib.OWNER_BROWSER_CHECKED)
+    assert unchecked <= set(bib.OWNER_BROWSER_CHECKED), sorted(unchecked - set(bib.OWNER_BROWSER_CHECKED))

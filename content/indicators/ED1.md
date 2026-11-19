@@ -3,7 +3,7 @@ summary: The share of business income paid to workers has been falling for decad
 warning_sign: A falling labor share would be consistent with workers losing leverage in the economy.
 data_sources:
   - name: "Bureau of Labor Statistics (BLS), Productivity and Costs: labor share, nonfarm business sector"
-    url: https://www.bls.gov/productivity/home.htm
+    url: https://data.bls.gov/timeseries/PRS85006174
   - name: "Bureau of Economic Analysis (BEA), corporate profits after tax and gross domestic product, via FRED (Federal Reserve Bank of St. Louis)"
     url: https://fred.stlouisfed.org/series/CPATAX
 calculation: The labor share is the part of what nonfarm businesses produce that is paid to workers as wages and benefits, as a percent of output, published by BLS. The profit share shown alongside is corporate profits after tax divided by gross domestic product.

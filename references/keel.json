@@ -104,7 +104,45 @@
       ]
     },
     "DOI": "10.18653/v1/2026.evaleval-1.36",
-    "URL": "https://aclanthology.org/2026.evaleval-1.36/"
+    "URL": "https://aclanthology.org/2026.evaleval-1.36/",
+    "editor": [
+      {
+        "family": "Akhtar",
+        "given": "Mubashara"
+      },
+      {
+        "family": "Batzner",
+        "given": "Jan"
+      },
+      {
+        "family": "Choshen",
+        "given": "Leshem"
+      },
+      {
+        "family": "Ghosh",
+        "given": "Avijit"
+      },
+      {
+        "family": "Gohar",
+        "given": "Usman"
+      },
+      {
+        "family": "Mickel",
+        "given": "Jennifer"
+      },
+      {
+        "family": "Pant",
+        "given": "Ichhya"
+      },
+      {
+        "family": "Talat",
+        "given": "Zeerak"
+      },
+      {
+        "family": "Lin",
+        "given": "Michelle"
+      }
+    ]
   },
   {
     "id": "drago2025",
@@ -228,7 +266,7 @@
         "given": "Alex"
       }
     ],
-    "title": "How AI Agents Shape Experts' Judgment Calls",
+    "title": "How AI Agents Shape Experts’ Judgment Calls",
     "container-title": "Anthropic Research",
     "issued": {
       "date-parts": [
@@ -258,7 +296,7 @@
         "given": "Alex"
       }
     ],
-    "title": "Who's Aligned to Whom? How AI Agents Shape Experts' Research Judgment Calls",
+    "title": "Who’s Aligned to Whom? How AI Agents Shape Experts’ Research Judgment Calls",
     "publisher": "Anthropic",
     "issued": {
       "date-parts": [
@@ -397,7 +435,7 @@
       }
     ],
     "title": "Gradual Disempowerment Might Not Be So Bad",
-    "container-title": "Beren's Blog",
+    "container-title": "Beren’s Blog",
     "issued": {
       "date-parts": [
         [
@@ -593,7 +631,8 @@
         ]
       ]
     },
-    "URL": "https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_8_policy_and_governance.pdf"
+    "URL": "https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_8_policy_and_governance.pdf",
+    "page": "323-359"
   },
   {
     "id": "anthropic_economic_index",
@@ -614,7 +653,7 @@
         ]
       ]
     },
-    "license": "Data CC BY; code MIT License (dataset README, License section)",
+    "license": "Data CC BY; code MIT License",
     "URL": "https://huggingface.co/datasets/Anthropic/EconomicIndex"
   },
   {
@@ -636,7 +675,7 @@
       ]
     },
     "license": "US government work, public domain",
-    "URL": "https://www.bls.gov/productivity/home.htm"
+    "URL": "https://data.bls.gov/timeseries/PRS85006174"
   },
   {
     "id": "census_btos",
@@ -832,5 +871,358 @@
     },
     "license": "CC0 1.0",
     "URL": "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/"
+  },
+  {
+    "id": "anthropic2025",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Anthropic"
+      }
+    ],
+    "title": "Anthropic Economic Index: Insights from Claude 3.7 Sonnet",
+    "container-title": "Anthropic",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          3,
+          27
+        ]
+      ]
+    },
+    "URL": "https://www.anthropic.com/news/anthropic-economic-index-insights-from-claude-sonnet-3-7"
+  },
+  {
+    "id": "appel2025",
+    "type": "webpage",
+    "author": [
+      {
+        "family": "Appel",
+        "given": "Ruth"
+      },
+      {
+        "family": "McCrory",
+        "given": "Peter"
+      },
+      {
+        "family": "Tamkin",
+        "given": "Alex"
+      },
+      {
+        "family": "McCain",
+        "given": "Miles"
+      },
+      {
+        "family": "Neylon",
+        "given": "Tyler"
+      },
+      {
+        "family": "Stern",
+        "given": "Michael"
+      }
+    ],
+    "title": "Anthropic Economic Index Report: Uneven Geographic and Enterprise AI Adoption",
+    "container-title": "Anthropic",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          9,
+          15
+        ]
+      ]
+    },
+    "URL": "https://www.anthropic.com/research/anthropic-economic-index-september-2025-report"
+  },
+  {
+    "id": "appel2026",
+    "type": "webpage",
+    "author": [
+      {
+        "family": "Appel",
+        "given": "Ruth"
+      },
+      {
+        "family": "Massenkoff",
+        "given": "Maxim"
+      },
+      {
+        "family": "McCrory",
+        "given": "Peter"
+      },
+      {
+        "family": "McCain",
+        "given": "Miles"
+      },
+      {
+        "family": "Heller",
+        "given": "Ryan"
+      },
+      {
+        "family": "Neylon",
+        "given": "Tyler"
+      },
+      {
+        "family": "Tamkin",
+        "given": "Alex"
+      }
+    ],
+    "title": "Anthropic Economic Index Report: Economic Primitives",
+    "container-title": "Anthropic",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          1,
+          15
+        ]
+      ]
+    },
+    "URL": "https://www.anthropic.com/research/anthropic-economic-index-january-2026-report"
+  },
+  {
+    "id": "massenkoff2026b",
+    "type": "webpage",
+    "author": [
+      {
+        "family": "Massenkoff",
+        "given": "Maxim"
+      },
+      {
+        "family": "Lyubich",
+        "given": "Eva"
+      },
+      {
+        "family": "McCrory",
+        "given": "Peter"
+      },
+      {
+        "family": "Appel",
+        "given": "Ruth"
+      },
+      {
+        "family": "Heller",
+        "given": "Ryan"
+      }
+    ],
+    "title": "Anthropic Economic Index Report: Learning Curves",
+    "container-title": "Anthropic",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          3,
+          24
+        ]
+      ]
+    },
+    "URL": "https://www.anthropic.com/research/economic-index-march-2026-report"
+  },
+  {
+    "id": "massenkoff2026a",
+    "type": "webpage",
+    "author": [
+      {
+        "family": "Massenkoff",
+        "given": "Maxim"
+      },
+      {
+        "family": "Lyubich",
+        "given": "Eva"
+      },
+      {
+        "family": "Sacher",
+        "given": "Szymon"
+      },
+      {
+        "family": "Hitzig",
+        "given": "Zoe"
+      },
+      {
+        "family": "Zhang",
+        "given": "Shaoyi"
+      },
+      {
+        "family": "Heller",
+        "given": "Ryan"
+      },
+      {
+        "family": "McCrory",
+        "given": "Peter"
+      }
+    ],
+    "title": "Anthropic Economic Index Report: Cadences",
+    "container-title": "Anthropic",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          6,
+          26
+        ]
+      ]
+    },
+    "URL": "https://www.anthropic.com/research/economic-index-june-2026-report"
+  },
+  {
+    "id": "bls2026",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "U.S. Bureau of Labor Statistics"
+      }
+    ],
+    "title": "Labor Share at Its Lowest Level, 52.8 Percent, in Second Quarter 2026",
+    "container-title": "The Economics Daily",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          9,
+          15
+        ]
+      ]
+    },
+    "URL": "https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm"
+  },
+  {
+    "id": "eo14434",
+    "type": "legislation",
+    "title": "Exec. Order No. 14434",
+    "container-title": "Fed. Reg.",
+    "volume": "91",
+    "page": "63129",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          10,
+          2
+        ]
+      ]
+    },
+    "note": "Inaugurating the Era of Super Intelligence. Signed September 29, 2026; FR Doc. 2026-20321.",
+    "URL": "https://www.federalregister.gov/documents/2026/10/02/2026-20321/inaugurating-the-era-of-super-intelligence"
+  },
+  {
+    "id": "census2026",
+    "type": "report",
+    "author": [
+      {
+        "literal": "U.S. Census Bureau"
+      }
+    ],
+    "title": "Business Trends and Outlook Survey: Content Year 5, Cycle 2 with SI Supplement",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://www.census.gov/hfp/btos/downloads/BTOS%20Content%20V5%20Core%20and%20SI%20Instrument%20-%20Cycle%202-Tagged.pdf"
+  },
+  {
+    "id": "openai2022",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "OpenAI"
+      }
+    ],
+    "title": "Introducing ChatGPT",
+    "container-title": "OpenAI",
+    "issued": {
+      "date-parts": [
+        [
+          2022,
+          11,
+          30
+        ]
+      ]
+    },
+    "URL": "https://openai.com/index/chatgpt/"
+  },
+  {
+    "id": "friedman2021",
+    "type": "post-weblog",
+    "author": [
+      {
+        "family": "Friedman",
+        "given": "Nat"
+      }
+    ],
+    "title": "Introducing GitHub Copilot: Your AI Pair Programmer",
+    "container-title": "The GitHub Blog",
+    "issued": {
+      "date-parts": [
+        [
+          2021,
+          6,
+          29
+        ]
+      ]
+    },
+    "URL": "https://github.blog/news-insights/product-news/introducing-github-copilot-ai-pair-programmer/"
+  },
+  {
+    "id": "dohmke2022",
+    "type": "post-weblog",
+    "author": [
+      {
+        "family": "Dohmke",
+        "given": "Thomas"
+      }
+    ],
+    "title": "GitHub Copilot Is Generally Available to All Developers",
+    "container-title": "The GitHub Blog",
+    "issued": {
+      "date-parts": [
+        [
+          2022,
+          6,
+          21
+        ]
+      ]
+    },
+    "URL": "https://github.blog/news-insights/product-news/github-copilot-is-generally-available-to-all-developers/"
+  },
+  {
+    "id": "makyen2022",
+    "type": "webpage",
+    "author": [
+      {
+        "literal": "Makyen"
+      }
+    ],
+    "title": "Policy: Generative AI (e.g., ChatGPT) Is Banned",
+    "container-title": "Meta Stack Overflow",
+    "issued": {
+      "date-parts": [
+        [
+          2022,
+          12,
+          5
+        ]
+      ]
+    },
+    "URL": "https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned"
+  },
+  {
+    "id": "stackoverflow2023",
+    "type": "webpage",
+    "title": "Dear Stack Overflow, Inc.",
+    "container-title": "Open letter",
+    "issued": {
+      "date-parts": [
+        [
+          2023,
+          6,
+          5
+        ]
+      ]
+    },
+    "URL": "https://openletter.mousetail.nl"
   }
 ]

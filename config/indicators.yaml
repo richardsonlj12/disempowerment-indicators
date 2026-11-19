@@ -23,7 +23,7 @@ indicators:
     disclosure: null
     sources:
       - name: BLS Productivity and Costs
-        url: https://www.bls.gov/productivity/home.htm
+        url: https://data.bls.gov/timeseries/PRS85006174
         license: US government work, public domain
       - name: BEA National Income and Product Accounts (corporate profits, GDP), via FRED
         url: https://fred.stlouisfed.org/series/CPATAX
@@ -75,7 +75,7 @@ indicators:
     sources:
       - name: Anthropic Economic Index (Hugging Face)
         url: https://huggingface.co/datasets/Anthropic/EconomicIndex
-        license: "Data released under CC-BY, code released under MIT License (dataset README, License section)"
+        license: "Data released under CC-BY, code released under MIT License"
   - id: GD1
     release: 1
     domain: government
