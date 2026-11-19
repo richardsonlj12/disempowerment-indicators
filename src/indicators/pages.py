@@ -489,7 +489,7 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
         out.append(f"- **{item['label']}** ({item['domain'].capitalize()}; "
                    f"{KIND_LABELS.get(item.get('kind'), 'Item')}; dated {fmt_date(item['date'])}).{measured} "
                    f"Source: [{item['source_name']}]({_url(item['source_url'])}).")
-    out += ["", "::: {.callout-note collapse=\"true\" title=\"Inclusion criteria\"}",
+    out += ["", "::: {#inclusion-criteria .callout-note collapse=\"true\" title=\"Inclusion criteria\"}",
             " ".join(str(counter_header["inclusion_criteria"]).split()), ":::", "::::", ":::::", "",
             "Earlier snapshots and superseded rules will be kept in the [Archive](archive.qmd).", ""]
     return "\n".join(out)

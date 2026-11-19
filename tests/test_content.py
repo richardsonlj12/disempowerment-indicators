@@ -9,6 +9,7 @@ CONTENT = ROOT / "content"
 INDICATOR_PAGES = sorted((CONTENT / "indicators").glob("*.md"))
 METHODOLOGY = CONTENT / "methodology.md"
 CLOSING_PAGES = INDICATOR_PAGES + [METHODOLOGY]
+ABOUT = ROOT / "site" / "about.qmd"
 ALL_CONTENT = sorted(CONTENT.rglob("*.md"))
 
 CLOSING = (
@@ -43,7 +44,7 @@ def test_no_retired_closing_wording(path):
         assert phrase not in text, f"{path.name} still contains {phrase!r}"
 
 
-@pytest.mark.parametrize("path", CLOSING_PAGES, ids=_ids(CLOSING_PAGES))
+@pytest.mark.parametrize("path", INDICATOR_PAGES + [ABOUT], ids=_ids(INDICATOR_PAGES) + ["about.qmd"])
 def test_page_links_feedback_channels(path):
     """All three feedback channels are linked (link text may vary by page)."""
     text = path.read_text(encoding="utf-8")
@@ -70,3 +71,26 @@ def test_feedback_form_link_supplied(path):
 def test_no_unapproved_drafts(path):
     """Blocks release until the owner approves or removes every [DRAFT FOR OWNER] passage."""
     assert "[DRAFT FOR OWNER]" not in path.read_text(encoding="utf-8")
+
+
+METHODOLOGY_H2_IDS = ["what-keel-measures", "how-to-read-an-indicator", "how-readings-are-made",
+                      "guards", "roadmap", "sources"]
+
+
+def test_methodology_sections_and_index():
+    """Exactly six H2 sections with explicit ids, in order, all linked from the "On this page" index."""
+    import re
+
+    text = METHODOLOGY.read_text(encoding="utf-8")
+    h2 = re.findall(r"^## .*$", text, flags=re.M)
+    ids = [m.group(1) if (m := re.search(r"\{#([\w-]+)\}\s*$", h)) else None for h in h2]
+    assert ids == METHODOLOGY_H2_IDS, h2
+    index = next(line for line in text.splitlines() if line.startswith("**On this page:**"))
+    assert re.findall(r"\]\(#([\w-]+)\)", index) == METHODOLOGY_H2_IDS
+    assert text.index(index) < text.index(h2[0])
+
+
+def test_methodology_feedback_points_to_about():
+    """The methodology page links the About page's feedback section, which carries the three channels."""
+    assert "about.qmd#report-an-error-or-give-feedback" in METHODOLOGY.read_text(encoding="utf-8")
+    assert "## Report an error or give feedback" in ABOUT.read_text(encoding="utf-8")
