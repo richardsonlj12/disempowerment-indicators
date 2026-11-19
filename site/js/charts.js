@@ -114,6 +114,29 @@ function unitsLabel(units, deviation) {
   return units === "percent" ? "percentage points from the 2010–19 trend" : `${units}, difference from the 2010–19 trend`;
 }
 
+// Hover-tip wording: periods as on the page (pages.py fmt_period); percents as "%" (owner, 2026-11-19).
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+  "October", "November", "December"];
+export function fmtPeriod(date, frequency) {
+  const y = date.getUTCFullYear(), m = date.getUTCMonth();
+  if (frequency === "quarterly") return `${y} Q${Math.floor(m / 3) + 1}`;
+  if (frequency === "monthly") return `${MONTHS[m]} ${y}`;
+  if (frequency === "annual") return String(y);
+  return `${date.getUTCDate()} ${MONTHS[m]} ${y}`;
+}
+export function fmtValue(value, units, deviation = false) {
+  const abs = Math.abs(value);
+  const number = abs >= 1000 ? Math.round(abs).toLocaleString("en-US") : abs.toFixed(1);
+  if (deviation) {
+    const sign = value > 0 ? "+" : value < 0 ? "−" : "";
+    return units === "percent" ? `${sign}${number} points from the trend` : `${sign}${number} ${units} from the trend`;
+  }
+  const signed = (value < 0 ? "−" : "") + number;
+  if (units === "percent") return `${signed}%`;
+  const index = /^index \((.*)\)$/.exec(units);
+  return index ? `${signed} (index, ${index[1]})` : `${signed} ${units}`;
+}
+
 const utc = s => new Date(s + "T00:00:00Z");
 // The trend is fitted to 2010-19 and extended forward; it is not drawn before the fit window.
 const TREND_START = utc("2010-01-01");
@@ -142,7 +165,7 @@ export function renderChart(Plot, d3, spec, data, opts) {
       for (const d of inRange(data[id])) {
         const label = d.group != null ? (spec.groupLabels[d.group] || String(d.group)) : seriesName(spec, id);
         if (!labels.includes(label)) labels.push(label);
-        plotted.push({...d, label, key: `${label}|${d.segment ?? 0}`});
+        plotted.push({...d, label, id, key: `${label}|${d.segment ?? 0}`});
       }
     }
     const range = labels.map((_, i) => colors[i % colors.length]);
@@ -225,8 +248,14 @@ export function renderChart(Plot, d3, spec, data, opts) {
     marks.push(Plot.text(shownMarkers, {x: "when", text: (d, i) => String(i + 1), frameAnchor: "top", dy: 8, dx: 6, fontSize: 11, fontWeight: 700}));
   }
   if (Plot.tip) {
-    const y = view.kind === "deviation" ? "deviation" : "value";
-    marks.push(Plot.tip(plotted, Plot.pointerX({x: "date", y, stroke: view.kind === "multi" ? "label" : undefined})));
+    const deviation = view.kind === "deviation";
+    const y = deviation ? "deviation" : "value";
+    const tipText = d => {
+      const meta = spec.series[d.id || ids[0]];
+      const name = d.label || seriesName(spec, ids[0]);
+      return `${name}\n${fmtPeriod(d.date, meta.frequency)}: ${fmtValue(d[y], meta.units, deviation)}`;
+    };
+    marks.push(Plot.tip(plotted, Plot.pointerX({x: "date", y, title: tipText, stroke: view.kind === "multi" ? "label" : undefined})));
   }
 
   const values = plotted.map(d => (view.kind === "deviation" ? d.deviation : d.value));
