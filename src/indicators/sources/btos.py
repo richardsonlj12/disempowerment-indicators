@@ -189,14 +189,16 @@ def _by_size(wb: openpyxl.Workbook, fetched_at: str) -> tuple[pd.DataFrame, Seri
         max_lag_days=45,
         role="context",
         notes=(
-            "Firm-weighted share answering Yes (question 7) within each employment size class, with Census "
+            "Firm-weighted share answering Yes (the core AI-use question) within each employment size class, with Census "
             "standard errors (column se, percentage points), from Employment Size Class.xlsx (sheets Response "
             "Estimates and Response Standard Errors). Size classes: " + "; ".join(SIZE_CLASSES.values()) + ". "
             "Each estimate is dated by the end of its two-week collection period. The file holds only the "
-            f"new-wording series, from the 2025-11-17 collection (sample dates {min(kept)} to {max(kept)}). Question: {question} "
-            "Census published no estimate for sample dates 202521 to 202523. The workbook prints the SI label "
-            "for every period; the relabel from 'AI' to 'Super Intelligence or SI' began with the collection "
-            "fielded from 2026-10-19 (shown as a chart marker, not a break)."
+            f"new-wording series, from the 2025-11-17 collection (sample dates {min(kept)} to {max(kept)}). Question as printed in the workbook (it prints the October 2026 wording for "
+            f"every period): {question} "
+            "Census published no estimate for sample dates 202521 to 202523. The question actually asked from "
+            "2025-11-17 to 2026-10-18 used the term 'Artificial Intelligence (AI)' in 'any of its business "
+            "functions'. The change of term from 'AI' to 'Super Intelligence or SI', with new examples, began with "
+            "the collection fielded from 2026-10-19 (shown as a chart marker, not a break)."
         ),
     )
     return df, meta
@@ -252,19 +254,26 @@ def fetch() -> list[tuple[pd.DataFrame, SeriesMeta]]:
         breaks=list(BREAKS),
         role="primary",
         notes=(
-            "National, all-sector, firm-weighted share answering Yes (question 7), with Census standard errors "
-            "(column se, percentage points). Each estimate is dated by the end of its two-week collection "
-            "period (Census sample date in parentheses). "
-            f"Periods {old_periods[-1]} to {old_periods[0]} (AI Core Questions.xlsx): {old_q} "
-            f"Periods {new_periods[-1]} to {new_periods[0]} (National.xlsx): {new_q} "
+            "National, all-sector, firm-weighted share answering Yes (the core AI-use question), with Census "
+            "standard errors (column se, percentage points). Each estimate is dated by the end of its two-week "
+            "collection period (Census sample date in parentheses). "
+            "The question actually asked in each period. "
+            f"Before 17 November 2025 (periods {old_periods[-1]} to {old_periods[0]}, AI Core Questions.xlsx): {old_q} "
+            "From 17 November 2025 to 18 October 2026: In the last two weeks, did this business use Artificial "
+            "Intelligence (AI) in any of its business functions? (Examples of AI: machine learning, natural "
+            "language processing, virtual agents, voice recognition, etc.) "
+            "From 19 October 2026: Between MMM DD - MMM DD, did this business use Super Intelligence or SI "
+            "(formerly referred to as Artificial Intelligence or AI) in any of its business functions? (Examples "
+            "of SI use include: SI-powered data analysis; generative SI for marketing, product design, or coding; "
+            "virtual SI agents for customer service; SI-powered forecasting or pricing; SI-driven computer vision "
+            "for quality control, etc.) "
+            f"National.xlsx prints the October 2026 wording for all of its periods ({new_periods[-1]} to "
+            f"{new_periods[0]}), including those before 19 October 2026: {new_q} "
             "Census published no estimate for sample dates 202521 to 202523 (collections 2025-10-06 to "
-            "2025-11-16), so the series has a gap before the wording change. The two wordings are not "
-            "directly comparable; the break date is the first collection of the new wording. The workbook prints "
-            "the question with the Super Intelligence (SI) label for every period; Census's wording notice of "
-            "3 December 2025 shows the question as 'Artificial Intelligence (AI) ... in any of its business "
-            "functions' from 2025-11-17, and the Content V5 instrument (fielded from 2026-10-19) is the first "
-            "to use 'Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)'. That "
-            "relabel is shown as a chart marker, not a break."
+            "2025-11-16), so the series has a gap before the wording change. The pre-17-November-2025 and later "
+            "wordings are not directly comparable; the break date is the first collection of the new wording. "
+            "Sources: Census's wording notice of 3 December 2025 and the BTOS instruments. The October 2026 "
+            "change of both the term and the examples is shown as a chart marker, not a break."
         ),
     )
     size_wb = _workbook(SIZE_URL)
