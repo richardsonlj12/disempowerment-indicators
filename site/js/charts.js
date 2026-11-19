@@ -438,9 +438,14 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   const groupText = s => (narrow ? "" : "Group ") + groupOf(s.segment).name;
   const pxPerDay = (width - 64) / ((+x1 - +x0) / DAY);
 
+  // Of two labels too close to share a line, the higher value goes on top (owner, 2026-11-19).
   samples.forEach((s, i) => {
     const prev = samples[i - 1];
-    s.raise = !!prev && !prev.raise && (+s.mid - +prev.mid) / DAY * pxPerDay < 34;
+    s.raise = false;
+    if (prev && !prev.raise && (+s.mid - +prev.mid) / DAY * pxPerDay < 34) {
+      if (s.first > prev.first) s.raise = true;
+      else prev.raise = true;
+    }
 
   });
   const tipText = d => `${name(d.group)}, sampled ${d.period}\n${fmtValue(d.value, meta.units)} (released ${fmtDay(d.release)})`;
@@ -452,7 +457,7 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
     // The first family's total sits on the bar just above where its segments end (owner, 2026-11-19),
     // in white with a dark halo so it reads on the blue and where it overhangs a narrow bar.
     ...[samples.filter(s => !s.raise), samples.filter(s => s.raise)].map((set, k) =>
-      Plot.text(set, {x: "mid", y: "first", text: s => s.first.toFixed(1), dy: k ? -23 : -9, fontWeight: 700, fontSize: 11,
+      Plot.text(set, {x: "mid", y: "first", text: s => s.first.toFixed(1), dy: k ? -24 : -9, fontWeight: 700, fontSize: 12,
         fill: "white", stroke: "rgba(15, 25, 35, 0.85)", strokeWidth: 3, paintOrder: "stroke"})),
     Plot.text(firsts, {x: s => new Date(+s.mid - BAR_HALF_DAYS * DAY), y: 100, text: groupText,
       dy: -12, textAnchor: "start", fontSize: 11}),
