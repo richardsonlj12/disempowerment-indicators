@@ -1,5 +1,5 @@
 ---
-summary: On average, governments in the OECD (Organisation for Economic Co-operation and Development, a group of mostly wealthy countries) still raise about half of their tax revenue from taxes on people's incomes and social contributions, and that share is slightly above its 2010 level. The US share, which drives the reading, has fallen since 2022 but remains inside its 2010 to 2019 range. On the evidence so far, this indicator does not point toward disempowerment.
+summary: On average, governments in the OECD (Organisation for Economic Co-operation and Development, a group of mostly wealthy countries) still raise about half of their tax revenue from taxes on people's incomes and social contributions, and that share is slightly above its 2010 level. The US share, which drives the reading, has fallen since 2022.
 warning_sign: A falling labor-based share would be consistent with the state depending less on taxing workers. A rising or stable share points the other way.
 data_sources:
   - name: "Bureau of Economic Analysis (BEA), national accounts: government receipts, via FRED (Federal Reserve Bank of St. Louis)"
@@ -18,11 +18,9 @@ Kulveit et al. apply the same logic to AI. If AI shifts income from wages toward
 
 This indicator is the most direct public measure we found of that state-dependence argument. It sits in the **Displacement** row, as the core mechanism for the government domain. It is a **lagging** indicator, one that moves late: tax structures change slowly.
 
-**What the data say now.** The OECD context points away from disempowerment. Across OECD countries, the labor-based share of tax revenue is slightly above its 2010 level. It was 48.53 percent in 2010, peaked at 50.54 percent in 2020, and was 49.20 percent in 2023, the latest year with an OECD average. It dipped below the 2010 level in some years in between.
+**What the data say now.** Across OECD countries, the labor-based share of tax revenue was 48.53 percent in 2010, peaked at 50.54 percent in 2020, and was 49.20 percent in 2023, the latest year with an OECD average.
 
-The US quarterly series drives this indicator's reading. It has fallen since 2022: it averaged 66.85 percent in 2022 and was 63.21 percent in the second quarter of 2026 (data as of 17 November 2026). That is still inside the range it moved through in 2010 to 2019 (62.30 to 66.88 percent).
-
-Taken together, the evidence does not currently point toward disempowerment. The US decline is worth watching. The reading itself is not yet reviewed.
+The US quarterly series drives this indicator's reading. It has fallen since 2022: it averaged 66.85 percent in 2022 and was 63.21 percent in the second quarter of 2026 (data as of 17 November 2026). That is inside the range it moved through in 2010 to 2019 (62.30 to 66.88 percent). The reading itself is not yet reviewed.
 
 ## What it shows
 
@@ -54,7 +52,7 @@ This is the most direct public measure of state dependence we found, not a guara
 - A fall that occurs while corporate and capital-income tax receipts grow faster than wage-based receipts.
 - The same fall showing up in the OECD data once those data arrive.
 
-**What would strengthen the current reading:** the US share holding inside or above its 2010 to 2019 range, and the OECD share continuing not to fall.
+**What would point away from disempowerment:** the US share holding inside or above its 2010 to 2019 range, and the OECD share continuing not to fall.
 
 A later version plans a US-states comparison: states that depend heavily on taxes on extracting oil, gas and coal against states that do not. That would test the rentier logic on US data.
 
