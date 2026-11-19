@@ -17,6 +17,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
+import pandas as pd
 import yaml
 
 from indicators import bibliography
@@ -457,6 +458,29 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
     return "\n".join(lines)
 
 
+def latest_data_bullet(ind, series) -> str:
+    """Generated 'Latest data' bullet for Data and calculation (owner, 2026-11-19): the primary series'
+    latest value and the one before it, from the data, so it never goes stale. A standard error is
+    given when the source publishes one; a break between the two values is named."""
+    primary = series.get(ind.primary_series)
+    frame = primary[0] if primary else None
+    if _latest(frame) is None:
+        return f"- **Latest data.** {NO_VALUE}."
+    meta = primary[1]
+    rows = frame.sort_values("date")
+    latest, prev = rows.iloc[-1], (rows.iloc[-2] if len(rows) > 1 else None)
+    when = lambda r: (r["period"] if "period" in rows.columns and r["period"]
+                      else fmt_period(r["date"].date().isoformat(), meta.frequency))
+    text = f"- **Latest data.** {meta.title}: {fmt_value(float(latest['value']), meta.units)} ({when(latest)})"
+    if "se" in rows.columns and pd.notna(latest["se"]):
+        text += f", standard error {float(latest['se']):.1f} points"
+    if prev is not None:
+        broke = "segment" in rows.columns and prev["segment"] != latest["segment"]
+        text += (f". The value before it was {fmt_value(float(prev['value']), meta.units)} ({when(prev)})"
+                 + (", before a series break, so the two are not directly comparable" if broke else ""))
+    return text + "."
+
+
 def sources_and_dates(ind, series, cites: bibliography.Citations) -> str:
     """Generated end of 'Data and calculation': each source with its license, then when KEEL last
     fetched each series (moved from Method, owner decision 2026-11-19, so they sit together)."""
@@ -524,7 +548,8 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
         "%%SHOWS%%": section(SECTIONS[1]),
         "%%DOESNT_SHOW%%": section(SECTIONS[2]),
         "%%CHANGE%%": section(SECTIONS[3]),
-        "%%DATA_AND_CALCULATION%%": section(SECTIONS[4]).rstrip() + "\n" + sources_and_dates(ind, series, cites),
+        "%%DATA_AND_CALCULATION%%": (section(SECTIONS[4]).rstrip() + "\n" + latest_data_bullet(ind, series)
+                                     + "\n" + sources_and_dates(ind, series, cites)),
         "%%METHOD%%": method_section(ind, series, markers, cites, marker_keys) + "".join(
             f"\n\n### {name} {{#{OPTIONAL_ANCHORS[name]}}}\n\n{sections[name]}"
             for name in OPTIONAL_SECTIONS if name in sections),

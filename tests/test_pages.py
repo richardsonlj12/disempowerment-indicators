@@ -254,6 +254,32 @@ def test_e3_page_has_caveat_and_disclosure(repo):
     assert 'title="Caveat"' not in text
 
 
+def test_generated_latest_data_bullet_in_data_and_calculation(repo):
+    """Owner, 2026-11-19: every page's Data and calculation has one 'Latest data' bullet, generated
+    from the primary series, so the Latest data row's More link always lands on it."""
+    pages.build(repo, today=TODAY)
+    for ind_id in RELEASE1:
+        text = _page(repo, ind_id)
+        section = text[text.index("## Data and calculation"):text.index("## Download the data")]
+        assert section.count("- **Latest data.**") == 1, ind_id
+        assert text.count("- **Latest data.**") == 1, ind_id
+    ea2 = _page(repo, "EA2")
+    assert "(May 2026). The value before it was" in ea2  # sample-window label, not a day
+    assert "standard error" in _page(repo, "EA1")
+
+
+def test_latest_data_bullet_names_a_break_and_a_missing_value():
+    import pandas as pd
+    from types import SimpleNamespace
+    meta = SimpleNamespace(title="X", units="percent", frequency="quarterly")
+    frame = pd.DataFrame({"date": pd.to_datetime(["2026-01-01", "2026-04-01"]), "value": [1.0, 2.0], "segment": [0, 1]})
+    ind = SimpleNamespace(primary_series="x")
+    line = pages.latest_data_bullet(ind, {"x": (frame, meta)})
+    assert line == ("- **Latest data.** X: 2.0 percent (2026 Q2). The value before it was 1.0 percent (2026 Q1), "
+                    "before a series break, so the two are not directly comparable.")
+    assert pages.latest_data_bullet(ind, {}) == "- **Latest data.** Latest value not yet available (data still being collected)."
+
+
 def test_ea2_method_groups_sit_inside_method_with_anchor(repo):
     """Owner, 2026-11-19: the full group definitions are part of Method; the chart links to them."""
     pages.build(repo, today=TODAY)

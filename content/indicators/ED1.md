@@ -20,7 +20,7 @@ This indicator sits in the **Displacement** row: it asks whether the economy's d
 
 ## What it shows
 
-- **Latest data.** The labor share was 53.0 percent in the third quarter of 2026, the lowest since the series began in 1947. BLS reported its first estimate for the second quarter, 52.8 percent, as the lowest level on record [(U.S. Bureau of Labor Statistics 2026)](../sources.qmd#bls2026). The fall began before ChatGPT's release: the share averaged 56.7 percent in 2021 and was 55.5 percent in the third quarter of 2022.
+- **Latest data in context.** The labor share was 53.0 percent in the third quarter of 2026, the lowest since the series began in 1947. BLS reported its first estimate for the second quarter, 52.8 percent, as the lowest level on record [(U.S. Bureau of Labor Statistics 2026)](../sources.qmd#bls2026). The fall began before ChatGPT's release: the share averaged 56.7 percent in 2021 and was 55.5 percent in the third quarter of 2022.
 - **Labor share of income, nonfarm business sector.** Published quarterly by the Bureau of Labor Statistics (BLS), adjusted to remove regular seasonal swings. The chart shows the full history from 1947.
 - **Profit share, for context.** Corporate profits after tax as a share of gross domestic product, from the Bureau of Economic Analysis (BEA). It uses a different top and bottom of the fraction, so it is a rough counterpart to the labor share and does not add up to 100 with it. The labor share alone drives this indicator's reading.
 
