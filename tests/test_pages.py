@@ -27,7 +27,7 @@ summary: Neutral summary text.
 warning_sign: Neutral warning text.
 data_sources:
   - name: Source one
-    url: https://example.org/one
+    url: https://www.census.gov/hfp/btos
 calculation: Neutral calculation text.
 coverage: Somewhere · monthly · from 2000
 ---
@@ -168,8 +168,27 @@ def test_interpretation_on_second_line_without_ai_link(repo):
 def test_data_sources_render_as_links(repo):
     pages.build(repo, today=TODAY)
     cell = dict(_table(_page(repo, "CD1")))["Data source(s)"]
-    assert "[Stack Exchange API (new questions per month)](https://api.stackexchange.com/docs/questions)" in cell
-    assert "(https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/)" in cell
+    assert "[Stack Exchange API (new questions per month)](../sources.qmd#stackexchange_api)" in cell
+    assert "(../sources.qmd#wikimedia_analytics_api)" in cell
+
+
+def test_data_source_not_in_bibliography_fails_the_build(repo):
+    path = repo / "content" / "indicators" / "CD1.md"
+    path.write_text(path.read_text(encoding="utf-8").replace(
+        "https://api.stackexchange.com/docs/questions", "https://example.org/unlisted"), encoding="utf-8")
+    with pytest.raises(ValueError, match="not in the bibliography"):
+        pages.build(repo, today=TODAY)
+
+
+def test_method_section_links_sources_and_cites_chart_markers(repo):
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "CD1")
+    method = text[text.index("## Method"):text.index("## Caveats")]
+    assert "    - [Stack Exchange API](../sources.qmd#stackexchange_api). License: CC BY-SA." in method
+    assert "    - 29 June 2021: GitHub Copilot technical preview announced [(Friedman 2021)](../sources.qmd#friedman2021)" in method
+    assert "[(OpenAI 2022)](../sources.qmd#openai2022)" in method
+    ea1 = _page(repo, "EA1")
+    assert "[(U.S. Census Bureau 2026)](../sources.qmd#census2026)" in ea1
 
 
 def test_grid_position_and_coverage_filled_automatically(repo):
@@ -184,7 +203,7 @@ def test_e3_page_has_caveat_and_disclosure(repo):
     pages.build(repo, today=TODAY)
     text = _page(repo, "EA2")
     assert "One vendor, one product: Claude usage only" in text
-    assert "This data is published by Anthropic" in text
+    assert "These data are published by Anthropic" in text
 
 
 def test_stale_badge_rendered_when_stale(repo):
@@ -232,8 +251,19 @@ def test_index_has_oversight_row_with_citation(repo):
     block = text[text.index("Human deferral and oversight"):]
     block = block[:block.index("\n:::\n")]
     assert "No public measure yet" in block
-    assert "https://www.anthropic.com/research/agents-judgment-calls" in block
-    assert "Herdağdelen, Joren and Tamkin (2026)" in block
+    assert ("Nearest evidence: How AI agents shape experts' judgment calls, Anthropic Research, 27 October 2026 "
+            "[(Herdağdelen et al. 2026a)](sources.qmd#herdagdelen2026a).") in block
+    assert "https://www.anthropic.com" not in block
+
+
+def test_counter_evidence_sources_link_the_sources_page(repo):
+    pages.build(repo, today=TODAY)
+    text = _index(repo)
+    block = text[text.index("## Counter-evidence"):]
+    assert "Source: [OECD Revenue Statistics (OECD average, dataflow DF_RSOECD)](sources.qmd#oecd_revenue_statistics)." in block
+    assert ("Source: Stanford HAI, AI Index Report 2026, Chapter 8 Policy and Governance (data from Digital Policy "
+            "Alert and the AI Index) [(Sajadieh et al. 2026, 341, 343)](sources.qmd#sajadieh2026).") in block
+    assert "https://hai.stanford.edu" not in block and "https://sdmx.oecd.org" not in block
 
 
 def test_index_has_scales_note_placeholder_counter_evidence_and_archive(repo):
@@ -414,7 +444,9 @@ def test_caveat_has_single_period(repo):
 def test_e3_disclosure_names_keel(repo):
     pages.build(repo, today=TODAY)
     text = _page(repo, "EA2")
-    assert "This data is published by Anthropic, and KEEL is built with assistance from Claude." in text
+    assert ("These data are published by Anthropic, and KEEL is built with assistance from Claude. "
+            "Treat them as data from an interested party.") in text
+    assert text.count("published by Anthropic") == 1, "the disclosure appears once (owner decision)"
     assert "this site is built" not in text
 
 

@@ -10,7 +10,7 @@ coverage: Worldwide (Claude.ai users) · irregular releases · from a December 2
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event (Kulveit et al., 2025). The argument turns on decisions and tasks moving from people to AI. Among the metrics worth developing, Kulveit et al. suggest tracking the fraction of major corporate decisions made primarily by AI systems. No public data measures anything like that across society.
+Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). The argument turns on decisions and tasks moving from people to AI. Among the metrics worth developing, Kulveit et al. suggest tracking the fraction of major corporate decisions made primarily by AI systems. No public data measures anything like that across society.
 
 The Anthropic Economic Index is the nearest public proxy. It sorts conversations with Claude by how people work with the AI:
 
@@ -19,21 +19,19 @@ The Anthropic Economic Index is the nearest public proxy. It sorts conversations
 
 This indicator sits in the **Adoption** row, as a measure of how much of the work is handed to AI. Firm AI adoption (EA1) asks whether firms use AI at all. EA2 asks, for one product, how much of the work is handed over. It is a **leading** indicator, one that moves early.
 
-**Disclosure.** This data is published by Anthropic, and KEEL is built with assistance from Claude. Treat it as data from an interested party.
-
 ## What it shows
 
 - **The automation share and the augmentation share of Claude.ai conversations that fit one of the five patterns**, worldwide, one point per release.
 - **The data come from the Anthropic Economic Index releases on Hugging Face.** These appear at irregular intervals. Each release is converted to the same two shares, and every change in how a release is built is recorded as a break in the data (below).
 - **How many conversations each release analyzed.** Anthropic's reports give these sample sizes for its Claude.ai analyses:
-  - 10 February 2025: 1 million conversations.
-  - 27 March 2025: 1 million conversations.
-  - 15 September 2025: 1 million conversations.
-  - 15 January 2026: 1 million conversations.
-  - 24 March 2026: 1 million conversations sampled from Claude.ai and Anthropic's API; the report does not say how many came from Claude.ai.
-  - 26 June 2026: not reported. Anthropic says it now samples a slice of conversations every day.
+  - 10 February 2025: 1 million conversations [(Handa et al. 2025, app. E)](../sources.qmd#handa2025).
+  - 27 March 2025: 1 million conversations [(Anthropic 2025)](../sources.qmd#anthropic2025).
+  - 15 September 2025: 1 million conversations [(Appel et al. 2025)](../sources.qmd#appel2025).
+  - 15 January 2026: 1 million conversations [(Appel et al. 2026)](../sources.qmd#appel2026).
+  - 24 March 2026: 1 million conversations sampled from Claude.ai and Anthropic's API; the report does not say how many came from Claude.ai [(Massenkoff et al. 2026b)](../sources.qmd#massenkoff2026b).
+  - 26 June 2026: not reported. Anthropic says it now samples a slice of conversations every day [(Massenkoff et al. 2026a)](../sources.qmd#massenkoff2026a).
 
-**The denominator.** Some conversations do not fit any of the five patterns, and Anthropic labels them "none" or "not classified." KEEL leaves those out, so the automation and augmentation shares always add up to 100. Some of Anthropic's report headlines count every conversation in the denominator, including those that fit no pattern. For example, the September 2025 report puts automation at about 49 percent of Claude.ai conversations. Counting only the conversations that fit one of the five patterns, the same release gives 51.1 percent. Both are correct for their own denominators. KEEL uses the second version so that a change in how many conversations fit no pattern does not move the series.
+**The denominator.** Some conversations do not fit any of the five patterns, and Anthropic labels them "none" or "not classified." KEEL leaves those out, so the automation and augmentation shares always add up to 100. Some of Anthropic's report headlines count every conversation in the denominator, including those that fit no pattern. For example, the September 2025 report puts automation at about 49 percent of Claude.ai conversations [(Appel et al. 2025)](../sources.qmd#appel2025). Counting only the conversations that fit one of the five patterns, the same release gives 51.1 percent. Both are correct for their own denominators. KEEL uses the second version so that a change in how many conversations fit no pattern does not move the series.
 
 **Breaks in the data.** Each is marked on the chart.
 
@@ -70,7 +68,7 @@ A rising automation share would be consistent with tasks moving from people to A
 - A rise in automation that holds within a stable population and product mix, between releases with no break.
 - A similar rise in usage data from other AI providers, if any is published.
 
-- Independent labor-market evidence linking automation, measured with this same data at the level of occupations (EA2 charts only the overall share), to where young workers' employment fell. One study points this way, with limits: Brynjolfsson, Chandar and Chen find that employment of US workers aged 22 to 25 fell most in occupations whose tasks had the highest share of automation in Claude conversations. In occupations with the highest share of augmentation, employment was flat or rising. The authors call their findings descriptive, not estimates of what AI caused. The pattern weakens when they control for education, some of the trends began before generative AI, and it is stronger in their payroll data than in national survey data (["Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence," Stanford Digital Economy Lab, August 2026, Sec. 2.5, Fig. 5 and Table 3](https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf)).
+- Independent labor-market evidence linking automation, measured with this same data at the level of occupations (EA2 charts only the overall share), to where young workers' employment fell. One study points this way, with limits: Brynjolfsson, Chandar and Chen find that employment of US workers aged 22 to 25 fell most in occupations whose tasks had the highest share of automation in Claude conversations. In occupations with the highest share of augmentation, employment was flat or rising. The authors call their findings descriptive, not estimates of what AI caused. The pattern weakens when they control for education, some of the trends began before generative AI, and it is stronger in their payroll data than in national survey data [(Brynjolfsson et al. 2026, sec. 2.5, fig. 5, table 3)](../sources.qmd#brynjolfsson2026).
 
 **What would lower it:**
 
@@ -81,10 +79,10 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Data and calculation
 
-- **Source and series.** Anthropic Economic Index, published on Hugging Face. KEEL reads the worldwide Claude.ai rows of each release. Files covering Anthropic's API are a different population and are not used.
+- **Source and series.** [Anthropic Economic Index](../sources.qmd#anthropic_economic_index), published on Hugging Face. KEEL reads the worldwide Claude.ai rows of each release. Files covering Anthropic's API are a different population and are not used.
 - **Units.** Percent of the Claude.ai conversations that fit one of the five patterns.
 - **Frequency.** Irregular, one point per release. The June 2026 release gives separate figures for April and May 2026.
-- **Date range.** Six releases so far. The first release, dated 10 February 2025, covers a sample from 16 to 23 December 2024 ([Handa et al., "Which Economic Tasks are Performed with AI?", Appendix E](https://arxiv.org/abs/2503.04761)). The latest figures cover May 2026.
+- **Date range.** Six releases so far. The first release, dated 10 February 2025, covers a sample from 16 to 23 December 2024 [(Handa et al. 2025, app. E)](../sources.qmd#handa2025). The latest figures cover May 2026.
 - **Formula in plain words.** Automation share = (directive + feedback loop) divided by (directive + feedback loop + validation + task iteration + learning), times 100. Augmentation share = 100 minus the automation share. Conversations labeled "none" or "not classified" are left out. How each release's files are converted to these shares is recorded in the data's notes.
 
 ## Caveats
@@ -92,7 +90,7 @@ These indicators show whether the conditions for disempowerment are present. The
 - **Conflict of interest.** Anthropic publishes the data and has a commercial interest in how its products are perceived. KEEL is built with assistance from Claude. KEEL uses the published data as released and documents every choice it makes in converting it.
 - **Irregular releases.** Releases arrive months apart, and the gaps between them differ. Readings compare releases, whatever the time between them.
 - **Changing file formats.** Each release has been structured differently. Any future change in layout will be added as a break.
-- **Plans covered in January 2026.** Anthropic's January 2026 report describes its sample as Free, Pro and Max conversations, but the release's data documentation says Free and Pro. KEEL follows the data documentation, so the plan change is marked at the 24 March 2026 release.
+- **Plans covered in January 2026.** Anthropic's January 2026 report describes its sample as Free, Pro and Max conversations [(Appel et al. 2026)](../sources.qmd#appel2026), but the release's data documentation says Free and Pro. KEEL follows the data documentation, so the plan change is marked at the 24 March 2026 release.
 - **Patterns assigned automatically.** Anthropic sorts conversations into patterns automatically, using its own methods. A change in those methods could move the shares. The breaks list records only the changes the releases document.
 
-**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Give feedback](https://github.com/richardsonlj12/keel/discussions) · [Feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
+**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)

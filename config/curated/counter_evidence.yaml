@@ -26,6 +26,7 @@ items:
     date: 2023-12-31
     source_name: OECD Revenue Statistics (OECD average, dataflow DF_RSOECD)
     source_url: https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_OECD@DF_RSOECD,2.0/OECD_REP.TAX_REV.S13.T_1100+T_2000._T.PT_OTR_SECTOR.A?startPeriod=2010&endPeriod=2023
+    source_key: oecd_revenue_statistics  # the page links the Sources entry; this URL is the data request
     verified: true
     verified_on: 2026-11-17
     note: >-
@@ -45,6 +46,8 @@ items:
     date: 2025-12-31
     source_name: Stanford HAI, AI Index Report 2026, Chapter 8 Policy and Governance (data from Digital Policy Alert and the AI Index)
     source_url: https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_8_policy_and_governance.pdf
+    source_key: sajadieh2026
+    locator: 341, 343  # printed pages of the two quoted sentences (see note)
     verified: true
     verified_on: 2026-11-17
     note: >-

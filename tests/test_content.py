@@ -19,7 +19,8 @@ CLOSING = (
 RETIRED_CLOSING_PHRASES = ["that it is happening", "or that it is not"]
 
 REPORT_ERROR = "[Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md)"
-GIVE_FEEDBACK = "[Give feedback](https://github.com/richardsonlj12/keel/discussions)"
+JOIN_DISCUSSION = "[Join the discussion](https://github.com/richardsonlj12/keel/discussions)"
+SEND_PRIVATE = ("[Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)")
 FORM_PLACEHOLDER = "[feedback form link]"
 
 
@@ -55,8 +56,21 @@ def test_page_links_feedback_channels(path):
 
 @pytest.mark.parametrize("path", INDICATOR_PAGES, ids=_ids(INDICATOR_PAGES))
 def test_indicator_page_ends_with_feedback_line(path):
+    """Owner decision (2026-11-18): one line, sentence-case labels, same URLs and order."""
     last = path.read_text(encoding="utf-8").rstrip().splitlines()[-1]
-    assert last.startswith("**Feedback.**") and REPORT_ERROR in last
+    assert last == f"**Feedback.** {REPORT_ERROR} · {JOIN_DISCUSSION} · {SEND_PRIVATE}"
+
+
+def test_ea2_has_no_inline_disclosure_paragraph():
+    """Owner decision (2026-11-18): the generated Disclosure callout is the only disclosure on EA2."""
+    assert "**Disclosure.**" not in (CONTENT / "indicators" / "EA2.md").read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("path", ALL_CONTENT, ids=_ids(ALL_CONTENT))
+def test_data_is_plural(path):
+    """Owner wording rule: "these data", not "this data"."""
+    text = path.read_text(encoding="utf-8").lower()
+    assert "this data " not in text and "this data." not in text
 
 
 @pytest.mark.release_gate

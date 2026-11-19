@@ -12,9 +12,9 @@ coverage: United States, nonfarm business sector · quarterly · from 1947
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event (Kulveit et al., 2025). The argument starts from a simple observation: economies serve people partly because they need people's work. Workers who are needed have bargaining power, which KEEL calls leverage. If AI systems can do more of the work, firms need fewer workers, and that source of leverage weakens.
+Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). The argument starts from a simple observation: economies serve people partly because they need people's work. Workers who are needed have bargaining power, which KEEL calls leverage. If AI systems can do more of the work, firms need fewer workers, and that source of leverage weakens.
 
-The labor share is the most direct public measure of how much of what businesses produce is paid out to the people who work in them. Chooi, Lee and Li (2026) call labor cost share "the most direct financial measure of human economic participation." If AI substitutes for human work at scale, a falling labor share is one place the change should show up.
+The labor share is the most direct public measure of how much of what businesses produce is paid out to the people who work in them. [Chooi et al. (2026, 232)](../sources.qmd#chooi2026) call labor cost share "the most direct financial measure of human economic participation." If AI substitutes for human work at scale, a falling labor share is one place the change should show up.
 
 This indicator sits in the **Displacement** row: it asks whether the economy's dependence on human labor is falling, and by how much. It is a **lagging** indicator, one that moves late. Income shares move slowly, so it is more likely to confirm a change already under way than to warn of one early.
 
@@ -40,7 +40,7 @@ A falling labor share would be consistent with workers losing leverage in the ec
 
 ### Alternative explanations
 
-- **A flat line can hide lost leverage.** Labor's share could hold steady while work moves into jobs where workers have less bargaining power. Alex Imas and Jacob Schaal describe a "relational sector," where "human involvement in the role is part of the value," that "may expand as labor flows to existing relational jobs (e.g., healthcare, education)." They present this as a counterforce to AI displacement. KEEL draws a further inference of its own: if labor flows into such jobs as AI takes over other work, labor's share of income could stay roughly flat even if workers end up with less bargaining power. So a flat line is not proof that leverage is intact.
+- **A flat line can hide lost leverage.** Labor's share could hold steady while work moves into jobs where workers have less bargaining power. Alex Imas and Jacob Schaal describe a "relational sector," where "human involvement in the role is part of the value," that "may expand as labor flows to existing relational jobs (e.g., healthcare, education)" [(Imas and Schaal 2026)](../sources.qmd#imas2026). They present this as a counterforce to AI displacement. KEEL draws a further inference of its own: if labor flows into such jobs as AI takes over other work, labor's share of income could stay roughly flat even if workers end up with less bargaining power. So a flat line is not proof that leverage is intact.
 - **A fall can have causes other than AI.** The share has fallen for decades for reasons that have nothing to do with generative AI, and it moves with the business cycle.
 
 ### What would raise or lower our confidence
@@ -60,7 +60,7 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Data and calculation
 
-- **Source and series.** BLS Productivity and Costs program, labor share for the nonfarm business sector, level in percent. FRED, the Federal Reserve Bank of St. Louis's data service, carries only an index version of this series (2017 = 100), so KEEL reads the percent level from the BLS public data service. The profit share uses BEA's corporate profits after tax (with inventory valuation and capital consumption adjustments) and gross domestic product, both read through FRED.
+- **Source and series.** BLS Productivity and Costs program, [labor share for the nonfarm business sector, level in percent](../sources.qmd#bls_labor_share). FRED, the Federal Reserve Bank of St. Louis's data service, carries only an index version of this series (2017 = 100), so KEEL reads the percent level from the BLS public data service. The profit share uses BEA's [corporate profits after tax (with inventory valuation and capital consumption adjustments)](../sources.qmd#fred_cpatax) and [gross domestic product](../sources.qmd#fred_gdp), both read through FRED.
 - **Units.** Percent of output.
 - **Frequency.** Quarterly, adjusted to remove regular seasonal swings.
 - **Date range.** From the first quarter of 1947 to the latest published quarter.
@@ -68,8 +68,8 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Caveats
 
-- **BLS revises recent quarters.** For example, BLS first published the labor share for the second quarter of 2026 as 52.8 percent. As of 17 November 2026, the same quarter reads 53.3 percent. KEEL uses the latest revised data, so recent values can move after a reading is made. A revision that changes a proposed reading is treated as new data and goes to review. A later version will show readings computed with data as first published alongside the revised data (from the St. Louis Fed's ALFRED archive of past data versions).
+- **BLS revises recent quarters.** For example, BLS first published the labor share for the second quarter of 2026 as 52.8 percent [(U.S. Bureau of Labor Statistics 2026)](../sources.qmd#bls2026). As of 17 November 2026, the same quarter reads 53.3 percent. KEEL uses the latest revised data, so recent values can move after a reading is made. A revision that changes a proposed reading is treated as new data and goes to review. A later version will show readings computed with data as first published alongside the revised data (from the St. Louis Fed's ALFRED archive of past data versions).
 - **Quarter-to-quarter movements are noisy.** Readings will use a fixed window and a threshold rule, set in Stage 2, so a single quarter cannot by itself change a reading.
 - **The retrospective is not yet computed.** The retrospective applies the fixed rule to every quarter from the fourth quarter of 2022 onward, to show how readings would have changed since ChatGPT's release. It will be computed once and published as a dated snapshot in Stage 3.
 
-**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Give feedback](https://github.com/richardsonlj12/keel/discussions) · [Feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
+**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)

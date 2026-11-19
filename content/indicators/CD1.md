@@ -12,7 +12,7 @@ coverage: Worldwide (English-language sites) · monthly · index from June 2012;
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event (Kulveit et al., 2025). Culture, in this argument, stays tied to people because people make it and pass it on. Public knowledge commons are one place this happens in the open. On Stack Overflow, people ask questions and other people answer them. On Wikipedia, people write and read a shared reference.
+Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). Culture, in this argument, stays tied to people because people make it and pass it on. Public knowledge commons are one place this happens in the open. On Stack Overflow, people ask questions and other people answer them. On Wikipedia, people write and read a shared reference.
 
 If people turn to AI systems in place of these communities, two things follow:
 
@@ -52,15 +52,15 @@ This is a **relative-activity index, not a causal estimate**. Stack Overflow was
 
 **Stack Overflow's decline began before ChatGPT.** The number of surviving questions per year peaked in the mid-2010s and fell through the late 2010s. After a rise in 2020, the fall steepened in 2021 and 2022, before ChatGPT's release. The chart shows this full history.
 
-**"Before AI" is not a clean line for programmers.** GitHub Copilot, an AI coding assistant, was announced as a technical preview on 29 June 2021 and became generally available on 21 June 2022. Programmers had AI help well before ChatGPT, so part of the 2021 and 2022 fall could already be AI-related.
+**"Before AI" is not a clean line for programmers.** GitHub Copilot, an AI coding assistant, was announced as a technical preview on 29 June 2021 [(Friedman 2021)](../sources.qmd#friedman2021) and became generally available on 21 June 2022 [(Dohmke 2022)](../sources.qmd#dohmke2022). Programmers had AI help well before ChatGPT, so part of the 2021 and 2022 fall could already be AI-related.
 
 **Chart markers.** The chart marks these dates without splitting the line:
 
-- 29 June 2021: GitHub Copilot technical preview announced
-- 21 June 2022: GitHub Copilot generally available
-- 30 November 2022: ChatGPT released to the public
-- 5 December 2022: Stack Overflow bans AI-generated answers
-- 5 June 2023: Stack Overflow moderators begin a strike over the site's policy on AI-generated content
+- 29 June 2021: GitHub Copilot technical preview announced [(Friedman 2021)](../sources.qmd#friedman2021)
+- 21 June 2022: GitHub Copilot generally available [(Dohmke 2022)](../sources.qmd#dohmke2022)
+- 30 November 2022: ChatGPT released to the public [(OpenAI 2022)](../sources.qmd#openai2022)
+- 5 December 2022: Stack Overflow bans AI-generated answers [(Makyen 2022)](../sources.qmd#makyen2022)
+- 5 June 2023: Stack Overflow moderators begin a strike over the site's policy on AI-generated content [(“Dear Stack Overflow, Inc.” 2023)](../sources.qmd#stackoverflow2023)
 
 **The baseline.** This is a long-running series with a comparison group. Its baseline is how the index behaved from June 2012 to December 2019. The index starts in June 2012, the first month in which all four comparison sites have a full 12 months of questions, so its baseline covers June 2012 to December 2019. Readings start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
 
@@ -119,7 +119,7 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Data and calculation
 
-- **Source and series.** Stack Exchange API: the number of new questions created in each calendar month on Stack Overflow and on the four comparison sites (Home Improvement, Travel, Role-playing Games, and Science Fiction & Fantasy). Wikimedia Analytics API: monthly English Wikipedia pageviews by human users, and monthly counts of logged-in editors with five or more edits, leaving out accounts Wikimedia counts as bots.
+- **Source and series.** [Stack Exchange API](../sources.qmd#stackexchange_api): the number of new questions created in each calendar month on Stack Overflow and on the four comparison sites (Home Improvement, Travel, Role-playing Games, and Science Fiction & Fantasy). [Wikimedia Analytics API](../sources.qmd#wikimedia_analytics_api): monthly English Wikipedia pageviews by human users, and monthly counts of logged-in editors with five or more edits, leaving out accounts Wikimedia counts as bots.
 - **Units.** Index (2019 average = 100); percent for the change since November 2022; percentage points for the year-over-year gap; questions, pageviews and editors per month for the underlying counts.
 - **Frequency.** Monthly. The current month is left out until it is complete.
 - **Date range.** Stack Overflow counts from September 2008. Each comparison site starts at its first full month after its public beta. The index starts in June 2012 and the year-over-year gap in July 2012. Wikipedia pageviews start in July 2015; active editors in January 2010.
@@ -131,9 +131,9 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Caveats
 
-- **Wikipedia's improved bot detection.** In 2025 Wikimedia improved its detection of automated traffic that had been counted as human, and used the new method to reclassify its data from March 2025. Earlier months were not reprocessed, so the improved classification exists only from March 2025, and KEEL cannot use it for the years before. After the revision, Wikimedia reported that human pageviews across all language versions of Wikipedia had fallen roughly 8 percent compared with the same months of 2024 ([Wikimedia, 17 October 2025](https://diff.wikimedia.org/2025/10/17/new-user-trends-on-wikipedia/)). Some of the drop in the chart across March 2025 reflects better bot detection, so the chart marks a break there.
+- **Wikipedia's improved bot detection.** In 2025 Wikimedia improved its detection of automated traffic that had been counted as human, and used the new method to reclassify its data from March 2025. Earlier months were not reprocessed, so the improved classification exists only from March 2025, and KEEL cannot use it for the years before. After the revision, Wikimedia reported that human pageviews across all language versions of Wikipedia had fallen roughly 8 percent compared with the same months of 2024 [(Miller 2025)](../sources.qmd#miller2025). Some of the drop in the chart across March 2025 reflects better bot detection, so the chart marks a break there.
 - **Deleted questions are not counted.** Question counts come from the Stack Exchange API as of the download date, so questions deleted since they were asked are missing. Deletion rates differ by site and accumulate with age, so older months are undercounted. Its size is unknown; it likely makes the index understate Stack Overflow's decline. Every download is archived, so the build-up of deletions can be measured later.
 - **Small sites are noisier.** Each comparison site gets far fewer questions a month than Stack Overflow, so their counts jump around more. Using 12-month totals and four sites reduces this.
 - **The retrospective is not yet computed.** The retrospective applies the fixed rule to every quarter from the fourth quarter of 2022 onward, to show how readings would have changed since ChatGPT's release. It will be computed once and published as a dated snapshot in Stage 3.
 
-**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Give feedback](https://github.com/richardsonlj12/keel/discussions) · [Feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
+**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)

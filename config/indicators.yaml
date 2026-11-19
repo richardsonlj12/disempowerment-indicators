@@ -71,7 +71,7 @@ indicators:
     primary_series: aei_automation_share
     chart_title: Automation and augmentation share of Claude usage
     headline_caveat: "One vendor, one product: Claude usage only"
-    disclosure: This data is published by Anthropic, and KEEL is built with assistance from Claude.
+    disclosure: These data are published by Anthropic, and KEEL is built with assistance from Claude. Treat them as data from an interested party.
     sources:
       - name: Anthropic Economic Index (Hugging Face)
         url: https://huggingface.co/datasets/Anthropic/EconomicIndex

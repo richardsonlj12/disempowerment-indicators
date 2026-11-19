@@ -1,38 +1,45 @@
 # Chart markers: dated events drawn as vertical marks on a chart. They never split a line
 # (series breaks, which do, live in each series' meta `breaks`). Only entries with
 # verified: true are used. Each date is checked against a primary source and logged in
-# review/figure-verification.md. The key `all` applies to every indicator.
+# review/figure-verification.md. The key `all` applies to every indicator. `source_key` is the
+# marker source's entry in references/keel.json; the Method section cites it.
 markers:
   all:
     - date: 2022-11-30
       label: ChatGPT released to the public
       source_url: https://openai.com/index/chatgpt/
+      source_key: openai2022
       verified: true
       verified_on: 2026-11-17
   CD1:
     - date: 2021-06-29
       label: GitHub Copilot technical preview announced
       source_url: https://github.blog/news-insights/product-news/introducing-github-copilot-ai-pair-programmer/
+      source_key: friedman2021
       verified: true
       verified_on: 2026-11-17
     - date: 2022-06-21
       label: GitHub Copilot generally available to all developers
       source_url: https://github.blog/news-insights/product-news/github-copilot-is-generally-available-to-all-developers/
+      source_key: dohmke2022
       verified: true
       verified_on: 2026-11-17
     - date: 2022-12-05
       label: Stack Overflow bans AI-generated answers
       source_url: https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned
+      source_key: makyen2022
       verified: true
       verified_on: 2026-11-17
     - date: 2023-06-05
       label: Stack Overflow moderators begin a strike over AI-content policy
       source_url: https://openletter.mousetail.nl
+      source_key: stackoverflow2023
       verified: true
       verified_on: 2026-11-17
   EA1:
     - date: 2026-10-19
       label: "Census question wording changed: term 'AI' replaced by 'Super Intelligence or SI (formerly AI)' (from the collection starting 19 October 2026)"
       source_url: https://www.census.gov/hfp/btos/downloads/BTOS%20Content%20V5%20Core%20and%20SI%20Instrument%20-%20Cycle%202-Tagged.pdf
+      source_key: census2026
       verified: true
       verified_on: 2026-11-17

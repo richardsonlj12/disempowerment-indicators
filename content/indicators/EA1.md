@@ -10,7 +10,7 @@ coverage: United States · every two weeks · from September 2023
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event (Kulveit et al., 2025). Before AI can reduce the economy's dependence on human work, firms have to adopt it. This indicator tracks that first step: the share of US businesses that report using AI. It sits in the **Adoption** row of the grid, which asks whether AI is entering a system and how far it has gone.
+Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). Before AI can reduce the economy's dependence on human work, firms have to adopt it. This indicator tracks that first step: the share of US businesses that report using AI. It sits in the **Adoption** row of the grid, which asks whether AI is entering a system and how far it has gone.
 
 Adoption is a precondition for the mechanism Kulveit et al. describe. It is not evidence of the mechanism itself. Rising adoption is equally consistent with AI making workers more productive and more valuable, and with AI replacing them. This indicator cannot tell those apart. It is a **leading** indicator, one that moves early: adoption should move before any effect on labor's share of income or on tax revenue does.
 
@@ -24,7 +24,7 @@ Adoption is a precondition for the mechanism Kulveit et al. describe. It is not 
 
 **Why firm-weighted.** KEEL uses the firm-weighted share for three reasons, and accepts one limitation:
 
-1. **It is the official national estimate.** The BTOS national estimate is firm-weighted. It is the official, free series, published every two weeks with standard errors, and KEEL can track it automatically. Measures weighted by employment, or drawn from other surveys, report substantially higher adoption than the firm-weighted Census figure. A Federal Reserve Board note compares the two kinds of measure ([Allen, "Monitoring AI Adoption in the U.S. Economy," April 2026](https://www.federalreserve.gov/econres/notes/feds-notes/monitoring-ai-adoption-in-the-u-s-economy-20260403.html)). They answer different questions, so neither is wrong.
+1. **It is the official national estimate.** The BTOS national estimate is firm-weighted. It is the official, free series, published every two weeks with standard errors, and KEEL can track it automatically. Measures weighted by employment, or drawn from other surveys, report substantially higher adoption than the firm-weighted Census figure. A Federal Reserve Board note compares the two kinds of measure [(Allen 2026)](../sources.qmd#allen2026). They answer different questions, so neither is wrong.
 2. **It measures breadth.** Counting each firm once shows how widely AI has spread across separate businesses, which is the question the Adoption row asks.
 3. **The firm-size view fills part of the gap.** It shows how adoption differs between small and large firms.
 
@@ -35,9 +35,9 @@ Adoption is a precondition for the mechanism Kulveit et al. describe. It is not 
 - **Through early October 2025**, firms were asked whether they used AI "in producing goods or services."
 - **From the collection that began on 17 November 2025**, they are asked whether they used it "in any of its business functions." The examples given did not change.
 
-Census's testing found that some businesses answered "No" even though they used AI, for example in hiring, accounting, project management or research and development, because those uses were not directly connected to "producing goods or services." The broader question counts more uses as AI use, so the two segments are not comparable. Census saw a shift in the level of the series with the new wording and started a new time series because of it ([Census Bureau, "BTOS AI Core Question Updates," 3 December 2025](https://www.census.gov/hfp/btos/downloads/AI%20Question%20Wording%20Updates.pdf)). The chart shows them as separate segments and does not join them. There are no estimates for the weeks between the last old-wording period and the first new-wording period.
+Census's testing found that some businesses answered "No" even though they used AI, for example in hiring, accounting, project management or research and development, because those uses were not directly connected to "producing goods or services." The broader question counts more uses as AI use, so the two segments are not comparable. Census saw a shift in the level of the series with the new wording and started a new time series because of it [(U.S. Census Bureau 2025)](../sources.qmd#census2025). The chart shows them as separate segments and does not join them. There are no estimates for the weeks between the last old-wording period and the first new-wording period.
 
-**The wording marker on 19 October 2026.** Beginning with the collection of 19 October 2026, Census changed the term in the question to "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)." Census cites Executive Order 14434 for the change. Respondents saw the new wording. In that first period:
+**The wording marker on 19 October 2026.** Beginning with the collection of 19 October 2026, Census changed the term in the question to "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)" [(U.S. Census Bureau 2026)](../sources.qmd#census2026). Census cites [Executive Order 14434](../sources.qmd#eo14434) for the change ([BTOS page](../sources.qmd#census_btos)). Respondents saw the new wording. In that first period:
 
 - the "Do not know" share rose from 9.6 to 13.9 percent, and the "No" share fell from 65.8 to 61.9 percent
 - the "Yes" share was essentially unchanged, at 24.2 percent against 24.6 percent in the period before
@@ -71,7 +71,7 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Data and calculation
 
-- **Source and series.** Census Bureau, Business Trends and Outlook Survey, question 7 ("In the last two weeks, did this business use..."), answer "Yes." Periods from September 2023 to early October 2025 come from Census's AI core questions file. Periods from November 2025 onward come from the national estimates file, and the firm-size view from the employment size class file. All are linked from the BTOS data downloads page.
+- **Source and series.** [Census Bureau, Business Trends and Outlook Survey](../sources.qmd#census_btos), question 7 ("In the last two weeks, did this business use..."), answer "Yes." Periods from September 2023 to early October 2025 come from Census's AI core questions file. Periods from November 2025 onward come from the national estimates file, and the firm-size view from the employment size class file. All are linked from the BTOS data downloads page.
 - **Units.** Percent of firms. Standard errors are in percentage points.
 - **Frequency.** Every two weeks. Each estimate is dated by the last day of its collection period.
 - **Date range.** From the period ending 24 September 2023 to the latest published period. Census published no estimates for collections from 6 October to 16 November 2025, during a federal funding lapse. The firm-size view starts in November 2025.
@@ -84,4 +84,4 @@ These indicators show whether the conditions for disempowerment are present. The
 - **The 17 November 2025 break.** A reading that spans the break treats the two segments separately. Part or all of any jump at the break comes from the new wording.
 - **US only, and firms only.** The series says nothing about government or household use of AI.
 
-**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Give feedback](https://github.com/richardsonlj12/keel/discussions) · [Feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
+**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)

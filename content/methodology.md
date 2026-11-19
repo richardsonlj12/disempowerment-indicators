@@ -4,13 +4,13 @@ KEEL measures whether the conditions for gradual disempowerment are present, usi
 
 ## What KEEL measures {#what-keel-measures}
 
-KEEL tracks the scenario that Kulveit et al. (2025) call **gradual disempowerment** ([Kulveit et al., "Gradual Disempowerment," arXiv 2501.16946](https://arxiv.org/abs/2501.16946)). Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. As AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. KEEL's author has written a short introduction to the argument ([Richardson, "No Robot Uprising Required"](https://richardsonlj.substack.com/p/no-robot-uprising-required)).
+KEEL tracks the scenario that [Kulveit et al. (2025)](sources.qmd#kulveit2025) call **gradual disempowerment**. Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. As AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. KEEL's author has written a short introduction to the argument [(Richardson 2026)](sources.qmd#richardson2026).
 
 KEEL uses one word for this throughout: **leverage**, the bargaining power people have because systems need their work, taxes or attention.
 
 ### The grid
 
-The scorecard is a grid. Its columns are three **domains**: economic, government and cultural, following Kulveit et al. Its rows are three **layers**:
+The scorecard is a grid. Its columns are three **domains**: economic, government and cultural, following [Kulveit et al. (2025)](sources.qmd#kulveit2025). Its rows are three **layers**:
 
 - **Adoption:** is AI entering the system, and how far?
 - **Displacement:** is the system's dependence on human participation falling, and by how much?
@@ -18,12 +18,12 @@ The scorecard is a grid. Its columns are three **domains**: economic, government
 
 A fourth row, **human deferral and oversight**, runs across all three domains. It asks whether people are deferring to AI's judgment.
 
-**The rows are inspired by Chooi, Lee and Li (2026).** Their paper, ["Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics"](https://aclanthology.org/2026.evaleval-1.36/), proposes three layers that they call exposure, erosion and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two.
+**The rows are inspired by [Chooi et al. (2026)](sources.qmd#chooi2026).** Their paper, "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics", proposes three layers that they call exposure, erosion and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two.
 
 ::: {.callout-note collapse="true" title="How KEEL's rows line up with Chooi, Lee and Li"}
 | KEEL's row | Chooi, Lee and Li's term | How they relate |
 |---|---|---|
-| **Adoption:** AI entering a system (EA1, EA2) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it. We agree, and the adoption row's pages say so. |
+| **Adoption:** AI entering a system (EA1, EA2) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it [(Chooi et al. 2026, 228)](sources.qmd#chooi2026). We agree, and the adoption row's pages say so. |
 | **Displacement:** a whole system depending less on human participation (ED1, GD1, CD1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
 | Not measured | **Erosion:** individuals losing the ability to do a task without AI | None of KEEL's indicators measures individual capability (see [Known gaps](#known-gaps)). |
 | **Lock-in:** reduced dependence becoming hard to restore (empty for now) | **Lock-in:** the institutional infrastructure for human agency dismantled, for example a profession that no longer trains juniors | Close to the paper's meaning. |
@@ -53,13 +53,13 @@ Rising switching costs is one of the lock-in signs Chooi, Lee and Li list. Persi
 
 #### Oversight
 
-The mechanism at the center of the gradual disempowerment argument is decisions moving from people to AI. No public time series measures this. The oversight row therefore reads "No public measure yet" and cites the only current evidence we know of: an experiment by Herdağdelen, Joren and Tamkin (2026), ["How AI agents shape experts' judgment calls"](https://www.anthropic.com/research/agents-judgment-calls).
+The mechanism at the center of the gradual disempowerment argument is decisions moving from people to AI. No public time series measures this. The oversight row therefore reads "No public measure yet" and cites the only current evidence we know of: an experiment by [Herdağdelen et al. (2026a)](sources.qmd#herdagdelen2026a), "How AI agents shape experts' judgment calls".
 
 **The study.** Professional analysts worked on a data analysis with an AI coding agent. On four analytical decisions, a coin flip set which option the agent was set to favor. Across those decisions, the 50 analysts in the study went with the agent's favored option 86 percent of the time, against 50 percent by chance. Many repeated the agent's arguments when explaining their choices without crediting it.
 
 **Its limits.** It is one experiment, in one task, with one agent, and the authors list these limits themselves. The agent in the study was Claude. The study is authored at Anthropic, which also publishes the data behind EA2 and makes Claude. It is not a time series and cannot fill the row.
 
-Moon and Boudreaux (2026, RAND Corporation) propose a formal way to track the same mechanism in ["A Formal Model of How Artificial Intelligence Erodes Human Agency"](https://www.rand.org/pubs/research_reports/RRA4817-1.html): the number and makeup of the groups whose agreement decides an outcome, and whether AI is entering those groups or shaping the options they see. If a public, repeatable measure of deferral appears, it will fill this row.
+[Moon and Boudreaux (2026)](sources.qmd#moon2026), of the RAND Corporation, propose a formal way to track the same mechanism in "A Formal Model of How Artificial Intelligence Erodes Human Agency": the number and makeup of the groups whose agreement decides an outcome, and whether AI is entering those groups or shaping the options they see. If a public, repeatable measure of deferral appears, it will fill this row.
 
 [Back to top](#)
 
@@ -163,8 +163,8 @@ ED1 will gain an industry comparison in Release 2: labor share in industries whe
 
 #### Breaks, markers and revisions
 
-- **Series breaks.** When a source changes its definition or method so that values before and after are not comparable, the chart marks the date and does not join the two parts. Examples: the change to the Census AI question on 17 November 2025 (EA1), Wikimedia's improved bot detection in 2025 (CD1), and changes in the Anthropic Economic Index release format (EA2).
-- **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart), GitHub Copilot's launch and Stack Overflow policy events (CD1), and the Census question wording that began on 19 October 2026 (EA1).
+- **Series breaks.** When a source changes its definition or method so that values before and after are not comparable, the chart marks the date and does not join the two parts. Examples: the change to the Census AI question on 17 November 2025 (EA1) [(U.S. Census Bureau 2025)](sources.qmd#census2025), Wikimedia's improved bot detection in 2025 (CD1) [(Miller 2025)](sources.qmd#miller2025), and changes in the Anthropic Economic Index release format (EA2).
+- **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart) [(OpenAI 2022)](sources.qmd#openai2022), GitHub Copilot's launch and Stack Overflow policy events (CD1) ([Friedman 2021](sources.qmd#friedman2021); [Dohmke 2022](sources.qmd#dohmke2022); [Makyen 2022](sources.qmd#makyen2022)), and the Census question wording that began on 19 October 2026 (EA1) [(U.S. Census Bureau 2026)](sources.qmd#census2026).
 - **Revisions.** Official statistics are revised. KEEL uses the latest revised data. A revision that would change a reading is treated like new data and goes to review.
 
 EA1's two Census changes are treated differently because they did different things: the 17 November 2025 change altered what the question asks and produced a level shift, and Census started a new series, so it is a break; the 19 October 2026 change replaced the term "AI" with "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)" and the "Yes" share was essentially unchanged, so it is a labeled marker, to be revisited in Stage 2.
@@ -229,19 +229,19 @@ These indicators are diagnostics. KEEL does not recommend that any policy aim to
 
 ### Critiques we take seriously
 
-**David Krueger (2025)**, a coauthor of the gradual disempowerment paper, warns that many proposed metrics do not separate empowering uses of AI from disempowering ones. Heavy AI use can look like progress while people lose real agency. KEEL responds in three ways:
+**[David Krueger (2025)](sources.qmd#krueger2025)**, a coauthor of the gradual disempowerment paper, warns that many proposed metrics do not separate empowering uses of AI from disempowering ones. Heavy AI use can look like progress while people lose real agency. KEEL responds in three ways:
 
 - It keeps adoption (EA1, EA2) apart from displacement.
 - It adds a note on augmentation versus replacement (AI helping people work, against AI doing the work instead of them) wherever adoption is shown.
 - It names deferral, whether people simply approve AI's decisions, as the row with no public measure.
 
-**Beren Millidge (2025)** argues that gradual disempowerment might not be so bad. Most people already have little individual influence over large systems. AI governance could be better than human governance. Capital income and transfers could sustain living standards. He calls the outcome highly uncertain. His argument is why every economic page separates welfare from influence: material gains are real, but they answer a different question (see [Welfare is not influence](#welfare-is-not-influence)).
+**[Beren Millidge (2025)](sources.qmd#millidge2025)** argues that gradual disempowerment might not be so bad. Most people already have little individual influence over large systems. AI governance could be better than human governance. Capital income and transfers could sustain living standards. He calls the outcome highly uncertain. His argument is why every economic page separates welfare from influence: material gains are real, but they answer a different question (see [Welfare is not influence](#welfare-is-not-influence)).
 
-**P. O. Jedlicka (2026)** argues that gradual disempowerment scenarios do not explain how societies actually respond, and assume that technology dictates outcomes. In Jedlicka's view they underrate people acting together and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason for KEEL's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
+**[P. O. Jedlicka (2026)](sources.qmd#jedlicka2026)** argues that gradual disempowerment scenarios do not explain how societies actually respond, and assume that technology dictates outcomes. In Jedlicka's view they underrate people acting together and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason for KEEL's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
 
 #### The authors' own caveats
 
-- Kulveit et al. concede that some outcomes of the scenario are ambiguous. For example, an AI-run state could bring large benefits.
+- [Kulveit et al. (2025)](sources.qmd#kulveit2025) concede that some outcomes of the scenario are ambiguous. For example, an AI-run state could bring large benefits.
 - Chooi, Lee and Li say that showing what caused a change is hard throughout, that most metrics in this area can only describe and compare, and that leading indicators are hard to validate before the outcomes they predict have happened.
 
 KEEL's indicators are descriptive in exactly this sense.
@@ -316,14 +316,7 @@ Later versions are planned under four headings: method, harder indicators of AI'
 
 ## Sources and disclosure {#sources}
 
-<!-- SOURCES: replaced by a link to the dedicated Sources page in the Sources batch -->
-
-The framework comes from [Kulveit et al. (2025)](https://arxiv.org/abs/2501.16946). These four sources were read in full before this page was written (the RAND report's mathematical appendix skimmed):
-
-- [Chooi, Lee and Li (2026), "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics"](https://aclanthology.org/2026.evaleval-1.36/)
-- [Moon and Boudreaux (2026), "A Formal Model of How Artificial Intelligence Erodes Human Agency," RAND Corporation](https://www.rand.org/pubs/research_reports/RRA4817-1.html)
-- [Herdağdelen, Joren and Tamkin (2026), "How AI agents shape experts' judgment calls"](https://www.anthropic.com/research/agents-judgment-calls)
-- [Imas and Schaal (2026), "Has AI impacted the labor market yet?"](https://aleximas.substack.com/p/has-ai-impacted-the-labor-market)
+Every work and dataset cited on KEEL is listed, with links, on the [Sources](sources.qmd) page.
 
 Every figure KEEL publishes is checked against its primary source before publication.
 

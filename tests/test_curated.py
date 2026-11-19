@@ -86,5 +86,5 @@ def test_oversight_note_is_in_plain_words():
 
 def test_oversight_cites_herdagdelen():
     _, items = load_curated(OVERSIGHT)
-    assert any("Tamkin" in i["source_name"] for i in items)
+    assert any(i["source_key"] == "herdagdelen2026a" for i in items)  # cited through the Sources page
     assert all(i["source_url"].startswith("https://") for i in items)

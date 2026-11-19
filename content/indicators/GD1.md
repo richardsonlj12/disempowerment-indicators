@@ -12,9 +12,9 @@ coverage: United States · quarterly · from 1947; OECD average and United State
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event (Kulveit et al., 2025). A state that funds itself by taxing its citizens' work has a reason to keep them productive and to listen to them. A state that funds itself from other sources has less reason to. Political scientists call this the rentier-state pattern: governments funded by resources rather than taxes tend to answer less to their citizens. It is a common explanation for why governments that live on oil revenue tend to be less accountable.
+Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). A state that funds itself by taxing its citizens' work has a reason to keep them productive and to listen to them. A state that funds itself from other sources has less reason to. Political scientists call this the rentier-state pattern: governments funded by resources rather than taxes tend to answer less to their citizens. It is a common explanation for why governments that live on oil revenue tend to be less accountable.
 
-Kulveit et al. apply the same logic to AI. If AI shifts income from wages toward capital, and tax revenue follows, the state could come to depend less on its citizens. Drago and Laine make the same comparison in [*The Intelligence Curse*](https://intelligence-curse.ai/) (2025): like a state rich in oil, a state whose income comes from AI rather than from people's work may lose its incentive to care about them. Chooi, Lee and Li (2026) propose a related metric: citizen tax revenue relative to AI-derived corporate profits.
+Kulveit et al. apply the same logic to AI. If AI shifts income from wages toward capital, and tax revenue follows, the state could come to depend less on its citizens. [Drago and Laine (2025)](../sources.qmd#drago2025) make the same comparison in *The Intelligence Curse*: like a state rich in oil, a state whose income comes from AI rather than from people's work may lose its incentive to care about them. [Chooi et al. (2026, 232)](../sources.qmd#chooi2026) propose a related metric: citizen tax revenue relative to AI-derived corporate profits.
 
 This indicator is the most direct public measure we found of that state-dependence argument. It sits in the **Displacement** row, as the core mechanism for the government domain. It is a **lagging** indicator, one that moves late: tax structures change slowly.
 
@@ -66,8 +66,8 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Data and calculation
 
-- **Source and series, United States quarterly.** BEA national accounts, read through FRED: personal current taxes, contributions for government social insurance, and government current tax receipts, all for government at every level.
-- **Source and series, annual.** OECD Revenue Statistics, comparative tables: taxes on income of individuals and social security contributions, each as a percent of total tax revenue, for the OECD average and for the United States. The OECD average is OECD's own published figure; KEEL does not recompute it. Source: OECD, Revenue Statistics 2025.
+- **Source and series, United States quarterly.** BEA national accounts, read through FRED: [personal current taxes](../sources.qmd#fred_personal_current_taxes), [contributions for government social insurance](../sources.qmd#fred_social_insurance_contributions), and [government current tax receipts](../sources.qmd#fred_tax_receipts), all for government at every level.
+- **Source and series, annual.** [OECD Revenue Statistics, comparative tables](../sources.qmd#oecd_revenue_statistics): taxes on income of individuals and social security contributions, each as a percent of total tax revenue, for the OECD average and for the United States. The OECD average is OECD's own published figure; KEEL does not recompute it. Source: [OECD, Revenue Statistics 2025](../sources.qmd#oecd_revenue_statistics).
 - **Units.** Percent of tax revenue.
 - **Frequency.** Quarterly (US, at seasonally adjusted annual rates) and annual (OECD).
 - **Date range.** US quarterly from the first quarter of 1947; OECD annual from 1965. The OECD average currently runs to 2023 and the OECD figure for the United States to 2024.
@@ -80,4 +80,4 @@ These indicators show whether the conditions for disempowerment are present. The
 - **The OECD average is the published OECD figure.** KEEL does not recompute it, and its country coverage follows OECD's own definitions.
 - **The retrospective is not yet computed.** The retrospective applies the fixed rule to every quarter from the fourth quarter of 2022 onward, to show how readings would have changed since ChatGPT's release. It will be computed once and published as a dated snapshot in Stage 3.
 
-**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Give feedback](https://github.com/richardsonlj12/keel/discussions) · [Feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
+**Feedback.** [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Join the discussion](https://github.com/richardsonlj12/keel/discussions) · [Send private feedback](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)

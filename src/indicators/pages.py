@@ -219,13 +219,18 @@ def reading_parts(ind: reg.Indicator, reading: reg.Reading, series: dict) -> tup
     return label, magnitude, reading.interpretation or None
 
 
-def summary_table(ind, front, reading, series) -> str:
+def _data_link(name: str, url: str, cites: bibliography.Citations, prefix: str) -> str:
+    """A data source's name linked to its Sources entry (the URL must be in the bibliography)."""
+    return f"[{name}]({cites.anchor(cites.key_for_url(url), prefix)})"
+
+
+def summary_table(ind, front, reading, series, cites: bibliography.Citations) -> str:
     primary = series.get(ind.primary_series)
     through = (f"data through {fmt_period(primary[1].data_through, primary[1].frequency)}"
                if primary else "data through: not yet available (data still being collected)")
     label, magnitude, interpretation = reading_parts(ind, reading, series)
     current = "<br>".join(_cell(x) for x in (label, interpretation) if x)
-    sources = "<br>".join(f"[{_cell(s['name'])}]({_url(s['url'])})" for s in front["data_sources"])
+    sources = "<br>".join(_data_link(_cell(s["name"]), s["url"], cites, "../") for s in front["data_sources"])
     rows = [
         ("Summary", reg.content_summary(front)),
         ("Description", magnitude),
@@ -343,7 +348,7 @@ def reading_history(readings: list[reg.Reading]) -> str:
     return "\n".join(lines)
 
 
-def method_section(ind, series, markers) -> str:
+def method_section(ind, series, markers, cites: bibliography.Citations, marker_keys: dict | None = None) -> str:
     lines = [f"- **Comparison and baseline.** {COMPARISON[ind.comparison].format(baseline=baseline_text(ind))}",
              "- **Threshold rule and sensitivity table.** Stage 2.",
              f"- **AI link: {ind.ai_link.capitalize()}** (draft, to be reviewed in Stage 2), judged on four criteria:"]
@@ -351,7 +356,7 @@ def method_section(ind, series, markers) -> str:
         lines.append(f"    - *{question}* {ind.ai_link_criteria.get(key, 'Not yet assessed.')}")
     lines.append("- **Sources.**")
     for s in ind.sources:
-        lines.append(f"    - [{s['name']}]({_url(s['url'])}). License: {s['license']}.")
+        lines.append(f"    - {_data_link(s['name'], s['url'], cites, '../')}. License: {s['license']}.")
     breaks = [(b["date"], meta.title, b["note"]) for _, meta in series.values() for b in meta.breaks]
     if breaks:
         lines.append("- **Series breaks.** The chart does not join the line across a break.")
@@ -362,7 +367,9 @@ def method_section(ind, series, markers) -> str:
     if markers:
         lines.append("- **Chart markers.** Dated events marked on the chart without splitting the line.")
         for m in markers:
-            lines.append(f"    - {fmt_date(m['date'])}: {m['label']}")
+            key = (marker_keys or {}).get((m["date"], m["label"]))
+            cite = f" {cites.cite(key, '../')}" if key else ""
+            lines.append(f"    - {fmt_date(m['date'])}: {m['label']}{cite}")
     if series:
         lines.append("- **Last fetched.**")
         for _, meta in series.values():
@@ -401,7 +408,8 @@ def write_trend_csv(frame, meta: SeriesMeta, out_dir: Path) -> None:
 
 
 def indicator_page(template: str, ind, front, sections, reading, history, views, series, markers,
-                   group_labels, trend_files, today) -> str:
+                   group_labels, trend_files, today, cites: bibliography.Citations,
+                   marker_keys: dict | None = None) -> str:
     title = f"{ind.name} ({ind.id})"
     fm = yaml.safe_dump({"title": title, "pagetitle": f"{title} · {SITE_NAME}"}, allow_unicode=True,
                         sort_keys=False, width=1000).strip()
@@ -413,7 +421,7 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
 
     replacements = {
         "%%FRONT_MATTER%%": fm,
-        "%%SUMMARY_TABLE%%": summary_table(ind, front, reading, series),
+        "%%SUMMARY_TABLE%%": summary_table(ind, front, reading, series, cites),
         "%%NOTICES%%": notices(ind, views, series, today),
         "%%WHY%%": section(SECTIONS[0]),
         "%%CHART%%": chart,
@@ -422,7 +430,7 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
         "%%DOESNT_SHOW%%": section(SECTIONS[2]),
         "%%CHANGE%%": section(SECTIONS[3]),
         "%%DATA_AND_CALCULATION%%": section(SECTIONS[4]),
-        "%%METHOD%%": method_section(ind, series, markers),
+        "%%METHOD%%": method_section(ind, series, markers, cites, marker_keys),
         "%%CAVEATS%%": section(SECTIONS[5]),
         "%%DOWNLOADS%%": downloads(views, series, trend_files),
     }
@@ -443,8 +451,16 @@ def _cell_div(layer, domain, body) -> str:
     return f'::: {{.keel-cell row="{row}" domain="{dom}"}}\n{caption}\n\n{body}\n:::'
 
 
+def _item_source(item: dict, cites: bibliography.Citations) -> str:
+    """A curated item's source: a dataset's name linked to its entry, or the source named and cited."""
+    key = item["source_key"]
+    if cites.entries[key]["type"] == "dataset":
+        return f"[{item['source_name']}]({cites.anchor(key)})"
+    return f"{item['source_name']} {cites.cite(key, locator=item.get('locator'))}"
+
+
 def summary_page(indicators, grid, oversight, readings, latest_text, oversight_items, counter_header,
-                 counter_items, about) -> str:
+                 counter_items, about, cites: bibliography.Citations) -> str:
     by_id = {i.id: i for i in indicators}
     cells = {(c.layer, c.domain): c for c in grid}
     out = ["These indicators show whether the conditions for disempowerment are present. "
@@ -477,9 +493,9 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
             out.append(_cell_div(layer, d, body))
     cite = []
     for item in oversight_items:
-        cite.append(f"Nearest evidence: [{item['label']}]({_url(item['source_url'])}), {item['source_name']}, "
-                    f"{fmt_date(item['date'])}. {item['metric']}: {item['value']} {item['unit']}. "
-                    "One study, not a time series.")
+        cite.append(f"Nearest evidence: {item['label']}, {item['source_name']}, {fmt_date(item['date'])} "
+                    f"{cites.cite(item['source_key'], locator=item.get('locator'))}. "
+                    f"{item['metric']}: {item['value']} {item['unit']}. One study, not a time series.")
     out += [_rowhead(reg.CROSS_CUTTING_LABEL, reg.CROSS_CUTTING_DEFINITION),
             "::: {.keel-oversight}",
             f"**{oversight['row_label']}**", "", oversight["label"], "", *cite, ":::"]
@@ -491,7 +507,7 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
         measured = "" if isinstance(value, dict) else f" {item['metric']}: {value} {item['unit']}."
         out.append(f"- **{item['label']}** ({item['domain'].capitalize()}; "
                    f"{KIND_LABELS.get(item.get('kind'), 'Item')}; dated {fmt_date(item['date'])}).{measured} "
-                   f"Source: [{item['source_name']}]({_url(item['source_url'])}).")
+                   f"Source: {_item_source(item, cites)}.")
     out += ["", "::: {#inclusion-criteria .callout-note collapse=\"true\" title=\"Inclusion criteria\"}",
             " ".join(str(counter_header["inclusion_criteria"]).split()), ":::", "::::", ":::::", "",
             "Earlier snapshots and superseded rules will be kept in the [Archive](archive.qmd).", ""]
@@ -534,6 +550,9 @@ def build(repo_root: Path, today: date | None = None) -> None:
     group_labels = {s["api_site_name"]: s["name"] for s in sites.get("sites", [])}
     _, oversight_items = load_curated(config / "curated" / "oversight.yaml")
     counter_header, counter_items = load_curated(config / "curated" / "counter_evidence.yaml")
+    cites = bibliography.Citations(bibliography.load(root / bibliography.BIB_PATH))
+    marker_keys = {(str(m["date"]), m["label"]): m["source_key"]
+                   for rows in chart_markers.values() for m in rows or [] if m.get("source_key")}
 
     for sub in ("data", "config", "indicators", "_generated"):
         _reset(site / sub)
@@ -563,14 +582,15 @@ def build(repo_root: Path, today: date | None = None) -> None:
         front, sections = split_content((root / "content" / "indicators" / f"{ind.id}.md").read_text(encoding="utf-8"))
         markers = reg.markers_for(chart_markers, ind.id)
         page = indicator_page(template, ind, front, sections, reg.current_reading(readings, ind.id),
-                              readings.get(ind.id, []), views, series, markers, group_labels, trend_files, today)
+                              readings.get(ind.id, []), views, series, markers, group_labels, trend_files, today,
+                              cites, marker_keys)
         (site / "indicators" / f"{ind.id}.qmd").write_text(page, encoding="utf-8")
         latest_text[ind.id] = latest_value_parts(ind, series)
 
     summary = summary_page(indicators, grid, oversight, readings, latest_text,
                            [i for i in published(oversight_items) if i["id"] == oversight.get("citation_ref")],
                            counter_header, published(counter_items),
-                           (root / "content" / "summary-about-indicators.md").read_text(encoding="utf-8"))
+                           (root / "content" / "summary-about-indicators.md").read_text(encoding="utf-8"), cites)
     (site / "_generated" / "summary.md").write_text(summary, encoding="utf-8")
     bibliography.write_sources_page(root)
 
