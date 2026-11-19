@@ -32,6 +32,8 @@ website:
             text: "Human knowledge-commons activity (CD1)"
       - href: methodology.qmd
         text: Methodology
+      - href: sources.qmd
+        text: Sources
       - href: archive.qmd
         text: Archive
       - href: about.qmd

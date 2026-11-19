@@ -1,0 +1,836 @@
+[
+  {
+    "id": "allen2026",
+    "type": "report",
+    "author": [
+      {
+        "family": "Allen",
+        "given": "Jeffrey S."
+      }
+    ],
+    "title": "Monitoring AI Adoption in the U.S. Economy",
+    "collection-title": "FEDS Notes",
+    "publisher": "Board of Governors of the Federal Reserve System",
+    "publisher-place": "Washington, DC",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          4,
+          3
+        ]
+      ]
+    },
+    "DOI": "10.17016/2380-7172.4032",
+    "URL": "https://www.federalreserve.gov/econres/notes/feds-notes/monitoring-ai-adoption-in-the-u-s-economy-20260403.html"
+  },
+  {
+    "id": "brynjolfsson2026",
+    "type": "report",
+    "author": [
+      {
+        "family": "Brynjolfsson",
+        "given": "Erik"
+      },
+      {
+        "family": "Chandar",
+        "given": "Bharat"
+      },
+      {
+        "family": "Chen",
+        "given": "Ruyu"
+      }
+    ],
+    "title": "Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence",
+    "publisher": "Stanford Digital Economy Lab",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          8
+        ]
+      ]
+    },
+    "URL": "https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf"
+  },
+  {
+    "id": "census2025",
+    "type": "report",
+    "author": [
+      {
+        "literal": "U.S. Census Bureau"
+      }
+    ],
+    "title": "BTOS AI Core Question Updates",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          12,
+          3
+        ]
+      ]
+    },
+    "URL": "https://www.census.gov/hfp/btos/downloads/AI%20Question%20Wording%20Updates.pdf"
+  },
+  {
+    "id": "chooi2026",
+    "type": "paper-conference",
+    "author": [
+      {
+        "family": "Chooi",
+        "given": "Jay"
+      },
+      {
+        "family": "Lee",
+        "given": "Jaeho"
+      },
+      {
+        "family": "Li",
+        "given": "Jasmine"
+      }
+    ],
+    "title": "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics",
+    "container-title": "Proceedings of the Workshop on Evaluating Evaluations (EvalEval)",
+    "page": "227-236",
+    "publisher": "Association for Computational Linguistics",
+    "publisher-place": "San Diego, CA",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          7
+        ]
+      ]
+    },
+    "DOI": "10.18653/v1/2026.evaleval-1.36",
+    "URL": "https://aclanthology.org/2026.evaleval-1.36/"
+  },
+  {
+    "id": "drago2025",
+    "type": "report",
+    "author": [
+      {
+        "family": "Drago",
+        "given": "Luke"
+      },
+      {
+        "family": "Laine",
+        "given": "Rudolf"
+      }
+    ],
+    "title": "The Intelligence Curse",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          4
+        ]
+      ]
+    },
+    "URL": "https://intelligence-curse.ai/"
+  },
+  {
+    "id": "handa2025",
+    "type": "article",
+    "author": [
+      {
+        "family": "Handa",
+        "given": "Kunal"
+      },
+      {
+        "family": "Tamkin",
+        "given": "Alex"
+      },
+      {
+        "family": "McCain",
+        "given": "Miles"
+      },
+      {
+        "family": "Huang",
+        "given": "Saffron"
+      },
+      {
+        "family": "Durmus",
+        "given": "Esin"
+      },
+      {
+        "family": "Heck",
+        "given": "Sarah"
+      },
+      {
+        "family": "Mueller",
+        "given": "Jared"
+      },
+      {
+        "family": "Hong",
+        "given": "Jerry"
+      },
+      {
+        "family": "Ritchie",
+        "given": "Stuart"
+      },
+      {
+        "family": "Belonax",
+        "given": "Tim"
+      },
+      {
+        "family": "Troy",
+        "given": "Kevin K."
+      },
+      {
+        "family": "Amodei",
+        "given": "Dario"
+      },
+      {
+        "family": "Kaplan",
+        "given": "Jared"
+      },
+      {
+        "family": "Clark",
+        "given": "Jack"
+      },
+      {
+        "family": "Ganguli",
+        "given": "Deep"
+      }
+    ],
+    "title": "Which Economic Tasks Are Performed with AI? Evidence from Millions of Claude Conversations",
+    "genre": "Preprint",
+    "publisher": "arXiv",
+    "number": "arXiv:2503.04761",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          2,
+          11
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2503.04761",
+    "URL": "https://arxiv.org/abs/2503.04761"
+  },
+  {
+    "id": "herdagdelen2026a",
+    "type": "webpage",
+    "author": [
+      {
+        "family": "Herdağdelen",
+        "given": "Amaç"
+      },
+      {
+        "family": "Joren",
+        "given": "Hailey"
+      },
+      {
+        "family": "Tamkin",
+        "given": "Alex"
+      }
+    ],
+    "title": "How AI Agents Shape Experts' Judgment Calls",
+    "container-title": "Anthropic Research",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          10,
+          27
+        ]
+      ]
+    },
+    "URL": "https://www.anthropic.com/research/agents-judgment-calls"
+  },
+  {
+    "id": "herdagdelen2026b",
+    "type": "report",
+    "author": [
+      {
+        "family": "Herdağdelen",
+        "given": "Amaç"
+      },
+      {
+        "family": "Joren",
+        "given": "Hailey"
+      },
+      {
+        "family": "Tamkin",
+        "given": "Alex"
+      }
+    ],
+    "title": "Who's Aligned to Whom? How AI Agents Shape Experts' Research Judgment Calls",
+    "publisher": "Anthropic",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://assets.claude.com/519c17a5d23a794e8b6d50a854048d0b61e0d73a.pdf"
+  },
+  {
+    "id": "imas2026",
+    "type": "post-weblog",
+    "author": [
+      {
+        "family": "Imas",
+        "given": "Alex"
+      },
+      {
+        "family": "Schaal",
+        "given": "Jacob"
+      }
+    ],
+    "title": "Has AI Impacted the Labor Market Yet?",
+    "container-title": "Ghosts of Electricity",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          9,
+          29
+        ]
+      ]
+    },
+    "URL": "https://aleximas.substack.com/p/has-ai-impacted-the-labor-market"
+  },
+  {
+    "id": "jedlicka2026",
+    "type": "article",
+    "author": [
+      {
+        "family": "Jedlicka",
+        "given": "Petr O."
+      }
+    ],
+    "title": "Why Do We Need Social Singularity? A Mechanism-Based Critique of Gradual Scenarios in AI Existential-Risk Discourse",
+    "genre": "Preprint",
+    "publisher": "arXiv",
+    "number": "arXiv:2608.03904",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          8,
+          4
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2608.03904",
+    "URL": "https://arxiv.org/abs/2608.03904"
+  },
+  {
+    "id": "krueger2025",
+    "type": "webpage",
+    "author": [
+      {
+        "family": "Krueger",
+        "given": "David Scott"
+      }
+    ],
+    "title": "A Few Quick Thoughts on Measuring Disempowerment",
+    "container-title": "LessWrong",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          12,
+          8
+        ]
+      ]
+    },
+    "URL": "https://www.lesswrong.com/posts/hP2Pms2acPW6eeD6B/a-few-quick-thoughts-on-measuring-disempowerment"
+  },
+  {
+    "id": "kulveit2025",
+    "type": "article",
+    "author": [
+      {
+        "family": "Kulveit",
+        "given": "Jan"
+      },
+      {
+        "family": "Douglas",
+        "given": "Raymond"
+      },
+      {
+        "family": "Ammann",
+        "given": "Nora"
+      },
+      {
+        "family": "Turan",
+        "given": "Deger"
+      },
+      {
+        "family": "Krueger",
+        "given": "David"
+      },
+      {
+        "family": "Duvenaud",
+        "given": "David"
+      }
+    ],
+    "title": "Gradual Disempowerment: Systemic Existential Risks from Incremental AI Development",
+    "genre": "Preprint",
+    "publisher": "arXiv",
+    "number": "arXiv:2501.16946",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          1,
+          28
+        ]
+      ]
+    },
+    "DOI": "10.48550/arXiv.2501.16946",
+    "URL": "https://arxiv.org/abs/2501.16946"
+  },
+  {
+    "id": "millidge2025",
+    "type": "post-weblog",
+    "author": [
+      {
+        "family": "Millidge",
+        "given": "Beren"
+      }
+    ],
+    "title": "Gradual Disempowerment Might Not Be So Bad",
+    "container-title": "Beren's Blog",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          11,
+          23
+        ]
+      ]
+    },
+    "URL": "https://www.beren.io/2025-11-23-Gradual-Disempowerment-Might-Not-Be-So-Bad/"
+  },
+  {
+    "id": "miller2025",
+    "type": "post-weblog",
+    "author": [
+      {
+        "family": "Miller",
+        "given": "Marshall"
+      }
+    ],
+    "title": "New User Trends on Wikipedia",
+    "container-title": "Diff",
+    "publisher": "Wikimedia Foundation",
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          10,
+          17
+        ]
+      ]
+    },
+    "URL": "https://diff.wikimedia.org/2025/10/17/new-user-trends-on-wikipedia/"
+  },
+  {
+    "id": "moon2026",
+    "type": "report",
+    "author": [
+      {
+        "family": "Moon",
+        "given": "Alvin"
+      },
+      {
+        "family": "Boudreaux",
+        "given": "Benjamin"
+      }
+    ],
+    "title": "A Formal Model of How Artificial Intelligence Erodes Human Agency",
+    "number": "RR-A4817-1",
+    "publisher": "RAND Corporation",
+    "publisher-place": "Santa Monica, CA",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          4,
+          20
+        ]
+      ]
+    },
+    "DOI": "10.7249/RRA4817-1",
+    "URL": "https://www.rand.org/pubs/research_reports/RRA4817-1.html"
+  },
+  {
+    "id": "richardson2026",
+    "type": "post-weblog",
+    "author": [
+      {
+        "family": "Richardson",
+        "given": "Jeremy"
+      }
+    ],
+    "title": "No Robot Uprising Required",
+    "container-title": "Working Through the AI Transition",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          11
+        ]
+      ]
+    },
+    "URL": "https://richardsonlj.substack.com/p/no-robot-uprising-required"
+  },
+  {
+    "id": "sajadieh2026",
+    "type": "chapter",
+    "author": [
+      {
+        "family": "Sajadieh",
+        "given": "Sha"
+      },
+      {
+        "family": "Fattorini",
+        "given": "Loredana"
+      },
+      {
+        "family": "Perrault",
+        "given": "Raymond"
+      },
+      {
+        "family": "Gil",
+        "given": "Yolanda"
+      },
+      {
+        "family": "Parli",
+        "given": "Vanessa"
+      },
+      {
+        "family": "Santarlasci",
+        "given": "Lapo"
+      },
+      {
+        "family": "Pava",
+        "given": "Juan"
+      },
+      {
+        "family": "Maslej",
+        "given": "Nestor"
+      },
+      {
+        "family": "Altman",
+        "given": "Russ"
+      },
+      {
+        "family": "Brynjolfsson",
+        "given": "Erik"
+      },
+      {
+        "family": "Brodley",
+        "given": "Carla"
+      },
+      {
+        "family": "Clark",
+        "given": "Jack"
+      },
+      {
+        "family": "Dignum",
+        "given": "Virginia"
+      },
+      {
+        "family": "Kumar",
+        "given": "Vipin"
+      },
+      {
+        "family": "Landay",
+        "given": "James"
+      },
+      {
+        "family": "Lyons",
+        "given": "Terah"
+      },
+      {
+        "family": "Manyika",
+        "given": "James"
+      },
+      {
+        "family": "Niebles",
+        "given": "Juan Carlos"
+      },
+      {
+        "family": "Shoham",
+        "given": "Yoav"
+      },
+      {
+        "family": "Tabassi",
+        "given": "Elham"
+      },
+      {
+        "family": "Wald",
+        "given": "Russell"
+      },
+      {
+        "family": "Walsh",
+        "given": "Toby"
+      },
+      {
+        "family": "Weld",
+        "given": "Dan"
+      }
+    ],
+    "title": "Policy and Governance",
+    "chapter-number": "8",
+    "container-title": "The AI Index 2026 Annual Report",
+    "publisher": "AI Index Steering Committee, Institute for Human-Centered AI, Stanford University",
+    "publisher-place": "Stanford, CA",
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          4
+        ]
+      ]
+    },
+    "URL": "https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_8_policy_and_governance.pdf"
+  },
+  {
+    "id": "anthropic_economic_index",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "Anthropic"
+      }
+    ],
+    "title": "Anthropic Economic Index",
+    "publisher": "Hugging Face",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "Data CC BY; code MIT License (dataset README, License section)",
+    "URL": "https://huggingface.co/datasets/Anthropic/EconomicIndex"
+  },
+  {
+    "id": "bls_labor_share",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "U.S. Bureau of Labor Statistics"
+      }
+    ],
+    "title": "Labor Share for the Nonfarm Business Sector, Level (Percentage) [PRS85006174]",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "US government work, public domain",
+    "URL": "https://www.bls.gov/productivity/home.htm"
+  },
+  {
+    "id": "census_btos",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "U.S. Census Bureau"
+      }
+    ],
+    "title": "Business Trends and Outlook Survey (BTOS)",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "US government work, public domain",
+    "URL": "https://www.census.gov/hfp/btos"
+  },
+  {
+    "id": "fred_cpatax",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "U.S. Bureau of Economic Analysis"
+      }
+    ],
+    "title": "Corporate Profits After Tax with Inventory Valuation Adjustment (IVA) and Capital Consumption Adjustment (CCAdj) [CPATAX]",
+    "publisher": "FRED, Federal Reserve Bank of St. Louis",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "US government work, public domain",
+    "URL": "https://fred.stlouisfed.org/series/CPATAX"
+  },
+  {
+    "id": "fred_gdp",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "U.S. Bureau of Economic Analysis"
+      }
+    ],
+    "title": "Gross Domestic Product [GDP]",
+    "publisher": "FRED, Federal Reserve Bank of St. Louis",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "US government work, public domain",
+    "URL": "https://fred.stlouisfed.org/series/GDP"
+  },
+  {
+    "id": "fred_personal_current_taxes",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "U.S. Bureau of Economic Analysis"
+      }
+    ],
+    "title": "Personal Current Taxes [W055RC1Q027SBEA]",
+    "publisher": "FRED, Federal Reserve Bank of St. Louis",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "US government work, public domain",
+    "URL": "https://fred.stlouisfed.org/series/W055RC1Q027SBEA"
+  },
+  {
+    "id": "fred_social_insurance_contributions",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "U.S. Bureau of Economic Analysis"
+      }
+    ],
+    "title": "Government Current Receipts: Contributions for Government Social Insurance [W782RC1Q027SBEA]",
+    "publisher": "FRED, Federal Reserve Bank of St. Louis",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "US government work, public domain",
+    "URL": "https://fred.stlouisfed.org/series/W782RC1Q027SBEA"
+  },
+  {
+    "id": "fred_tax_receipts",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "U.S. Bureau of Economic Analysis"
+      }
+    ],
+    "title": "Government Current Tax Receipts [W054RC1Q027SBEA]",
+    "publisher": "FRED, Federal Reserve Bank of St. Louis",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "US government work, public domain",
+    "URL": "https://fred.stlouisfed.org/series/W054RC1Q027SBEA"
+  },
+  {
+    "id": "oecd_revenue_statistics",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "OECD"
+      }
+    ],
+    "title": "Revenue Statistics in OECD Member Countries: Comparative Tax Revenues [DSD_REV_COMP_OECD@DF_RSOECD]",
+    "publisher": "OECD Data Explorer",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "OECD terms and conditions",
+    "URL": "https://data-explorer.oecd.org/?df[ds]=DisseminateFinalDMZ&df[id]=DSD_REV_COMP_OECD%40DF_RSOECD&df[ag]=OECD.CTP.TPS"
+  },
+  {
+    "id": "stackexchange_api",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "Stack Exchange"
+      }
+    ],
+    "title": "Usage of /questions, Stack Exchange API v2.3",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "CC BY-SA (user contributions)",
+    "URL": "https://api.stackexchange.com/docs/questions"
+  },
+  {
+    "id": "wikimedia_analytics_api",
+    "type": "dataset",
+    "author": [
+      {
+        "literal": "Wikimedia Foundation"
+      }
+    ],
+    "title": "Wikimedia Analytics API",
+    "accessed": {
+      "date-parts": [
+        [
+          2026,
+          11,
+          18
+        ]
+      ]
+    },
+    "license": "CC0 1.0",
+    "URL": "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/"
+  }
+]

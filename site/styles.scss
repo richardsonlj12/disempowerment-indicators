@@ -273,3 +273,14 @@ body.quarto-dark {
   vertical-align: middle;
   margin-right: 0.35rem;
 }
+
+// Sources page: hanging indent, as in a printed reference list.
+.keel-ref {
+  padding-left: 2em;
+  text-indent: -2em;
+  margin-bottom: 0.6em;
+  overflow-wrap: anywhere;
+}
+.keel-ref p {
+  margin-bottom: 0;
+}

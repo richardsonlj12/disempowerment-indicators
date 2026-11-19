@@ -72,9 +72,10 @@ def _copy_site_sources(dest: Path) -> None:
 
 @pytest.fixture
 def repo(tmp_path):
-    """A copy of config/, the top-level data/ files, content/ and the site sources."""
+    """A copy of config/, the top-level data/ files, content/, references/ and the site sources."""
     shutil.copytree(ROOT / "config", tmp_path / "config")
     shutil.copytree(ROOT / "content", tmp_path / "content")
+    shutil.copytree(ROOT / "references", tmp_path / "references")
     (tmp_path / "data").mkdir()
     for f in (ROOT / "data").iterdir():
         if f.is_file():
@@ -425,6 +426,20 @@ def test_navbar_names_match_registry():
     grid_order = [i for cell in reg["grid"] for i in cell["indicator_ids"]]
     expected = [(f"indicators/{i}.qmd", f"{names[i]} ({i})") for i in grid_order]
     assert [(m["href"], m["text"]) for m in menu] == expected
+
+
+def test_navbar_has_sources_after_methodology():
+    config = yaml.safe_load((ROOT / "site" / "_quarto.yml").read_text(encoding="utf-8"))
+    hrefs = [i.get("href") for i in config["website"]["navbar"]["left"]]
+    assert hrefs.index("sources.qmd") == hrefs.index("methodology.qmd") + 1
+    item = config["website"]["navbar"]["left"][hrefs.index("sources.qmd")]
+    assert item["text"] == "Sources"
+
+
+def test_build_writes_sources_page(repo):
+    pages.build(repo, today=TODAY)
+    text = (repo / "site" / "_generated" / "sources.md").read_text(encoding="utf-8")
+    assert "::: {#kulveit2025 .keel-ref}" in text
 
 
 def test_feedback_form_link_on_about_page():

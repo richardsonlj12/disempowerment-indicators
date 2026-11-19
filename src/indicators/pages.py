@@ -3,7 +3,8 @@
 `build(repo_root)` copies data/ and the public config files into site/, writes one page per
 Release 1 indicator from site/_indicator_template.qmd, writes trend CSVs for the long-running
 series, and writes the generated parts of the summary and methodology pages (site/_generated/,
-included by index.qmd and methodology.qmd). CLI: `python -m indicators.pages [repo_root]`.
+included by index.qmd and methodology.qmd), including the Sources page rendered from
+references/keel.json (indicators.bibliography). CLI: `python -m indicators.pages [repo_root]`.
 
 Public text uses display labels only; internal keys (layer, comparison, tier) never reach a page.
 """
@@ -18,6 +19,7 @@ from pathlib import Path
 
 import yaml
 
+from indicators import bibliography
 from indicators import registry as reg
 from indicators.curated import load_curated, published
 from indicators.store import SeriesMeta, assign_segments, read_series, stale_since, staleness
@@ -570,6 +572,7 @@ def build(repo_root: Path, today: date | None = None) -> None:
                            counter_header, published(counter_items),
                            (root / "content" / "summary-about-indicators.md").read_text(encoding="utf-8"))
     (site / "_generated" / "summary.md").write_text(summary, encoding="utf-8")
+    bibliography.write_sources_page(root)
 
 
 def main(argv: list[str] | None = None) -> int:
