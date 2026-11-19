@@ -155,7 +155,7 @@ def test_rows_link_to_the_sections_that_expand_on_them(repo):
     rows = dict(_table(_page(repo, "ED1")))
     expected = {"What it measures": " [More](#what-it-shows)", "Why it matters":
                 " [More](#why-this-matters-for-gradual-disempowerment)", "AI link": " [More](#method)",
-                "Latest data": " [More](#method)", "Calculation": " [More](#data-and-calculation)",
+                "Latest data": " [More](#data-and-calculation)", "Calculation": " [More](#data-and-calculation)",
                 "Coverage": " [More](#method)", "Data sources": "<br>[More](#data-and-calculation)"}
     for row, link in expected.items():
         assert rows[row].endswith(link), row

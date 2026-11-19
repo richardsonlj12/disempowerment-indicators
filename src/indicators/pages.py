@@ -305,7 +305,7 @@ def summary_table(ind, front, reading, series, cites: bibliography.Citations) ->
         ("AI link", f"**{ind.ai_link.capitalize()}**<br>A draft rating on four criteria, to be reviewed in Stage 2.",
          "#method"),
         ("Leading or lagging", f"**{timing_value}**<br>{timing_text}.", None),
-        ("Latest data", latest_data, "#method"),
+        ("Latest data", latest_data, "#data-and-calculation"),  # owner, 2026-11-19
         ("Calculation", _cell(front["calculation"]), "#data-and-calculation"),
         ("Coverage", _cell(f"{front['coverage']} · {through}"), "#method"),
         ("Data sources", sources, "#data-and-calculation", "More", "<br>"),
