@@ -1,8 +1,8 @@
 # Sources link check
 
-Every URL and DOI in `references/keel.json`, requested on 2026-11-18 with a browser-like User-Agent, following redirects (`python -m indicators.bibliography check-links`). "Owner browser check" means the site refused or did not answer a scripted request; the owner must open it in a browser.
+Every URL and DOI in `references/keel.json`, requested on 2026-11-19 with a browser-like User-Agent, following redirects (`python -m indicators.bibliography check-links`). "Owner browser check" means the site refused or did not answer a scripted request; the owner must open it in a browser.
 
-Summary: OK: 40 · owner browser check: 7 · broken: 0
+Summary: OK: 42 · owner browser check: 8 · broken: 0
 
 | key | URL | status | HTTP | notes |
 |---|---|---|---|---|
@@ -53,6 +53,9 @@ Summary: OK: 40 · owner browser check: 7 · broken: 0
 | dohmke2022 | <https://github.blog/news-insights/product-news/github-copilot-is-generally-available-to-all-developers/> | OK | 200 |  |
 | makyen2022 | <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> | owner browser check | 403 | blocked or unavailable to scripts; owner checked in a browser on 2026-11-18 |
 | stackoverflow2023 | <https://openletter.mousetail.nl> | OK | 200 | redirected to https://openletter.mousetail.nl/ |
+| ross2001 | <https://doi.org/10.1353/wp.2001.0011> | OK | 200 | redirected to https://muse.jhu.edu/verify?url=%2Farticle%2F36477&r=8157948 |
+| ross2001 | <https://www.cambridge.org/core/journals/world-politics/article/abs/does-oil-hinderdemocracy/67665D8D240C8F43CD4A2DCB35894071> | OK | 200 |  |
+| cbo2023 | <https://www.cbo.gov/publication/58848> | owner browser check | 403 | blocked or unavailable to scripts |
 
 ## Owner browser checks
 
@@ -69,4 +72,4 @@ URLs that block scripts and that the owner opened in a browser (`OWNER_BROWSER_C
 | <https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm> | 2026-11-18 |
 | <https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned> | 2026-11-18 |
 
-Waiting for an owner browser check: none.
+Waiting for an owner browser check: <https://www.cbo.gov/publication/58848> (cbo2023, 403).
