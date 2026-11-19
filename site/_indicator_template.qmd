@@ -4,13 +4,13 @@
 
 %%SUMMARY_TABLE%%
 
+## The data over time
+
+%%CHART%%
+
 %%NOTICES%%
 
 %%WHY%%
-
-## Chart
-
-%%CHART%%
 
 ## Reading history
 
@@ -22,13 +22,13 @@
 
 %%CHANGE%%
 
-%%DATA_AND_CALCULATION%%
-
 ## Method
 
 %%METHOD%%
 
 %%CAVEATS%%
+
+%%DATA_AND_CALCULATION%%
 
 ## Download the data
 

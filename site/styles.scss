@@ -50,6 +50,9 @@ body.quarto-dark {
 }
 
 // Summary table at the top of each indicator page.
+.keel-summary {
+  margin-bottom: 2.5rem; // breathing room before the chart
+}
 .keel-summary table {
   width: 100%;
   td {
@@ -296,9 +299,15 @@ body.quarto-dark {
   margin-bottom: 0;
 }
 
-// Link targets clear the fixed navigation bar instead of sliding under it.
-[id] {
+// Sources entries clear the fixed navigation bar instead of sliding under it. (Quarto already
+// offsets section headings; a page-wide rule doubled that offset.)
+.keel-ref {
   scroll-margin-top: 5rem;
+}
+// Section links on indicator pages landed with about 95px of empty space between the banner and
+// the heading; pull them up so the heading sits just below the banner (measured in Chrome).
+section.level2[id] {
+  scroll-margin-top: -4.75rem;
 }
 // The Sources entry a citation points to is marked, so it is easy to find. The bar sits just
 // outside the entry, so the hanging indent and the text do not move.

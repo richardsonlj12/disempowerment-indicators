@@ -15,8 +15,8 @@ from indicators import pages
 
 ROOT = Path(__file__).resolve().parent.parent
 RELEASE1 = {"ED1", "EA1", "EA2", "GD1", "CD1"}
-TABLE_ROWS = ["Summary", "Description", "Current reading", "Grid position", "AI link", "Leading or lagging",
-              "Warning sign", "Data source(s)", "Calculation", "Coverage"]
+TABLE_ROWS = ["What it measures", "Current reading", "Why it matters", "Grid position", "AI link",
+              "Leading or lagging", "Latest data", "Calculation", "Coverage", "Data sources"]
 INTERNAL_KEYS = ["structural", "ai_native", "exposure", "erosion", "lockin", "tier"]
 RETIRED_TERMS = ["AI-specificity", "rival", "direction assumption", "takeaway"]
 FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform"
@@ -101,6 +101,11 @@ def _table(text):
     return rows
 
 
+def _value(cell):
+    """A summary-table cell without its trailing 'More' link."""
+    return re.sub(r"(<br>| )\[More\]\([^)]*\)$", "", cell)
+
+
 def _index(repo):
     site = repo / "site"
     return (site / "index.qmd").read_text(encoding="utf-8") + (site / "_generated" / "summary.md").read_text(encoding="utf-8")
@@ -137,19 +142,46 @@ def test_summary_table_has_ten_rows_in_order(repo):
         assert [r for r, _ in _table(_page(repo, ind_id))][:10] == TABLE_ROWS, ind_id
 
 
-def test_description_row_is_second_and_holds_magnitude(repo):
+def test_page_sections_in_order(repo):
+    pages.build(repo, today=TODAY)
+    heads = [line[3:] for line in _page(repo, "ED1").splitlines() if line.startswith("## ")]
+    assert heads == ["The data over time", "Why this matters for gradual disempowerment", "Reading history",
+                     "What it shows", "What it doesn't show", "What would change our reading", "Method",
+                     "Caveats", "Data and calculation", "Download the data"]
+
+
+def test_rows_link_to_the_sections_that_expand_on_them(repo):
+    pages.build(repo, today=TODAY)
+    rows = dict(_table(_page(repo, "ED1")))
+    expected = {"What it measures": " [More](#what-it-shows)", "Why it matters":
+                " [More](#why-this-matters-for-gradual-disempowerment)", "AI link": " [More](#method)",
+                "Latest data": " [More](#method)", "Calculation": " [More](#data-and-calculation)",
+                "Coverage": " [More](#method)", "Data sources": "<br>[More](#data-and-calculation)"}
+    for row, link in expected.items():
+        assert rows[row].endswith(link), row
+    assert "[More]" not in rows["Grid position"] and "[More]" not in rows["Leading or lagging"]
+
+
+def test_latest_data_row_holds_magnitude(repo):
     pages.build(repo, today=TODAY)
     table = _table(_page(repo, "ED1"))
-    assert table[1][0] == "Description"
-    desc = table[1][1]
+    assert table[6][0] == "Latest data"
+    desc = _value(table[6][1])
     assert desc.endswith("against its 2010 to 2019 trend") and "percent" in desc
-    assert "own recent path" in dict(_table(_page(repo, "EA1")))["Description"]
+    assert "own recent path" in dict(_table(_page(repo, "EA1")))["Latest data"]
+
+
+def test_rating_rows_show_a_bold_value_over_an_explanation(repo):
+    pages.build(repo, today=TODAY)
+    rows = dict(_table(_page(repo, "ED1")))
+    assert rows["AI link"].startswith("**Weak**<br>A draft rating on four criteria")
+    assert rows["Leading or lagging"] == "**Lagging**<br>Likely to move only after a change is well under way."
 
 
 def test_current_reading_is_label_only_without_ai_link(repo):
     pages.build(repo, today=TODAY)
     cell = dict(_table(_page(repo, "ED1")))["Current reading"]
-    assert cell.strip() == "**Not yet reviewed**"
+    assert cell.strip() == "**Not yet reviewed**<br>[History](#reading-history)"
     assert "AI link" not in cell
 
 
@@ -160,14 +192,15 @@ def test_interpretation_on_second_line_without_ai_link(repo):
     pages.build(repo, today=TODAY)
     cell = dict(_table(_page(repo, "ED1")))["Current reading"]
     lines = cell.split("<br>")
-    assert len(lines) == 2 and lines[0].strip().startswith("**")
+    assert len(lines) == 3 and lines[0].strip().startswith("**")
     assert lines[1].strip() == "If AI-driven, consistent with workers losing leverage"
+    assert lines[2] == "[History](#reading-history)"
     assert "AI link" not in cell
 
 
 def test_data_sources_render_as_links(repo):
     pages.build(repo, today=TODAY)
-    cell = dict(_table(_page(repo, "CD1")))["Data source(s)"]
+    cell = dict(_table(_page(repo, "CD1")))["Data sources"]
     assert "[Stack Exchange API (new questions per month)](../sources.qmd#stackexchange_api)" in cell
     assert "(../sources.qmd#wikimedia_analytics_api)" in cell
 
@@ -194,9 +227,9 @@ def test_method_section_links_sources_and_cites_chart_markers(repo):
 def test_grid_position_and_coverage_filled_automatically(repo):
     pages.build(repo, today=TODAY)
     rows = dict(_table(_page(repo, "GD1")))
-    assert rows["Grid position"] == "Displacement · Government"
+    assert rows["Grid position"] == "**Displacement · Government**"
     assert "data through 2026 Q2" in rows["Coverage"]
-    assert dict(_table(_page(repo, "EA1")))["Grid position"] == "Adoption · Economic"
+    assert dict(_table(_page(repo, "EA1")))["Grid position"] == "**Adoption · Economic**"
 
 
 def test_e3_page_has_caveat_and_disclosure(repo):
@@ -390,7 +423,7 @@ def _add_c1_index(repo):
 def test_c1_baseline_is_its_2012_to_2019_history(repo):
     _add_c1_index(repo)
     pages.build(repo, today=TODAY)
-    desc = dict(_table(_page(repo, "CD1")))["Description"]
+    desc = _value(dict(_table(_page(repo, "CD1")))["Latest data"])
     assert desc.endswith("against its 2012 to 2019 history")
     assert "61.5 (index, 2019 = 100)" in desc
     text = _page(repo, "CD1")
@@ -400,13 +433,13 @@ def test_c1_baseline_is_its_2012_to_2019_history(repo):
 
 def test_no_baseline_clause_without_a_value(repo):
     pages.build(repo, today=TODAY)
-    line = dict(_table(_page(repo, "CD1")))["Description"]
+    line = _value(dict(_table(_page(repo, "CD1")))["Latest data"])
     assert line == "Latest value not yet available (data still being collected)"
 
 
 def test_magnitude_line_names_the_series(repo):
     pages.build(repo, today=TODAY)
-    line = dict(_table(_page(repo, "EA2")))["Description"]
+    line = dict(_table(_page(repo, "EA2")))["Latest data"]
     assert line.startswith("Automation share of categorized Claude.ai conversations, latest value:")
 
 

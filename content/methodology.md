@@ -106,9 +106,9 @@ Each indicator's baseline period is stated on its page: 2010 to 2019 for ED1 and
 
 Each indicator page's summary table shows a reading in separate rows:
 
-1. **Description.** The magnitude: the number behind the reading, in the indicator's own units, naming the baseline it is measured against.
-2. **Current reading.** What the data are doing, using the labels above. From Stage 3, an interpretation line appears under it: what the movement would mean if AI were driving it, written from the indicator's warning sign.
-3. **AI link.** The AI link rating, in its own row further down the table.
+1. **Current reading.** What the data are doing, using the labels above. From Stage 3, an interpretation line appears under it: what the movement would mean if AI were driving it, written from the indicator's warning sign.
+2. **AI link.** The AI link rating, in its own row further down the table.
+3. **Latest data.** The magnitude: the number behind the reading, in the indicator's own units, naming the baseline it is measured against.
 
 A reading says what the data did. It does not say why.
 
@@ -116,9 +116,9 @@ A reading says what the data did. It does not say why.
 
 | ED1 Labor share | |
 |---|---|
-| **Description** | [x] points below its 2010 to 2019 baseline, over the latest [n] quarters |
 | **Current reading** | **Below baseline**<br>*If AI-driven, consistent with workers losing leverage* |
-| **AI link** | Weak |
+| **AI link** | **Weak** |
+| **Latest data** | [x] points below its 2010 to 2019 baseline, over the latest [n] quarters |
 
 ### The AI link rating
 

@@ -211,7 +211,7 @@ def latest_value_parts(ind: reg.Indicator, series: dict) -> list[str]:
 
 def reading_parts(ind: reg.Indicator, reading: reg.Reading, series: dict) -> tuple[str, str, str | None]:
     """(bold state label, magnitude, interpretation or None) for the summary table. The magnitude names
-    the baseline (no baseline clause while there is no value) and goes in the Description row; the
+    the baseline (no baseline clause while there is no value) and goes in the Latest data row; the
     label and any interpretation go in the Current reading row. The AI link has its own row."""
     label = f"**{reg.STATE_LABELS[reading.state]}**"
     value = latest_value_text(ind, series)
@@ -231,22 +231,26 @@ def summary_table(ind, front, reading, series, cites: bibliography.Citations) ->
     label, magnitude, interpretation = reading_parts(ind, reading, series)
     current = "<br>".join(_cell(x) for x in (label, interpretation) if x)
     sources = "<br>".join(_data_link(_cell(s["name"]), s["url"], cites, "../") for s in front["data_sources"])
+    timing_value, timing_text = (s[:1].upper() + s[1:] for s in TIMING[ind.timing].split(": ", 1))
+    # Row order and names: owner review, 2026-11-19. Each row ends with a "More" link to the section that
+    # expands on it (none for Grid position or Leading or lagging). Values are Markdown-safe cells.
     rows = [
-        ("Summary", reg.content_summary(front)),
-        ("Description", magnitude),
-        ("Current reading", current),
-        ("Grid position", f"{reg.layer_label(ind.layer)} · {ind.domain.capitalize()}"),
-        ("AI link", f"{ind.ai_link.capitalize()}. A draft rating, to be reviewed in Stage 2; the four criteria are under "
-                    "[Method](#method)."),
-        ("Leading or lagging", TIMING[ind.timing]),
-        ("Warning sign", front["warning_sign"]),
-        ("Data source(s)", sources),
-        ("Calculation", front["calculation"]),
-        ("Coverage", f"{front['coverage']} · {through}"),
+        ("What it measures", _cell(reg.content_summary(front)), "#what-it-shows"),
+        ("Current reading", current, "#reading-history", "History", "<br>"),
+        ("Why it matters", _cell(front["warning_sign"]), "#why-this-matters-for-gradual-disempowerment"),
+        ("Grid position", f"**{reg.layer_label(ind.layer)} · {ind.domain.capitalize()}**", None),
+        ("AI link", f"**{ind.ai_link.capitalize()}**<br>A draft rating on four criteria, to be reviewed in Stage 2.",
+         "#method"),
+        ("Leading or lagging", f"**{timing_value}**<br>{timing_text}.", None),
+        ("Latest data", _cell(magnitude), "#method"),
+        ("Calculation", _cell(front["calculation"]), "#data-and-calculation"),
+        ("Coverage", _cell(f"{front['coverage']} · {through}"), "#method"),
+        ("Data sources", sources, "#data-and-calculation", "More", "<br>"),
     ]
     lines = ["::: {.keel-summary}", "", "|   |   |", "|:----------|:--------------------------------------------|"]
-    lines += [f"| {label} | {value if label in ('Current reading', 'Data source(s)') else _cell(value)} |"
-              for label, value in rows]
+    def cell(value, target=None, text="More", sep=" "):
+        return f"{value}{sep}[{text}]({target})" if target else value
+    lines += [f"| {row[0]} | {cell(*row[1:])} |" for row in rows]
     lines += ["", ":::"]
     return "\n".join(lines)
 
