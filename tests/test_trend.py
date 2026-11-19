@@ -4,7 +4,7 @@ import pytest
 import numpy as np
 
 from indicators.trend import (
-    change_since, index_to_base_year, leave_one_out_band, pre_ai_trend, relative_log_level,
+    change_bands, change_since, index_to_base_year, leave_one_out_band, relative_log_level,
     relative_yoy, rolling_total, yoy_change,
 )
 
@@ -14,17 +14,51 @@ def monthly(values, start="2024-01-01", **extra):
     return pd.DataFrame({"date": dates, "value": values, **extra})
 
 
-def test_pre_ai_trend_exact_on_linear_series():
-    df = monthly([2 * t + 1 for t in range(120)], start="2010-01-01")
-    out = pre_ai_trend(df)
-    assert out["deviation"].abs().max() < 1e-6
+def quarterly(values, start="2008-01-01", **extra):
+    dates = pd.date_range(start, periods=len(values), freq="QS")
+    return pd.DataFrame({"date": dates, "value": values, **extra})
 
 
-def test_pre_ai_trend_extends_over_all_dates():
-    df = monthly([2.0 * t + 1 for t in range(150)], start="2010-01-01")
-    out = pre_ai_trend(df)
-    assert len(out) == 150
-    assert out["deviation"].abs().max() < 1e-6
+def test_change_bands_changes_and_baseline_spread():
+    # Quarterly, rising 1 point a quarter: every 1-year change is +4, every 3-year change +12.
+    df = quarterly([float(t) for t in range(80)])  # 2008 Q1 .. 2027 Q4
+    out = change_bands(df, years=(1, 3))
+    one = out[out["window_years"] == 1]
+    assert set(out.columns) == {"date", "window_years", "change", "segment", "base_mean", "base_sd", "base_n"}
+    assert (one["change"] == 4.0).all() and one["date"].min() == pd.Timestamp("2009-01-01")
+    # Baseline: changes with BOTH ends in 2010-2019. 1-year: ends 2011 Q1 .. 2019 Q4 = 36 changes.
+    assert one["base_n"].iloc[0] == 36 and one["base_mean"].iloc[0] == 4.0 and one["base_sd"].iloc[0] == 0.0
+    three = out[out["window_years"] == 3]
+    assert three["base_n"].iloc[0] == 28 and (three["change"] == 12.0).all()
+
+
+def test_change_bands_baseline_sd_matches_hand_calculation():
+    # Annual series 2010..2019 with 1-year changes +1, -1 alternating: mean 1/9, sample sd known.
+    values = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+    df = pd.DataFrame({"date": pd.date_range("2010-01-01", periods=10, freq="YS"), "value": [float(v) for v in values]})
+    one = change_bands(df, years=(1,))
+    changes = np.diff(values)
+    assert one["base_n"].iloc[0] == 9
+    assert one["base_mean"].iloc[0] == pytest.approx(changes.mean())
+    assert one["base_sd"].iloc[0] == pytest.approx(changes.std(ddof=1))
+
+
+def test_change_bands_skip_changes_across_a_break_and_missing_dates():
+    df = quarterly([float(t) for t in range(80)], segment=[0] * 60 + [1] * 20)
+    df = df[df["date"] != pd.Timestamp("2012-01-01")]  # a gap: no change ends or starts there
+    one = change_bands(df, years=(1,))
+    dates = set(one["date"])
+    assert pd.Timestamp("2012-01-01") not in dates and pd.Timestamp("2013-01-01") not in dates
+    # The break is at row 60 = 2023 Q1: changes ending 2023 Q1 .. 2023 Q4 start before it.
+    assert not any(pd.Timestamp(f"2023-{m:02d}-01") in dates for m in (1, 4, 7, 10))
+    assert pd.Timestamp("2024-01-01") in dates
+    assert set(one["segment"]) == {0, 1}
+
+
+def test_change_bands_without_baseline_data_gives_no_band():
+    df = quarterly([float(t) for t in range(12)], start="2022-01-01")
+    one = change_bands(df, years=(1,))
+    assert one["base_n"].eq(0).all() and one["base_mean"].isna().all() and one["base_sd"].isna().all()
 
 
 def test_yoy_change_monthly():

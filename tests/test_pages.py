@@ -168,7 +168,7 @@ def test_latest_data_row_is_series_then_value_then_fetch_date(repo):
     assert table[6][0] == "Latest data"
     name, value, fetched = _value(table[6][1]).split("<br>")
     assert name == "Labor share of income, nonfarm business sector"
-    assert value.endswith("against its 2010 to 2019 trend") and "percent" in value
+    assert value.endswith("against how it changed in 2010 to 2019") and "percent" in value
     assert re.fullmatch(r"Data last fetched \d{1,2} [A-Z][a-z]+ \d{4}", fetched)
     assert "own recent path" in dict(_table(_page(repo, "EA1")))["Latest data"]
 
@@ -320,14 +320,17 @@ def test_all_pages_show_not_yet_reviewed(repo):
             assert "Not yet reviewed" in body
 
 
-def test_trend_csv_for_structural_only(repo):
+def test_change_csv_for_change_views_only(repo):
+    """Owner decision 2026-11-19: no 2010-19 trend line or deviation view; the change view's data."""
     pages.build(repo, today=TODAY)
     data = repo / "site" / "data"
-    for sid in ("labor_share_nfb", "us_labor_tax_share"):
-        frame = pd.read_csv(data / f"{sid}_trend.csv")
-        assert list(frame.columns) == ["date", "value", "trend", "deviation", "segment"]
-    for sid in ("btos_ai_use", "btos_ai_use_by_size", "aei_automation_share", "aei_augmentation_share"):
-        assert not (data / f"{sid}_trend.csv").exists()
+    for sid in ("labor_share_nfb", "profit_share", "us_labor_tax_share", "oecd_labor_tax_share_avg"):
+        frame = pd.read_csv(data / f"{sid}_changes.csv")
+        assert list(frame.columns) == ["date", "window_years", "change", "segment", "base_mean", "base_sd", "base_n"]
+        assert set(frame["window_years"]) == {1, 3, 5}
+    for sid in ("btos_ai_use", "btos_ai_use_by_size", "aei_automation_share", "so_relative_index"):
+        assert not (data / f"{sid}_changes.csv").exists()
+    assert not list(data.glob("*_trend.csv"))
     assert (data / "btos_ai_use.csv").exists() and (data / "btos_ai_use.meta.json").exists()
 
 
@@ -598,14 +601,17 @@ def test_c1_views_listed_in_chart_spec(repo):
                   "Year-over-year gap (alternative view)", "Monthly questions", "Wikipedia"):
         assert label in text
     assert "By firm size" in _page(repo, "EA1")
-    assert "Deviation from 2010–19 trend" in _page(repo, "ED1")
+    for ind_id in ("ED1", "GD1"):
+        text = _page(repo, ind_id)
+        assert '"label": "Change over time"' in text and '"windows": [' in text
+        assert "Deviation from" not in text and '"trend": true' not in text
 
 
 def test_csv_links_relative(repo):
     pages.build(repo, today=TODAY)
     text = _page(repo, "ED1")
     assert "](../data/labor_share_nfb.csv)" in text
-    assert "](../data/labor_share_nfb_trend.csv)" in text
+    assert "](../data/labor_share_nfb_changes.csv)" in text
     assert "](../archive.qmd)" in text
 
 

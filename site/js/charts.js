@@ -43,7 +43,7 @@ export async function loadData(d3, spec) {
   await Promise.all(Object.entries(spec.series).map(async ([id, s]) => {
     if (!s.available) return;
     out[id] = await d3.csv(spec.dataBase + s.file, d3.autoType);
-    if (s.trendFile) out[id + "__trend"] = await d3.csv(spec.dataBase + s.trendFile, d3.autoType);
+    if (s.changeFile) out[id + "__changes"] = await d3.csv(spec.dataBase + s.changeFile, d3.autoType);
   }));
   return out;
 }
@@ -83,6 +83,13 @@ export function timeframeInput(Inputs, spec) {
   return Inputs.radio(TIMEFRAMES.map(t => t.label), {label: "Timeframe", value: "All"});
 }
 
+// The change view's window: the change over 1, 3 or 5 years (Stage 2 fixes which one counts).
+export function windowInput(Inputs, spec, viewLabel) {
+  const view = findView(spec, viewLabel);
+  if (view.kind !== "change") return hidden(null);
+  return Inputs.radio(view.windows, {label: "Change over", format: w => `${w} year${w === 1 ? "" : "s"}`, value: view.windows[0]});
+}
+
 export function logInput(Inputs, spec, viewLabel) {
   const view = findView(spec, viewLabel);
   if (!view.log_option) return hidden(false);
@@ -104,10 +111,11 @@ function message(text) {
 
 function legend(items) {
   const box = element("div", "keel-legend");
-  for (const {label, color, dashed} of items) {
+  for (const {label, color, dashed, opacity, block} of items) {
     const item = element("span");
-    const swatch = element("span", "keel-legend-swatch");
+    const swatch = element("span", "keel-legend-swatch" + (block ? " keel-legend-block" : ""));
     swatch.style.background = dashed ? "none" : color;
+    if (opacity != null) swatch.style.opacity = opacity;
     if (dashed) swatch.style.borderTop = `2px dashed ${color}`;
     item.append(swatch, document.createTextNode(label));
     box.append(item);
@@ -115,9 +123,9 @@ function legend(items) {
   return box;
 }
 
-function unitsLabel(units, deviation) {
-  if (!deviation) return units;
-  return units === "percent" ? "percentage points from the 2010–19 trend" : `${units}, difference from the 2010–19 trend`;
+function unitsLabel(units, change) {
+  if (!change) return units;
+  return units === "percent" ? "change, percentage points" : `change, ${units}`;
 }
 
 // Hover-tip wording: periods as on the page (pages.py fmt_period); percents as "%" (owner, 2026-11-19).
@@ -130,12 +138,12 @@ export function fmtPeriod(date, frequency) {
   if (frequency === "annual") return String(y);
   return `${date.getUTCDate()} ${MONTHS[m]} ${y}`;
 }
-export function fmtValue(value, units, deviation = false) {
+export function fmtValue(value, units, change = false) {
   const abs = Math.abs(value);
   const number = abs >= 1000 ? Math.round(abs).toLocaleString("en-US") : abs.toFixed(1);
-  if (deviation) {
-    const sign = value > 0 ? "+" : value < 0 ? "−" : "";
-    return units === "percent" ? `${sign}${number} points from the trend` : `${sign}${number} ${units} from the trend`;
+  if (change) {
+    const sign = number.replace(/[0.,]/g, "") === "" ? "" : value > 0 ? "+" : "−"; // no sign on a value that rounds to 0.0
+    return units === "percent" ? `${sign}${number} points` : `${sign}${number} ${units}`;
   }
   const signed = (value < 0 ? "−" : "") + number;
   if (units === "percent") return `${signed}%`;
@@ -148,7 +156,7 @@ const TABLE_MAX_ROWS = 120;
 // A text version of what the chart plots, for readers who cannot use the chart: the series and
 // timeframe currently shown, formatted as in the hover tips. Long series show the latest rows.
 function dataTable(spec, plotted, view, ids, singleLabel) {
-  const deviation = view.kind === "deviation";
+  const change = view.kind === "change";
   const columns = [];
   const rows = new Map();
   for (const d of plotted) {
@@ -157,7 +165,7 @@ function dataTable(spec, plotted, view, ids, singleLabel) {
     const meta = spec.series[d.id || ids[0]];
     const key = +d.date;
     if (!rows.has(key)) rows.set(key, {date: d.date, frequency: meta.frequency, cells: new Map()});
-    rows.get(key).cells.set(label, fmtValue(deviation ? d.deviation : d.value, meta.units, deviation));
+    rows.get(key).cells.set(label, fmtValue(d.value, meta.units, change));
   }
   const all = [...rows.values()].sort((a, b) => a.date - b.date);
   const shown = all.slice(-TABLE_MAX_ROWS);
@@ -194,8 +202,6 @@ function dataTable(spec, plotted, view, ids, singleLabel) {
 }
 
 const utc = s => new Date(s + "T00:00:00Z");
-// The trend is fitted to 2010-19 and extended forward; it is not drawn before the fit window.
-const TREND_START = utc("2010-01-01");
 
 export function renderChart(Plot, d3, spec, data, opts) {
   void opts.theme; // redraw on theme change
@@ -242,16 +248,31 @@ export function renderChart(Plot, d3, spec, data, opts) {
     ids = [id];
     const meta = spec.series[id];
     const label = seriesName(spec, id);
-    if (view.kind === "deviation") {
-      plotted = inRange((data[id + "__trend"] || []).filter(d => d.deviation != null && d.date >= TREND_START));
-      if (!plotted.length) {
-        return message("There are not enough data from 2010 to 2019 to fit a trend for this series, so the deviation view is not available.");
+    if (view.kind === "change") {
+      // The change over the chosen window, against the 2010-19 spread of same-length changes as
+      // 1 and 2 standard-deviation bands around their average (methodology: Reading labels).
+      const w = view.windows.includes(+opts.window) ? +opts.window : view.windows[0];
+      const years = `${w} year${w === 1 ? "" : "s"}`, yearAdj = `${w}-year`;
+      const all = (data[id + "__changes"] || []).filter(d => d.window_years === w);
+      plotted = inRange(all).map(d => ({...d, value: d.change}));
+      if (!plotted.length) return message(`No ${years} changes in this timeframe. Choose a longer timeframe.`);
+      const {base_mean: mean, base_sd: sd, base_n: n} = all[0];
+      const [b0, b1] = d3.extent(plotted, d => d.date);
+      if (n >= 2 && sd != null) {
+        for (const [k, opacity] of [[2, 0.12], [1, 0.22]]) {
+          marks.push(Plot.rect([0], {x1: () => b0, x2: () => b1, y1: () => mean - k * sd, y2: () => mean + k * sd, fill: colors[0], fillOpacity: opacity}));
+        }
+        legendItems.push({label: `Within 1σ of 2010–19 ${yearAdj} changes`, color: colors[0], opacity: 0.4, block: true});
+        legendItems.push({label: "Within 2σ", color: colors[0], opacity: 0.2, block: true});
+        notes.push(`Each point is the change from the same date ${years} earlier. Shaded bands: the average ${yearAdj} change in 2010 to 2019 (${fmtValue(mean, meta.units, true)}), plus or minus one and two standard deviations (σ = ${fmtValue(sd, meta.units, true).replace(/^\+/, "")}) of the ${n} such changes with both ends in 2010 to 2019. This is a chart view, not a reading: Stage 2 fixes which window and band count.`);
+      } else {
+        notes.push(`Each point is the change from the same date ${years} earlier. There are too few data from 2010 to 2019 to show the usual range of ${yearAdj} changes.`);
       }
-      marks.push(Plot.ruleY([0], {stroke: "currentColor", strokeOpacity: 0.6}));
-      marks.push(Plot.lineY(plotted, {x: "date", y: "deviation", z: "segment", stroke: colors[0], strokeWidth: 2}));
+      marks.push(Plot.ruleY([0], {stroke: "currentColor", strokeOpacity: 0.5}));
+      marks.push(Plot.lineY(plotted, {x: "date", y: "value", z: "segment", stroke: colors[0], strokeWidth: 2}));
+      if (plotted.length < 40) marks.push(Plot.dot(plotted, {x: "date", y: "value", fill: colors[0], r: 3}));
       yLabel = unitsLabel(meta.units, true);
-      notes.push("Zero is a straight-line trend fitted to 2010 to 2019 and extended. This is a chart view, not the threshold rule.");
-      legendItems.push({label, color: colors[0]});
+      legendItems.unshift({label: `${label}, change over ${years}`, color: colors[0]});
     } else {
       plotted = inRange(data[id]);
       if (view.kind === "band") {
@@ -271,15 +292,6 @@ export function renderChart(Plot, d3, spec, data, opts) {
       marks.push(Plot.lineY(plotted, {x: "date", y: "value", z: plotted.length && plotted[0].segment != null ? "segment" : undefined, stroke: colors[0], strokeWidth: 2}));
       if (plotted.length < 40) marks.push(Plot.dot(plotted, {x: "date", y: "value", fill: colors[0], r: 3}));
       legendItems.push({label, color: colors[0]});
-      if (view.trend && data[id + "__trend"]) {
-        const trend = inRange(data[id + "__trend"].filter(d => d.trend != null && d.date >= TREND_START));
-        if (trend.length) {
-          marks.push(Plot.lineY(trend, {x: "date", y: "trend", stroke: colors[1], strokeWidth: 1.5, strokeDasharray: "5,4"}));
-          legendItems.push({label: "2010–19 trend, extended", color: colors[1], dashed: true});
-        } else {
-          notes.push("No 2010–19 trend is drawn: the series has too few data from 2010 to 2019.");
-        }
-      }
       yLabel = meta.units;
     }
   }
@@ -305,17 +317,17 @@ export function renderChart(Plot, d3, spec, data, opts) {
     marks.push(Plot.text(shownMarkers, {x: "when", text: (d, i) => String(i + 1), frameAnchor: "top", dy: 8, dx: 6, fontSize: 11, fontWeight: 700}));
   }
   if (Plot.tip) {
-    const deviation = view.kind === "deviation";
-    const y = deviation ? "deviation" : "value";
+    const change = view.kind === "change";
     const tipText = d => {
       const meta = spec.series[d.id || ids[0]];
       const name = d.label || seriesName(spec, ids[0]);
-      return `${name}\n${fmtPeriod(d.date, meta.frequency)}: ${fmtValue(d[y], meta.units, deviation)}`;
+      const what = change ? `change over ${d.window_years} year${d.window_years === 1 ? "" : "s"} to ` : "";
+      return `${name}\n${what}${fmtPeriod(d.date, meta.frequency)}: ${fmtValue(d.value, meta.units, change)}`;
     };
-    marks.push(Plot.tip(plotted, Plot.pointerX({x: "date", y, title: tipText, stroke: view.kind === "multi" ? "label" : undefined})));
+    marks.push(Plot.tip(plotted, Plot.pointerX({x: "date", y: "value", title: tipText, stroke: view.kind === "multi" ? "label" : undefined})));
   }
 
-  const values = plotted.map(d => (view.kind === "deviation" ? d.deviation : d.value));
+  const values = plotted.map(d => d.value);
   const big = d3.max(values, Math.abs) >= 100000;
   const width = Math.max(280, opts.width || 640);
   const chart = Plot.plot({

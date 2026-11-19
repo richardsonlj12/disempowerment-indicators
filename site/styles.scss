@@ -348,6 +348,12 @@ body.quarto-dark {
   margin-right: 0.35rem;
 }
 
+// Shaded-band swatch in a legend (the change view's 1σ and 2σ bands).
+.keel-legend-swatch.keel-legend-block {
+  height: 0.8rem;
+  width: 1rem;
+}
+
 // Stacked-bar chart (EA2): legend to the right of the chart on wide screens, below it on narrow ones.
 .keel-chart-stacked {
   position: relative;

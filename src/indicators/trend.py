@@ -1,26 +1,41 @@
-"""Trend and year-over-year comparison calculations."""
+"""Change-distribution, year-over-year and relative-activity calculations."""
 
 import numpy as np
 import pandas as pd
 
 
-def pre_ai_trend(df, start="2010-01-01", end="2019-12-31"):
-    """Add `trend` (OLS line fitted on the window, extended over all dates) and
-    `deviation`. Chart view only; this is not the threshold rule."""
-    out = df.copy()
-    # Time in calendar months (fractional within a month), so monthly series
-    # step by exactly 1 and irregular gaps are still spaced correctly.
-    d = out["date"]
-    t = (d.dt.year * 12 + d.dt.month + (d.dt.day - 1) / d.dt.days_in_month).to_numpy(dtype=float)
-    in_window = (out["date"] >= pd.Timestamp(start)) & (out["date"] <= pd.Timestamp(end))
-    mask = (in_window & out["value"].notna()).to_numpy()
-    if mask.sum() < 2:
-        out["trend"] = np.nan
-    else:
-        slope, intercept = np.polyfit(t[mask], out["value"].to_numpy(dtype=float)[mask], 1)
-        out["trend"] = slope * t + intercept
-    out["deviation"] = out["value"] - out["trend"]
-    return out
+def change_bands(df, years=(1, 3, 5), start="2010-01-01", end="2019-12-31"):
+    """KEEL's method for long-running series (owner decision, 2026-11-19): the change over each
+    window, and the spread of same-length changes in the baseline period.
+
+    For each window of `years` years, `change` is the value minus the value exactly that many years
+    earlier (matched by date, so gaps simply drop a change), skipped where a series break (`segment`)
+    lies between the two. The baseline is every such change with BOTH ends inside [start, end]:
+    `base_mean`, `base_sd` (sample standard deviation) and `base_n` repeat on each row of the window
+    (NaN mean and sd when fewer than two baseline changes exist). Chart view and candidate-rule input
+    only; the window and the bands that count are fixed in Stage 2.
+
+    Columns: date, window_years, change, segment, base_mean, base_sd, base_n."""
+    d = df.sort_values("date")
+    value = dict(zip(d["date"], d["value"].astype(float)))
+    segment = dict(zip(d["date"], d["segment"] if "segment" in d.columns else [0] * len(d)))
+    lo, hi = pd.Timestamp(start), pd.Timestamp(end)
+    frames = []
+    for y in years:
+        rows = []
+        for date in d["date"]:
+            then = date - pd.DateOffset(years=y)
+            if then in value and segment[then] == segment[date]:
+                rows.append({"date": date, "window_years": y, "change": value[date] - value[then],
+                             "segment": int(segment[date]), "_base": then >= lo and date <= hi})
+        w = pd.DataFrame(rows, columns=["date", "window_years", "change", "segment", "_base"])
+        base = w.loc[w["_base"].astype(bool), "change"]
+        w["base_n"] = len(base)
+        w["base_mean"] = base.mean() if len(base) >= 2 else np.nan
+        w["base_sd"] = base.std(ddof=1) if len(base) >= 2 else np.nan
+        frames.append(w.drop(columns="_base"))
+    out = pd.concat(frames, ignore_index=True)
+    return out[["date", "window_years", "change", "segment", "base_mean", "base_sd", "base_n"]]
 
 
 def yoy_change(df, periods_per_year):

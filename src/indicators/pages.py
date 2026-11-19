@@ -1,7 +1,7 @@
 """Site generator: writes the Quarto sources that depend on config, data and content.
 
 `build(repo_root)` copies data/ and the public config files into site/, writes one page per
-Release 1 indicator from site/_indicator_template.qmd, writes trend CSVs for the long-running
+Release 1 indicator from site/_indicator_template.qmd, writes change CSVs for the long-running
 series, and writes the generated parts of the summary and methodology pages (site/_generated/,
 included by index.qmd and methodology.qmd), including the Sources page rendered from
 references/keel.json (indicators.bibliography). CLI: `python -m indicators.pages [repo_root]`.
@@ -24,7 +24,7 @@ from indicators import bibliography
 from indicators import registry as reg
 from indicators.curated import load_curated, published
 from indicators.store import SeriesMeta, assign_segments, read_series, stale_since, staleness
-from indicators.trend import pre_ai_trend
+from indicators.trend import change_bands
 
 RELEASE = 1
 SITE_NAME = "KEEL"
@@ -41,8 +41,11 @@ COMPARISON = {
 }
 # What each indicator is read against. CD1's index starts in June 2012 (2019 = 100), so it has no
 # 2010 to 2019 baseline.
-BASELINE_TEXT = {"ED1": "its 2010 to 2019 trend", "GD1": "its 2010 to 2019 trend", "CD1": "its 2012 to 2019 history"}
-DEFAULT_BASELINE = {"structural": "its 2010 to 2019 trend", "ai_native": "its own recent path"}
+# Long-running series are read by the distribution-of-changes method (owner decision, 2026-11-19):
+# the change over a window against the spread of same-length changes in the baseline period.
+BASELINE_TEXT = {"ED1": "how it changed in 2010 to 2019", "GD1": "how it changed in 2010 to 2019",
+                 "CD1": "its 2012 to 2019 history"}
+DEFAULT_BASELINE = {"structural": "how it changed in 2010 to 2019", "ai_native": "its own recent path"}
 AI_LINK_QUESTIONS = (
     ("directness", "Does it measure AI itself?"),
     ("comparison_group", "Is there a comparison group?"),
@@ -66,14 +69,15 @@ PUBLIC_CONFIG = ("indicators.yaml", "readings.yaml", "chart_markers.yaml", "cd1_
                  "curated/counter_evidence.yaml", "curated/oversight.yaml")
 
 # Chart views per indicator. kind: level (one series at a time, selector when several; standard
-# errors as a band; optional dashed 2010-19 trend), deviation (from the 2010-19 trend), band (line
+# errors as a band), change (the change over 1, 3 or 5 years with the 2010-19 spread of same-length
+# changes as 1 and 2 standard-deviation bands; owner decision 2026-11-19), band (line
 # plus a shaded range from two other series), multi (all series together, groups expanded), stacked
 # (one bar per sample on a time axis, split into groups that add to 100; EA2, owner review 2026-11-19).
 # "also": series offered for download with the view but not drawn.
 CHART_VIEWS: dict[str, list[dict]] = {
     "ED1": [
-        {"label": "Level", "kind": "level", "series": ["labor_share_nfb", "profit_share"], "trend": True},
-        {"label": "Deviation from 2010–19 trend", "kind": "deviation", "series": ["labor_share_nfb", "profit_share"]},
+        {"label": "Level", "kind": "level", "series": ["labor_share_nfb", "profit_share"]},
+        {"label": "Change over time", "kind": "change", "series": ["labor_share_nfb", "profit_share"], "windows": [1, 3, 5]},
     ],
     "EA1": [
         {"label": "All firms", "kind": "level", "series": ["btos_ai_use"]},
@@ -120,8 +124,8 @@ CHART_VIEWS: dict[str, list[dict]] = {
     ],
     "GD1": [
         {"label": "Level", "kind": "level",
-         "series": ["us_labor_tax_share", "oecd_labor_tax_share_usa", "oecd_labor_tax_share_avg"], "trend": True},
-        {"label": "Deviation from 2010–19 trend", "kind": "deviation",
+         "series": ["us_labor_tax_share", "oecd_labor_tax_share_usa", "oecd_labor_tax_share_avg"]},
+        {"label": "Change over time", "kind": "change", "windows": [1, 3, 5],
          "series": ["us_labor_tax_share", "oecd_labor_tax_share_usa", "oecd_labor_tax_share_avg"]},
     ],
     "CD1": [
@@ -389,23 +393,24 @@ def chart_spec(ind, views, series, markers, group_labels) -> dict:
     }
 
 
-def chart_block(spec: dict, trend_files: set[str]) -> str:
+def chart_block(spec: dict, change_files: set[str]) -> str:
     for sid, entry in spec["series"].items():
-        entry["trendFile"] = f"{sid}_trend.csv" if sid in trend_files else None
+        entry["changeFile"] = f"{sid}_changes.csv" if sid in change_files else None
     payload = json.dumps(spec, ensure_ascii=False, indent=1)
     return "\n".join([
         "```{ojs}",
         "//| echo: false",
-        'import { timeframeInput, loadData, themeChanges, viewInput, seriesInput, logInput, renderChart } from "../js/charts.js"',
+        'import { timeframeInput, loadData, themeChanges, viewInput, seriesInput, windowInput, logInput, renderChart } from "../js/charts.js"',
         f"keelSpec = ({payload})",
         "keelData = loadData(d3, keelSpec)",
         "keelTheme = themeChanges()",
         "viewof keelView = viewInput(Inputs, keelSpec)",
         "viewof keelTimeframe = timeframeInput(Inputs, keelSpec)",
         "viewof keelSeries = seriesInput(Inputs, keelSpec, keelView)",
+        "viewof keelWindow = windowInput(Inputs, keelSpec, keelView)",
         "viewof keelLog = logInput(Inputs, keelSpec, keelView)",
         "renderChart(Plot, d3, keelSpec, keelData, {view: keelView, timeframe: keelTimeframe, "
-        "series: keelSeries, log: keelLog, theme: keelTheme, width})",
+        "series: keelSeries, window: keelWindow, log: keelLog, theme: keelTheme, width})",
         "```",
     ])
 
@@ -495,7 +500,7 @@ def sources_and_dates(ind, series, cites: bibliography.Citations) -> str:
     return "\n".join(lines)
 
 
-def downloads(views, series, trend_files) -> str:
+def downloads(views, series, change_files) -> str:
     wanted = []
     for v in views:
         for sid in v["series"] + v.get("band", []) + v.get("also", []):
@@ -507,8 +512,9 @@ def downloads(views, series, trend_files) -> str:
             continue
         title = series[sid][1].title
         lines.append(f"- [{title}](../data/{sid}.csv) (CSV) · [metadata](../data/{sid}.meta.json) (JSON)")
-        if sid in trend_files:
-            lines.append(f"- [{title}, with the 2010–19 trend and the deviation from it](../data/{sid}_trend.csv) (CSV)")
+        if sid in change_files:
+            lines.append(f"- [{title}: changes over 1, 3 and 5 years, with the 2010–19 average and spread of "
+                         f"same-length changes](../data/{sid}_changes.csv) (CSV)")
     if any(sid not in series for sid in wanted):
         lines.append("- Some series are still being collected and will be listed here when available.")
     return "\n".join(lines)
@@ -516,15 +522,15 @@ def downloads(views, series, trend_files) -> str:
 
 # ------------------------------------------------------------------ pages
 
-def write_trend_csv(frame, meta: SeriesMeta, out_dir: Path) -> None:
+def write_change_csv(frame, meta: SeriesMeta, out_dir: Path, years) -> None:
     if "segment" not in frame.columns:
         frame = assign_segments(frame, meta.breaks)
-    trend = pre_ai_trend(frame)[["date", "value", "trend", "deviation", "segment"]]
-    trend.to_csv(out_dir / f"{meta.series_id}_trend.csv", index=False, date_format="%Y-%m-%d", lineterminator="\n")
+    change_bands(frame, years=tuple(years)).to_csv(out_dir / f"{meta.series_id}_changes.csv", index=False,
+                                                 date_format="%Y-%m-%d", lineterminator="\n")
 
 
 def indicator_page(template: str, ind, front, sections, reading, history, views, series, markers,
-                   group_labels, trend_files, today, cites: bibliography.Citations,
+                   group_labels, change_files, today, cites: bibliography.Citations,
                    marker_keys: dict | None = None) -> str:
     title = f"{ind.name} ({ind.id})"
     fm = yaml.safe_dump({"title": title, "pagetitle": f"{title} · {SITE_NAME}"}, allow_unicode=True,
@@ -533,7 +539,7 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
     note = ""
     if ind.id in PRIMARY_PENDING_NOTE and not views[0]["available"] and spec["defaultView"] != views[0]["label"]:
         note = f"*{PRIMARY_PENDING_NOTE[ind.id]}*\n\n"
-    chart = f"**{ind.chart_title or ind.name}**\n\n{note}{chart_block(spec, trend_files)}"
+    chart = f"**{ind.chart_title or ind.name}**\n\n{note}{chart_block(spec, change_files)}"
 
     def section(name):
         return f"## {name}\n\n{sections[name]}"
@@ -554,7 +560,7 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
             f"\n\n### {name} {{#{OPTIONAL_ANCHORS[name]}}}\n\n{sections[name]}"
             for name in OPTIONAL_SECTIONS if name in sections),
         "%%CAVEATS%%": section(SECTIONS[5]),
-        "%%DOWNLOADS%%": downloads(views, series, trend_files),
+        "%%DOWNLOADS%%": downloads(views, series, change_files),
         "%%FEEDBACK%%": FEEDBACK_LINE,
     }
     text = template
@@ -710,17 +716,16 @@ def build(repo_root: Path, today: date | None = None) -> None:
         series = _load_series(data_dir, list(dict.fromkeys(ind.series + drawn)))
         for v in views:
             v["available"] = all(s in series for s in v["series"] + v.get("band", []))
-        trend_files = set()
-        if ind.comparison == "structural":
-            wanted = {ind.primary_series} | {s for v in views if v["kind"] == "deviation" for s in v["series"]}
-            for sid in wanted:
-                if sid in series and "group" not in series[sid][0].columns:
-                    write_trend_csv(series[sid][0], series[sid][1], site / "data")
-                    trend_files.add(sid)
+        change_files = set()
+        for v in (v for v in views if v["kind"] == "change"):
+            for sid in v["series"]:
+                if sid in series and "group" not in series[sid][0].columns and sid not in change_files:
+                    write_change_csv(series[sid][0], series[sid][1], site / "data", v["windows"])
+                    change_files.add(sid)
         front, sections = split_content((root / "content" / "indicators" / f"{ind.id}.md").read_text(encoding="utf-8"))
         markers = reg.markers_for(chart_markers, ind.id)
         page = indicator_page(template, ind, front, sections, reg.current_reading(readings, ind.id),
-                              readings.get(ind.id, []), views, series, markers, group_labels, trend_files, today,
+                              readings.get(ind.id, []), views, series, markers, group_labels, change_files, today,
                               cites, marker_keys)
         (site / "indicators" / f"{ind.id}.qmd").write_text(page, encoding="utf-8")
         latest_text[ind.id] = latest_value_parts(ind, series)
