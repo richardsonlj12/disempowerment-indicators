@@ -45,7 +45,7 @@ A falling labor-based share would be consistent with the state depending less on
 
 ### Alternative explanations
 
-- **A steady share can hide lost leverage.** A state can keep citizens on side through transfer payments even when it no longer depends on their taxes. This is the rentier pattern of buying off citizens with payments, which political scientists call co-optation. So a steady labor-based tax share does not guarantee that citizens keep their leverage.
+- **A steady share can hide lost leverage.** A state can keep citizens on side through transfer payments even when it no longer depends on their taxes. This is the rentier pattern of buying off citizens with low taxes and patronage [(Ross 2001)](../sources.qmd#ross2001). So a steady labor-based tax share does not guarantee that citizens keep their leverage.
 - **A falling share can have other causes.** Tax cuts on income, a weak labor market, an aging population or a boom in corporate profits can all lower the share with no change caused by AI. The share could also fall while citizens keep leverage through other channels.
 
 This is the most direct public measure of state dependence we found, not a guarantee.
