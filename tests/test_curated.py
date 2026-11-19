@@ -75,13 +75,14 @@ def test_ai_legislation_counts_verified_from_chapter_pdf():
     assert item["source_url"].endswith("ai_index_report_2026_chapter_8_policy_and_governance.pdf")
 
 
-def test_oversight_note_is_in_plain_words():
+def test_oversight_note_gives_the_registered_policy_shift():
     _, items = load_curated(OVERSIGHT)
-    note = items[0]["note"]
-    assert "17-percentage-point shift" in note and "not statistically significant" in note
-    for jargon in ("CI ", "one-sided", "p 0."):
-        assert jargon not in note
+    note = " ".join(items[0]["note"].split())
+    assert "17-percentage-point" not in note
+    assert "0.17 policy shift" in note and "95% CI −6% to 40%" in note and "one-sided p = 0.069" in note
+    assert "not statistically significant" in note
     assert items[0]["value"] == 86 and "50 analysts" in items[0]["metric"]
+    assert items[0]["caveat"].startswith("The researchers deliberately strengthened the agent's lean")
 
 
 def test_oversight_cites_herdagdelen():

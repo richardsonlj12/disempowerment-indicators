@@ -497,6 +497,15 @@ def _item_source(item: dict, cites: bibliography.Citations) -> str:
     return f"{item['source_name']} {cites.cite(key, locator=item.get('locator'))}"
 
 
+def _caveat_lines(items: list[dict], indent: str) -> list[str]:
+    """Any curated item's `caveat` field, as an italic line (its own paragraph) under the item."""
+    out = []
+    for item in items:
+        if str(item.get("caveat", "")).strip():
+            out += ["", f"{indent}*{' '.join(str(item['caveat']).split())}*"]
+    return out
+
+
 def summary_page(indicators, grid, oversight, readings, latest_text, oversight_items, counter_header,
                  counter_items, about, cites: bibliography.Citations) -> str:
     by_id = {i.id: i for i in indicators}
@@ -536,7 +545,8 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
                     f"{item['metric']}: {item['value']} {item['unit']}. One study, not a time series.")
     out += [_rowhead(reg.CROSS_CUTTING_LABEL, reg.CROSS_CUTTING_DEFINITION),
             "::: {.keel-oversight}",
-            f"**{oversight['row_label']}**", "", oversight["label"], "", *cite, ":::"]
+            f"**{oversight['row_label']}**", "", oversight["label"], "", *cite,
+            *_caveat_lines(oversight_items, ""), ":::"]
 
     out += [":::: {.keel-counter}", "## Counter-evidence", "",
             "Signals that point away from disempowerment, held to the same standard as the indicators.", ""]
@@ -546,6 +556,10 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
         out.append(f"- **{item['label']}** ({item['domain'].capitalize()}; "
                    f"{KIND_LABELS.get(item.get('kind'), 'Item')}; dated {fmt_date(item['date'])}).{measured} "
                    f"Source: {_item_source(item, cites)}.")
+        out += _caveat_lines([item], "  ")
+    panel_note = str(counter_header.get("panel_note", "")).strip()
+    if panel_note:
+        out += ["", f"*{panel_note}*"]
     out += ["", "::: {#inclusion-criteria .callout-note collapse=\"true\" title=\"Inclusion criteria\"}",
             " ".join(str(counter_header["inclusion_criteria"]).split()), ":::", "::::", ":::::", "",
             "Earlier snapshots and superseded rules will be kept in the [Archive](archive.qmd).", ""]

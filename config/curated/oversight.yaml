@@ -3,13 +3,15 @@ items:
   - id: herdagdelen2026
     label: How AI agents shape experts' judgment calls
     domain: all
-    metric: Share of four analytical choices where professional analysts went with their AI agent's lean (one study, 50 analysts)
+    metric: Share of analysts' decisions that matched the AI agent's randomly assigned lean, across four analytical decisions each (one study, 50 analysts; 50 percent expected by chance)
     value: 86
     unit: percent
     date: 2026-10-27
     source_name: Anthropic Research
     source_url: https://www.anthropic.com/research/agents-judgment-calls
     source_key: herdagdelen2026a  # Sources page entry; the page shows the in-text citation
+    caveat: >-
+      The researchers deliberately strengthened the agent's lean, so this shows influence under a strong nudge. The pre-registered effect on analysts' final recommendations was not statistically significant. The 11 of 61 analysts who chose not to use the agent are excluded.
     verified: true
     verified_on: 2026-11-17
     note: >-
@@ -19,7 +21,7 @@ items:
       group), leaving 50 in the sample; on four analytical decisions they went with the agent's
       randomly assigned lean 86 percent of the time (50 percent by chance). The rollout figures on
       the Anthropic page (54 percent versus 36 percent) do not appear in the paper; the paper's
-      registered estimate is an estimated 17-percentage-point shift in the final recommendation when
-      the agent leaned one way rather than the other, which is not statistically significant, so the
-      site does not cite the 54 versus 36 contrast. A single pre-registered experiment in one task with
+      registered estimate is a 0.17 policy shift in the final recommendation (95% CI −6% to 40%,
+      one-sided p = 0.069) when the agent leaned one way rather than the other, which is not
+      statistically significant, so the site does not cite the 54 versus 36 contrast. A single pre-registered experiment in one task with
       one pinned agent, authored at Anthropic, not a time series.

@@ -57,6 +57,8 @@ The mechanism at the center of the gradual disempowerment argument is decisions 
 
 **The study.** Professional analysts worked on a data analysis with an AI coding agent. On four analytical decisions, a coin flip set which option the agent was set to favor. Across those decisions, the 50 analysts in the study went with the agent's favored option 86 percent of the time, against 50 percent by chance. Many repeated the agent's arguments when explaining their choices without crediting it.
 
+*The researchers deliberately strengthened the agent's lean, so this shows influence under a strong nudge. The pre-registered effect on analysts' final recommendations was not statistically significant. The 11 of 61 analysts who chose not to use the agent are excluded.*
+
 **Its limits.** It is one experiment, in one task, with one agent, and the authors list these limits themselves. The agent in the study was Claude. The study is authored at Anthropic, which also publishes the data behind EA2 and makes Claude. It is not a time series and cannot fill the row.
 
 [Moon and Boudreaux (2026, RAND Corporation)](sources.qmd#moon2026) propose a formal way to track the same mechanism in "A Formal Model of How Artificial Intelligence Erodes Human Agency": the number and makeup of the groups whose agreement decides an outcome, and whether AI is entering those groups or shaping the options they see. If a public, repeatable measure of deferral appears, it will fill this row.
