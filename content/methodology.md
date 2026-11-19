@@ -36,7 +36,9 @@ We also do not use the paper's second axis, level of analysis (individual, insti
 - How to weight indicators is not understood.
 - A composite can hide a failure in one domain.
 
-**Leading and lagging.** Each indicator is labeled **leading** or **lagging**. A leading indicator is likely to move early, before any effect is entrenched; adoption and activity measures are examples. A lagging indicator is likely to move only after a change is well under way; income and tax shares are examples. Most long-running series lag.
+#### Leading and lagging
+
+Each indicator is labeled **leading** or **lagging**. A leading indicator is likely to move early, before any effect is entrenched; adoption and activity measures are examples. A lagging indicator is likely to move only after a change is well under way; income and tax shares are examples. Most long-running series lag.
 
 ### Empty rows: lock-in and oversight
 
@@ -63,11 +65,11 @@ Moon and Boudreaux (2026, RAND Corporation) propose a formal way to track the sa
 
 ## How to read an indicator {#how-to-read-an-indicator}
 
-A **reading** is the label given to what an indicator's data is doing, such as "Rising" or "Within baseline." For now KEEL shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see [Releases and stages](#releases-and-stages)).
+A **reading** is the short label given to what an indicator's data is doing, such as "Rising" or "Within baseline." For now KEEL shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see [Releases and stages](#releases-and-stages)).
 
 ### Reading labels
 
-Each indicator gets a reading: a short label describing what its data are doing. The exact rules are written, fixed in advance and dated in Stage 2 (see [The threshold rule](#threshold-rule)); the definitions below give the candidate rules.
+The exact rules are written, fixed in advance and dated in Stage 2 (see [The threshold rule](#threshold-rule)); the definitions below give the candidate rules.
 
 #### Adoption indicators
 
@@ -100,27 +102,27 @@ Each indicator's baseline period is stated on its page: 2010 to 2019 for ED1 and
 | **No signal / insufficient data** | Not enough data to judge. |
 | **Not yet reviewed** | Data are shown, but the author hasn't confirmed a reading yet. |
 
-### The three-line reading
+### How a reading is shown
 
-Every reading will appear as three lines:
+Each indicator page's summary table shows a reading in separate rows:
 
-1. **The reading.** What the data is doing, using the labels above.
-2. **The magnitude.** The number behind the reading, in the indicator's own units, naming the baseline it is measured against.
-3. **The interpretation.** What the movement would mean if AI were driving it, written from the indicator's warning sign. It always carries the AI link rating.
+1. **Description.** The magnitude: the number behind the reading, in the indicator's own units, naming the baseline it is measured against.
+2. **Current reading.** What the data is doing, using the labels above. From Stage 3, an interpretation line appears under it: what the movement would mean if AI were driving it, written from the indicator's warning sign.
+3. **AI link.** The AI link rating, in its own row further down the table.
 
 A reading says what the data did. It does not say why.
 
 *Illustrative example only. No such reading has been made, and the bracketed values are placeholders:*
 
-> **ED1 Labor share: Below baseline**
->
-> [x] points below its 2010 to 2019 baseline, over the latest [n] quarters
->
-> *If AI-driven, consistent with workers losing leverage · AI link: weak*
+| ED1 Labor share | |
+|---|---|
+| **Description** | [x] points below its 2010 to 2019 baseline, over the latest [n] quarters |
+| **Current reading** | **Below baseline**<br>*If AI-driven, consistent with workers losing leverage* |
+| **AI link** | Weak |
 
 ### The AI link rating
 
-Every interpretation carries an **AI link** rating: strong, moderate or weak. It says how clearly a movement in the series can be connected to AI rather than to other causes. It is a judgment made against four written criteria. The rule of thumb:
+Every reading appears with an **AI link** rating: strong, moderate or weak. It says how clearly a movement in the series can be connected to AI rather than to other causes. It is a judgment made against four written criteria. The rule of thumb:
 
 - **Strong:** a direct measure of AI, or a comparison group plus timing that fits.
 - **Moderate:** timing fits and there is a plausible mechanism, but no comparison group, or other causes only partly addressed.
@@ -133,7 +135,7 @@ Every interpretation carries an **AI link** rating: strong, moderate or weak. It
 4. **Other possible causes.** How many documented causes other than AI (confounders) could produce the same movement, and are any of them addressed?
 :::
 
-EA1 and EA2 are rated strong because they measure AI directly. That is not evidence of disempowerment: a strong rating is not strong evidence of harm, and it does not mean the indicator shows disempowerment. The current ratings are drafts. They will be reviewed in Stage 2, and any later change will be recorded in the [revision log](#revision-log) on this page.
+EA1 and EA2 are rated strong because they measure AI directly. That is not strong evidence of harm, and it does not mean the indicator shows disempowerment. The current ratings are drafts. They will be reviewed in Stage 2, and any later change will be recorded in the [revision log](#revision-log) on this page.
 
 [Back to top](#)
 
@@ -165,7 +167,7 @@ ED1 will gain an industry comparison in Release 2: labor share in industries whe
 - **Chart markers.** Dated events that may matter for reading a chart are marked without splitting the line. Examples: ChatGPT's release on 30 November 2022 (every chart), GitHub Copilot's launch and Stack Overflow policy events (CD1), and the Census question wording that began on 19 October 2026 (EA1).
 - **Revisions.** Official statistics are revised. KEEL uses the latest revised data. A revision that would change a reading is treated like new data and goes to review.
 
-EA1's two Census changes are treated differently because they did different things: the 17 November 2025 change altered what the question asks and produced a level shift, and Census started a new series, so it is a break; the 19 October 2026 change replaced the term "AI" with "Super Intelligence or SI (formerly AI)" with no shift in the "Yes" share, so it is a labeled marker, to be revisited in Stage 2.
+EA1's two Census changes are treated differently because they did different things: the 17 November 2025 change altered what the question asks and produced a level shift, and Census started a new series, so it is a break; the 19 October 2026 change replaced the term "AI" with "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)" and the "Yes" share was essentially unchanged, so it is a labeled marker, to be revisited in Stage 2.
 
 ### The threshold rule (Stage 2) {#threshold-rule}
 
@@ -173,7 +175,7 @@ EA1's two Census changes are treated differently because they did different thin
 
 **The rule comes first.** In Stage 2, a mechanical rule for each kind of comparison will be written, reviewed, fixed in advance and dated. The bands for each indicator then follow from the rule. They are not hand-picked after looking at the data. The author and the AI assistant that built KEEL have already seen the 2023 to 2026 data, so fixing hand-picked thresholds would not be enough.
 
-**The candidate rule for long-running series** compares the change over an indicator's window with the spread of same-length changes in 2010 to 2019, using the one- and two-standard-deviation bands under [Reading labels](#reading-labels). A matching rule will be written for the adoption labels. The exact rules are a Stage 2 decision.
+**The candidate rule for long-running series** compares the change over an indicator's window with the spread of same-length changes in its baseline period, using the one- and two-standard-deviation bands under [Reading labels](#reading-labels). A matching rule will be written for the adoption labels. The exact rules are a Stage 2 decision.
 
 **Windows are part of the rule.** The window (for example, "change over the latest four quarters") can flip a reading on its own, so it is fixed for each indicator along with the rule.
 
@@ -233,11 +235,11 @@ These indicators are diagnostics. KEEL does not recommend that any policy aim to
 - It adds a note on augmentation versus replacement (AI helping people work, against AI doing the work instead of them) wherever adoption is shown.
 - It names deferral, whether people simply approve AI's decisions, as the row with no public measure.
 
-**Beren Millidge (2025)** argues that gradual disempowerment might not be so bad. Most people already have little individual influence over large systems. AI governance could be better than human governance. Capital income and transfers could sustain living standards. He calls the outcome highly uncertain. His argument is why every economic page separates welfare from influence (see [Welfare is not influence](#welfare-is-not-influence)).
+**Beren Millidge (2025)** argues that gradual disempowerment might not be so bad. Most people already have little individual influence over large systems. AI governance could be better than human governance. Capital income and transfers could sustain living standards. He calls the outcome highly uncertain. His argument is why every economic page separates welfare from influence: material gains are real, but they answer a different question (see [Welfare is not influence](#welfare-is-not-influence)).
 
 **P. O. Jedlicka (2026)** argues that gradual disempowerment scenarios do not explain how societies actually respond, and assume that technology dictates outcomes. In Jedlicka's view they underrate people acting together and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason for KEEL's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
 
-**The authors' own caveats.**
+#### The authors' own caveats
 
 - Kulveit et al. concede that some outcomes of the scenario are ambiguous. For example, an AI-run state could bring large benefits.
 - Chooi, Lee and Li say that showing what caused a change is hard throughout, that most metrics in this area can only describe and compare, and that leading indicators are hard to validate before the outcomes they predict have happened.
