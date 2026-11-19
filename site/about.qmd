@@ -11,7 +11,7 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## About the author
 
-[OWNER TO EDIT] KEEL is written and maintained by Jeremy Richardson, Ph.D. He writes about gradual disempowerment and related questions on [Substack](https://richardsonlj.substack.com/).
+KEEL is developed and maintained by [Jeremy Richardson, Ph.D.](https://www.linkedin.com/in/jeremy-richardson) He writes about what the AI transition means for jobs and the economy on his Substack called [Working Through the AI Transition](https://richardsonlj.substack.com/).
 
 ## How to cite
 

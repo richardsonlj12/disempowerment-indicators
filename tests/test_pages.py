@@ -255,7 +255,7 @@ def test_about_has_author_section_and_acronym():
     text = (ROOT / "site" / "about.qmd").read_text(encoding="utf-8")
     assert "## About the author" in text
     assert "Jeremy Richardson, Ph.D." in text
-    assert "[OWNER TO EDIT]" in text
+    assert "[OWNER TO EDIT]" not in text  # owner has written the bio (Task 10b)
     assert "https://richardsonlj.substack.com/" in text
     assert text.count("Key Evidence on Eroding Leverage") == 1
     assert "https://github.com/richardsonlj12/keel/issues/new?template=error-report.md" in text

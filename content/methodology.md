@@ -1,6 +1,10 @@
 This page explains how KEEL turns public data into indicators, and how it will turn indicators into readings. A **reading** is the label given to what an indicator's data is doing, such as "Rising" or "Within baseline." For now it shows data only. Every indicator's reading says "Not yet reviewed," because readings start once the rules that produce them are fixed in advance and dated (see "Releases and stages" below).
 
-We welcome constructive and honest feedback on this project. [Report an error](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md) · [Give feedback](https://github.com/richardsonlj12/keel/discussions) · [Feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)
+We welcome constructive and honest feedback on this project.
+
+- **Report an error** ([GitHub Issues](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md)): for a factual mistake in data, figures or sources. Public; needs a free GitHub account.
+- **Join the discussion** ([GitHub Discussions](https://github.com/richardsonlj12/keel/discussions)): for questions about the method, interpretation or ideas, in an open conversation others can read and add to. Public; needs a free GitHub account.
+- **Send private feedback** ([feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)): for anything else, or if you'd rather not post publicly. No account needed.
 
 ## The framework
 

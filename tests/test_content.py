@@ -45,10 +45,11 @@ def test_no_retired_closing_wording(path):
 
 @pytest.mark.parametrize("path", CLOSING_PAGES, ids=_ids(CLOSING_PAGES))
 def test_page_links_feedback_channels(path):
+    """All three feedback channels are linked (link text may vary by page)."""
     text = path.read_text(encoding="utf-8")
-    assert REPORT_ERROR in text
-    assert GIVE_FEEDBACK in text
-    assert "Feedback form" in text
+    assert "https://github.com/richardsonlj12/keel/issues/new?template=error-report.md" in text
+    assert "https://github.com/richardsonlj12/keel/discussions" in text
+    assert "https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform" in text
 
 
 @pytest.mark.parametrize("path", INDICATOR_PAGES, ids=_ids(INDICATOR_PAGES))
