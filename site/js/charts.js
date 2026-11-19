@@ -432,33 +432,32 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
 
   const full = Math.max(280, opts.width || 640);
   const width = full >= 640 ? full - 170 : full; // room for the legend on the right on wide screens
-  // Narrow charts: group labels shorten to "A", "B"..., and a share label too close to the one before
-  // it is raised a line so the two do not overlap.
+  // Narrow charts: group labels shorten to "A", "B"...
   const narrow = width < 560;
   const groupText = s => (narrow ? "" : "Group ") + groupOf(s.segment).name;
   const pxPerDay = (width - 64) / ((+x1 - +x0) / DAY);
-
-  // Of two labels too close to share a line, the higher value goes on top (owner, 2026-11-19).
+  // Each bar's first-family total is a dot on the bar, with its value just to the right of the bar
+  // (owner, 2026-11-19). A label that would run into the next bar's dot moves up if its value is the
+  // higher of the two and down if lower, so the higher value always reads above the lower.
+  const halfBarPx = BAR_HALF_DAYS * pxPerDay;
   samples.forEach((s, i) => {
-    const prev = samples[i - 1];
-    s.raise = false;
-    if (prev && !prev.raise && (+s.mid - +prev.mid) / DAY * pxPerDay < 34) {
-      if (s.first > prev.first) s.raise = true;
-      else prev.raise = true;
-    }
-
+    const next = samples[i + 1];
+    s.dy = 0;
+    if (next && (+next.mid - +s.mid) / DAY * pxPerDay < halfBarPx + 40) s.dy = s.first >= next.first ? -9 : 9;
   });
+  const pageBg = getComputedStyle(document.body).backgroundColor || "white";
   const tipText = d => `${name(d.group)}, sampled ${d.period}\n${fmtValue(d.value, meta.units)} (released ${fmtDay(d.release)})`;
   const marks = [
     Plot.ruleX(separators, {stroke: "currentColor", strokeOpacity: 0.6, strokeDasharray: "2,3"}),
     // Behind the bars, so it shows between them and does not cross the share labels.
     Plot.ruleY([50], {stroke: "currentColor", strokeDasharray: "4,3", strokeWidth: 1.5}),
     Plot.rect(pieces, {x1: "x1", x2: "x2", y1: "y1", y2: "y2", fill: d => colorOf[d.group], ...(Plot.tip ? {} : {title: tipText})}),
-    // The first family's total sits on the bar just above where its segments end (owner, 2026-11-19),
-    // in white with a dark halo so it reads on the blue and where it overhangs a narrow bar.
-    ...[samples.filter(s => !s.raise), samples.filter(s => s.raise)].map((set, k) =>
-      Plot.text(set, {x: "mid", y: "first", text: s => s.first.toFixed(1), dy: k ? -24 : -9, fontWeight: 700, fontSize: 12,
-        fill: "white", stroke: "rgba(15, 25, 35, 0.85)", strokeWidth: 3, paintOrder: "stroke"})),
+    Plot.dot(samples, {x: "mid", y: "first", r: 4, fill: "white", stroke: "rgba(15, 25, 35, 0.9)", strokeWidth: 1.5}),
+    // Labels in the page's text colour with a halo of the page background, so they read where they
+    // overlap a neighbouring bar. Plot's dy is a constant, so one mark per offset.
+    ...[-9, 0, 9].map(dy => Plot.text(samples.filter(s => s.dy === dy), {
+      x: "mid", y: "first", text: s => s.first.toFixed(1), dx: halfBarPx + 4, dy, textAnchor: "start",
+      fontWeight: 700, fontSize: 12, fill: "currentColor", stroke: pageBg, strokeWidth: 3, paintOrder: "stroke"})),
     Plot.text(firsts, {x: s => new Date(+s.mid - BAR_HALF_DAYS * DAY), y: 100, text: groupText,
       dy: -12, textAnchor: "start", fontSize: 11}),
   ];
@@ -468,7 +467,7 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   const chart = Plot.plot({
     width,
     height: Math.round(Math.min(420, Math.max(300, width * 0.55))),
-    marginLeft: 44, marginTop: 30, marginBottom: 44,
+    marginLeft: 44, marginTop: 30, marginBottom: 44, marginRight: 24, // room for the last value label
     // Every tick names its year (owner, 2026-11-19); quarterly ticks, half-yearly on narrow screens.
     x: {type: "utc", domain: [x0, x1], label: "Sampling date", labelAnchor: "center", labelArrow: "none",
       ticks: d3.utcMonth.every(narrow ? 6 : 3), tickFormat: d3.utcFormat("%b\n%Y")},
@@ -501,7 +500,7 @@ function renderStacked(Plot, d3, spec, data, view, opts) {
   const wrap = element("figure", "keel-chart keel-chart-stacked");
   wrap.append(row);
   const list = element("ul", "keel-chart-notes");
-  list.append(element("li", null, `Each bar is one sample, centred on the middle of its sample window and drawn the same width so it stays visible. The number on each bar is its ${firstName} share: the height of the ${firstName} patterns at the bottom of the bar, printed where the ${view.families[1].name.toLowerCase()} patterns begin. The dashed line marks 50 percent. Dotted lines separate the method groups: compare bars only within a group.`));
+  list.append(element("li", null, `Each bar is one sample, centred on the middle of its sample window and drawn the same width so it stays visible. The dot on each bar marks its ${firstName} share, where the ${firstName} patterns at the bottom of the bar end and the ${view.families[1].name.toLowerCase()} patterns begin; its value is printed to the right. The dashed line marks 50 percent. Dotted lines separate the method groups: compare bars only within a group.`));
   if (view.groupsLink) list.append(groupsLinkItem(view.groupsLink));
   wrap.append(list);
   wrap.append(stackedTable(spec, view, samples, name, groupOf, data));
