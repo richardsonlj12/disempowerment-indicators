@@ -378,11 +378,10 @@ def sort_text(text: str) -> str:
 # ------------------------------------------------------------------ the Sources page
 
 INTRO = (
-    "Works and datasets cited on KEEL. Every entry was checked against the original publication before it "
-    "was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure)). "
-    "Each entry has a stable "
+    "Works and datasets cited on KEEL. Each entry has a stable "
     "link: for example, `sources.html#kulveit2025`. Data sources give the date KEEL last checked "
-    "the page and the license of the data."
+    "the page and the license of the data. Every entry was checked against the original publication "
+    "before it was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure))."
 )
 
 def sources_markdown(entries: list[dict]) -> str:

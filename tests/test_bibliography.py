@@ -392,8 +392,9 @@ def _anchors(text):
 
 def test_intro_opening_and_no_style_name_on_the_page(sources_md):
     """Owner request (2026-11-18): the Sources page does not name the citation style."""
-    assert sources_md.startswith("Works and datasets cited on KEEL. Every entry was checked against the original publication before it was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure)).")
-    assert "Each entry has a stable link" in sources_md
+    assert sources_md.startswith("Works and datasets cited on KEEL. Each entry has a stable link")
+    assert ("Every entry was checked against the original publication before it was added. KEEL is built "
+            "with assistance from Claude (see [Disclosure](about.qmd#disclosure)).") in sources_md.split("\n\n")[0]
     assert "Chicago" not in sources_md
     assert "Chicago" not in (ROOT / "site" / "sources.qmd").read_text(encoding="utf-8")
 
