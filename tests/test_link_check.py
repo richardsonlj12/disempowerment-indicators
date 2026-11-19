@@ -31,13 +31,20 @@ def test_link_check_flags_missing_csv(tmp_path):
 def test_link_check_accepts_relative_links_under_base_path(tmp_path):
     site = _site(
         tmp_path,
-        {"index.html": '<a href="about.html#top">a</a><a href="/keel/data/s.csv">c</a>'
+        {"index.html": '<a href="about.html#top">a</a><a href="data/s.csv">c</a>'
                        '<a href="indicators/EA1.html">i</a>',
          "about.html": '<a href="index.html">home</a><img src="site_libs/x.png">',
-         "indicators/EA1.html": '<a href="../index.html">up</a><script src="../site_libs/a.js"></script>'
-                                '<a href="/keel/about.html">abs</a>'},
+         "indicators/EA1.html": '<a href="../index.html">up</a><script src="../site_libs/a.js"></script>'},
         files=("data/s.csv", "site_libs/a.js", "site_libs/x.png"))
     assert link_check.check(site, "/keel/") == []
+
+
+def test_link_check_flags_root_absolute_links_even_when_they_resolve(tmp_path):
+    site = _site(tmp_path, {"index.html": '<a href="/keel/about.html">a</a><a href="/about.html">b</a>',
+                            "about.html": ""})
+    broken = link_check.check(site)
+    assert len(broken) == 2
+    assert all("root-absolute" in b for b in broken)
 
 
 def test_link_check_ignores_external_and_fragments_but_flags_wrong_base(tmp_path):

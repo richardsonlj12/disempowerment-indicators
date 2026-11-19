@@ -1,8 +1,8 @@
 """Check internal links in a built site. Usage: python scripts/link_check.py [site_dir] [base_path]
 
 Looks at every href and src in every .html file. External (http, https, mailto and other schemes)
-and fragment-only links are ignored. Root-absolute paths must sit under base_path. Exits 1 and
-prints each broken link when any are found.
+and fragment-only links are ignored. Root-absolute paths are violations (links must be relative).
+Exits 1 and prints each broken link when any are found.
 """
 from __future__ import annotations
 
@@ -28,7 +28,11 @@ def _resolves(target: Path) -> bool:
 
 
 def check(site_dir: Path, base_path: str = "/keel/") -> list[str]:
-    """Return one message per broken internal link, resolved as the deployed site would be."""
+    """Return one message per broken internal link, resolved relative to its page.
+
+    Root-absolute links (/keel/... or /...) are reported even when they would resolve, because
+    the site rule is that all links are relative; base_path only improves the message.
+    """
     site_dir = Path(site_dir).resolve()
     stripped = base_path.strip("/")
     base = f"/{stripped}/" if stripped else "/"
@@ -42,14 +46,11 @@ def check(site_dir: Path, base_path: str = "/keel/") -> list[str]:
             if parts.scheme or parts.netloc or not parts.path:  # external, //host, or #fragment / ?query only
                 continue
             path = unquote(parts.path)
-            if path.startswith("/"):
-                if not (path.rstrip("/") + "/").startswith(base):
-                    broken.append(f"{rel_page}: {url} (outside base path {base})")
-                    continue
-                target = site_dir / path[len(base):]
-            else:
-                target = page.parent / path
-            target = target.resolve()
+            if path.startswith("/"):  # all links must be relative so the site works under any base path
+                hint = "" if (path.rstrip("/") + "/").startswith(base) else f", and outside base path {base}"
+                broken.append(f"{rel_page}: {url} (root-absolute link; links must be relative{hint})")
+                continue
+            target = (page.parent / path).resolve()
             if site_dir not in (target, *target.parents):
                 broken.append(f"{rel_page}: {url} (escapes the site)")
             elif not _resolves(target):
