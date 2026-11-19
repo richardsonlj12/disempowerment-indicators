@@ -1,6 +1,6 @@
 ---
 summary: The share of business income paid to workers has been falling for decades, long before generative AI. This page tracks whether that fall speeds up as AI spreads.
-warning_sign: A falling labor share would be consistent with workers losing leverage in the economy.
+warning_sign: A falling labor share would be consistent with workers losing leverage in the economy. A stable or rising share points the other way, though a steady share can still hide lost leverage.
 data_sources:
   - name: "Bureau of Labor Statistics (BLS), Productivity and Costs: labor share, nonfarm business sector"
     url: https://data.bls.gov/timeseries/PRS85006174
@@ -27,16 +27,12 @@ This is a long-running series. Its baseline is how it behaved in 2010 to 2019, a
 
 ## What it doesn't show
 
-- **It does not measure AI.** The labor share responds to globalization, market concentration, the decline of unions, the mix of industries, the business cycle and more. Chooi, Lee and Li note that labor cost share has been declining since the 1980s for reasons like these. That is why its **AI link** is **weak**: the decline began long before generative AI, there is no comparison with less AI-exposed industries in this series, and the other possible causes are not addressed. (A "strong" AI link would mean the series measures AI directly. It would not mean strong evidence of harm.)
+- **It does not measure AI.** The labor share responds to globalization, market concentration, the decline of unions, the mix of industries, the business cycle and more. Chooi, Lee and Li note that labor cost share has been declining since the 1980s for reasons like these.
 - **It does not measure leverage directly.** Bargaining power is the thing the argument is about. The labor share is a stand-in for it.
 - **It does not measure welfare.** People can be materially better off while losing leverage, and the reverse can also happen. A falling labor share in a fast-growing economy can come with rising real wages. A stable share can come with stagnant ones. KEEL tracks influence and dependence, not material welfare.
 - **It covers the nonfarm business sector only.** Government, farms, nonprofit institutions and private households are outside it.
 
 ## What would change our reading
-
-### Warning sign
-
-A falling labor share would be consistent with workers losing leverage in the economy. A stable or rising share points the other way, with the caveat below.
 
 ### Alternative explanations
 

@@ -94,7 +94,8 @@ def test_every_content_page_has_summary_warning_sign_and_subheadings(registry):
             assert str(src.get("name") or "").strip() and str(src.get("url") or "").startswith("https://"), i.id
         lines = body.splitlines()
         assert [ln for ln in lines if ln.startswith("## ")] == PAGE_H2, i.id
-        assert "### Warning sign" in lines, i.id
+        # The warning sign is shown once, in the summary table's "Why it matters" row (owner, 2026-11-19).
+        assert "### Warning sign" not in lines, i.id
         assert "### Alternative explanations" in lines, i.id
 
 

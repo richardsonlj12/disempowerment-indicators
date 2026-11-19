@@ -51,16 +51,12 @@ This series measures AI use directly and has no history before AI. Its baseline 
 
 ## What it doesn't show
 
-- **It does not show disempowerment.** The **AI link** is **strong** because this series measures AI use directly. "Strong" means only that a change in the series is a change in AI use. It is not strong evidence of harm, and it does not mean the series shows lost leverage.
+- **It does not show disempowerment.** A change in the series is a change in AI use. It is not evidence of harm, and it does not show lost leverage.
 - **It does not show how AI is used.** A firm that uses AI to help its staff (augmentation) and a firm that uses it to do the work instead of its staff (replacement) both answer "Yes." Adoption that augments workers may strengthen their position. Adoption that replaces them may weaken it. KEEL's next indicator, how AI is used (EA2), is the nearest public data on a related split, and it covers one vendor's product.
 - **It does not show how much AI a firm uses.** A firm that tried one tool once and a firm that runs core operations on AI count the same.
 - **It does not measure welfare.** Wider AI use may raise output and incomes while shifting who has influence, or the reverse. This series speaks to neither.
 
 ## What would change our reading
-
-### Warning sign
-
-Rising adoption would show AI spreading through firms. By itself it does not show that people have lost leverage.
 
 ### Alternative explanations
 

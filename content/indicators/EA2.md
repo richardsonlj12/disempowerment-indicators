@@ -44,16 +44,12 @@ This series measures AI use directly and has no history before AI. Its baseline 
 ## What it doesn't show
 
 - **It does not show AI use across society.** This is **one vendor, one product**: conversations on Claude.ai. Its users are not a representative sample of people who use AI. Use through Anthropic's API and through other companies' products is not included. Releases analyze large samples of conversations (see "What it shows"). A large sample reduces noise, but it does not make one product's users representative of all AI users.
-- **It does not show disempowerment.** The **AI link** is **strong** because the series measures AI use directly. "Strong" is not strong evidence of harm, and it does not mean the series shows lost leverage. A task handed to AI may free a person for work they value more.
+- **It does not show disempowerment.** A change in the series is a change in how AI is used. It is not evidence of harm, and it does not show lost leverage. A task handed to AI may free a person for work they value more.
 - **It does not measure decisions.** Automation here means a task completed with little back-and-forth in a conversation. It does not show who made the decision the task served, or whether a person reviewed the result.
 - **It has no pre-AI baseline.** The series begins with a sample from 16 to 23 December 2024. There is no earlier period to compare it with, so timing cannot serve as evidence here.
 - **It does not measure welfare.** People who automate more of their tasks may be better off, worse off, or neither. This series tracks how work is shared with AI. It says nothing about who gains from that.
 
 ## What would change our reading
-
-### Warning sign
-
-A rising automation share would be consistent with tasks moving from people to AI.
 
 ### Alternative explanations
 

@@ -230,6 +230,14 @@ def summary_table(ind, front, reading, series, cites: bibliography.Citations) ->
                if primary else "data through: not yet available (data still being collected)")
     label, magnitude, interpretation = reading_parts(ind, reading, series)
     current = "<br>".join(_cell(x) for x in (label, interpretation) if x)
+    latest = _latest(primary[0]) if primary else None
+    if latest is None:
+        latest_data = _cell(magnitude)
+    else:  # series name / value against the baseline / when KEEL last fetched it (owner, 2026-11-19)
+        meta = primary[1]
+        value = reading.magnitude or (f"{fmt_value(latest[0], meta.units)} ({fmt_period(latest[1], meta.frequency)}), "
+                                      f"against {baseline_text(ind)}")
+        latest_data = "<br>".join(_cell(x) for x in (meta.title, value, f"Data last fetched {fmt_date(meta.fetched_at)}"))
     sources = "<br>".join(_data_link(_cell(s["name"]), s["url"], cites, "../") for s in front["data_sources"])
     timing_value, timing_text = (s[:1].upper() + s[1:] for s in TIMING[ind.timing].split(": ", 1))
     # Row order and names: owner review, 2026-11-19. Each row ends with a "More" link to the section that
@@ -242,7 +250,7 @@ def summary_table(ind, front, reading, series, cites: bibliography.Citations) ->
         ("AI link", f"**{ind.ai_link.capitalize()}**<br>A draft rating on four criteria, to be reviewed in Stage 2.",
          "#method"),
         ("Leading or lagging", f"**{timing_value}**<br>{timing_text}.", None),
-        ("Latest data", _cell(magnitude), "#method"),
+        ("Latest data", latest_data, "#method"),
         ("Calculation", _cell(front["calculation"]), "#data-and-calculation"),
         ("Coverage", _cell(f"{front['coverage']} · {through}"), "#method"),
         ("Data sources", sources, "#data-and-calculation", "More", "<br>"),
@@ -358,10 +366,7 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
              f"- **AI link: {ind.ai_link.capitalize()}** (draft, to be reviewed in Stage 2), judged on four criteria:"]
     for key, question in AI_LINK_QUESTIONS:
         lines.append(f"    - *{question}* {ind.ai_link_criteria.get(key, 'Not yet assessed.')}")
-    lines.append("- **Sources.**")
-    for s in ind.sources:
-        lines.append(f"    - {_data_link(s['name'], s['url'], cites, '../')}. License: {s['license']}.")
-    breaks = [(b["date"], meta.title, b["note"]) for _, meta in series.values() for b in meta.breaks]
+    breaks =[(b["date"], meta.title, b["note"]) for _, meta in series.values() for b in meta.breaks]
     if breaks:
         lines.append("- **Series breaks.** The chart does not join the line across a break.")
         for d, title, note in sorted(breaks):
@@ -374,12 +379,21 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
             key = (marker_keys or {}).get((m["date"], m["label"]))
             cite = f" {cites.cite(key, '../')}" if key else ""
             lines.append(f"    - {fmt_date(m['date'])}: {m['label']}{cite}")
+    lines.append("- **Registry entry.** [indicators.yaml](../config/indicators.yaml) (YAML).")
+    return "\n".join(lines)
+
+
+def sources_and_dates(ind, series, cites: bibliography.Citations) -> str:
+    """Generated end of 'Data and calculation': each source with its license, then when KEEL last
+    fetched each series (moved from Method, owner decision 2026-11-19, so they sit together)."""
+    lines = ["- **Sources and licenses.**"]
+    for s in ind.sources:
+        lines.append(f"    - {_data_link(s['name'], s['url'], cites, '../')}. License: {s['license']}.")
     if series:
         lines.append("- **Last fetched.**")
         for _, meta in series.values():
             lines.append(f"    - {meta.title}: fetched {fmt_date(meta.fetched_at)}, data through "
                          f"{fmt_period(meta.data_through, meta.frequency)}.")
-    lines.append("- **Registry entry.** [indicators.yaml](../config/indicators.yaml) (YAML).")
     return "\n".join(lines)
 
 
@@ -433,7 +447,7 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
         "%%SHOWS%%": section(SECTIONS[1]),
         "%%DOESNT_SHOW%%": section(SECTIONS[2]),
         "%%CHANGE%%": section(SECTIONS[3]),
-        "%%DATA_AND_CALCULATION%%": section(SECTIONS[4]),
+        "%%DATA_AND_CALCULATION%%": section(SECTIONS[4]).rstrip() + "\n" + sources_and_dates(ind, series, cites),
         "%%METHOD%%": method_section(ind, series, markers, cites, marker_keys),
         "%%CAVEATS%%": section(SECTIONS[5]),
         "%%DOWNLOADS%%": downloads(views, series, trend_files),

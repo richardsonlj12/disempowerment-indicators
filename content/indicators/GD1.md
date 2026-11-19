@@ -1,6 +1,6 @@
 ---
 summary: On average, governments in the OECD (Organisation for Economic Co-operation and Development, a group of mostly wealthy countries) still raise about half of their tax revenue from taxes on people's incomes and social contributions, and that share is slightly above its 2010 level. The US share, which drives the reading, has fallen since 2022 but remains inside its 2010 to 2019 range. On the evidence so far, this indicator does not point toward disempowerment.
-warning_sign: A falling labor-based share would be consistent with the state depending less on taxing workers.
+warning_sign: A falling labor-based share would be consistent with the state depending less on taxing workers. A rising or stable share points the other way.
 data_sources:
   - name: "Bureau of Economic Analysis (BEA), national accounts: government receipts, via FRED (Federal Reserve Bank of St. Louis)"
     url: https://fred.stlouisfed.org/series/W055RC1Q027SBEA
@@ -33,15 +33,11 @@ This is a long-running series. Its baseline is how it behaved in 2010 to 2019. R
 
 ## What it doesn't show
 
-- **It does not measure AI.** Tax law, the business cycle, asset prices and an aging population all move this share. The **AI link** is **weak**: there is no comparison with less AI-exposed places or groups, and no change has yet been shown to follow the spread of generative AI. (A "strong" AI link would mean the series measures AI directly. It would not mean strong evidence of harm.)
+- **It does not measure AI.** Tax law, the business cycle, asset prices and an aging population all move this share.
 - **It is labor-based only approximately.** Personal income taxes also fall on interest, dividends and capital gains. A stock-market boom can raise "labor-based" revenue with no change in how much the state depends on workers. Social contributions are tied more closely to wages.
 - **It does not show whether governments respond to citizens.** It measures one source of the state's dependence on people. Elections, courts, protest and a free press are other sources, and none of them is measured here.
 
 ## What would change our reading
-
-### Warning sign
-
-A falling labor-based share would be consistent with the state depending less on taxing workers. A rising or stable share points away from disempowerment.
 
 ### Alternative explanations
 

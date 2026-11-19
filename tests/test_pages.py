@@ -162,12 +162,14 @@ def test_rows_link_to_the_sections_that_expand_on_them(repo):
     assert "[More]" not in rows["Grid position"] and "[More]" not in rows["Leading or lagging"]
 
 
-def test_latest_data_row_holds_magnitude(repo):
+def test_latest_data_row_is_series_then_value_then_fetch_date(repo):
     pages.build(repo, today=TODAY)
     table = _table(_page(repo, "ED1"))
     assert table[6][0] == "Latest data"
-    desc = _value(table[6][1])
-    assert desc.endswith("against its 2010 to 2019 trend") and "percent" in desc
+    name, value, fetched = _value(table[6][1]).split("<br>")
+    assert name == "Labor share of income, nonfarm business sector"
+    assert value.endswith("against its 2010 to 2019 trend") and "percent" in value
+    assert re.fullmatch(r"Data last fetched \d{1,2} [A-Z][a-z]+ \d{4}", fetched)
     assert "own recent path" in dict(_table(_page(repo, "EA1")))["Latest data"]
 
 
@@ -213,11 +215,20 @@ def test_data_source_not_in_bibliography_fails_the_build(repo):
         pages.build(repo, today=TODAY)
 
 
-def test_method_section_links_sources_and_cites_chart_markers(repo):
+def test_sources_licenses_and_fetch_dates_sit_in_data_and_calculation(repo):
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "CD1")
+    data = text[text.index("## Data and calculation"):text.index("## Download the data")]
+    method = text[text.index("## Method"):text.index("## Caveats")]
+    assert "    - [Stack Exchange API](../sources.qmd#stackexchange_api). License: CC BY-SA." in data
+    assert "- **Last fetched.**" in data
+    assert "License:" not in method and "Last fetched" not in method
+
+
+def test_method_section_cites_chart_markers(repo):
     pages.build(repo, today=TODAY)
     text = _page(repo, "CD1")
     method = text[text.index("## Method"):text.index("## Caveats")]
-    assert "    - [Stack Exchange API](../sources.qmd#stackexchange_api). License: CC BY-SA." in method
     assert "    - 29 June 2021: GitHub Copilot technical preview announced [(Friedman 2021)](../sources.qmd#friedman2021)" in method
     assert "[(OpenAI 2022)](../sources.qmd#openai2022)" in method
     ea1 = _page(repo, "EA1")
@@ -423,7 +434,7 @@ def _add_c1_index(repo):
 def test_c1_baseline_is_its_2012_to_2019_history(repo):
     _add_c1_index(repo)
     pages.build(repo, today=TODAY)
-    desc = _value(dict(_table(_page(repo, "CD1")))["Latest data"])
+    desc = _value(dict(_table(_page(repo, "CD1")))["Latest data"]).split("<br>")[1]
     assert desc.endswith("against its 2012 to 2019 history")
     assert "61.5 (index, 2019 = 100)" in desc
     text = _page(repo, "CD1")
@@ -440,7 +451,7 @@ def test_no_baseline_clause_without_a_value(repo):
 def test_magnitude_line_names_the_series(repo):
     pages.build(repo, today=TODAY)
     line = dict(_table(_page(repo, "EA2")))["Latest data"]
-    assert line.startswith("Automation share of categorized Claude.ai conversations, latest value:")
+    assert line.startswith("Automation share of categorized Claude.ai conversations<br>")
 
 
 def test_oecd_annual_series_not_stale_today(repo):

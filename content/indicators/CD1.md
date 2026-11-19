@@ -75,17 +75,9 @@ These are shown for context and do not drive the reading.
 
 - **It does not measure human capacity or reliance on AI.** It counts activity: questions asked, pages viewed, editors editing. People may know as much as before and simply ask in a different place. KEEL names this gap on the methodology page.
 - **It does not give the full AI effect.** AI affects the comparison sites too. People can ask a chatbot about wiring a light switch or a rule in a role-playing game. The index therefore measures Stack Overflow's change relative to sites that are less exposed. If AI has also reduced activity on the comparison sites, the index understates the effect on Stack Overflow.
-- **It does not separate AI from other changes specific to Stack Overflow.** Moderation policy, community norms, the maturing of the site (many common questions are already answered) and changes in the programming tools people use can all move Stack Overflow on its own. The **AI link** is **moderate**:
-  - The comparison sites hold changes across the whole Stack Exchange network roughly constant.
-  - The decline that began before ChatGPT and the causes specific to Stack Overflow are only partly addressed.
-
-  (A "strong" AI link would mean the series measures AI directly. It would not mean strong evidence of harm.)
+- **It does not separate AI from other changes specific to Stack Overflow.** Moderation policy, community norms, the maturing of the site (many common questions are already answered) and changes in the programming tools people use can all move Stack Overflow on its own.
 
 ## What would change our reading
-
-### Warning sign
-
-Stack Overflow's activity falling further behind the comparison sites than in its 2012 to 2019 history would be consistent with people turning from human knowledge communities to AI for coding help.
 
 ### Alternative explanations
 
