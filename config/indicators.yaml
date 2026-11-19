@@ -113,7 +113,7 @@ indicators:
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: Measures activity on public knowledge sites, not AI use or human capacity.
       comparison_group: Non-programming Stack Exchange sites chosen in advance give a contrast, though AI affects them too.
-      timing: Stack Overflow declined from about 2020, before generative AI, so timing only partly fits.
+      timing: Stack Overflow's decline began in the mid-2010s, years before generative AI, so timing only partly fits.
       confounders: Site policy, community changes and the pre-ChatGPT decline are partly addressed by the contrast.
     timing: leading
     comparison: structural

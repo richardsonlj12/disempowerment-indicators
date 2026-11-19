@@ -439,7 +439,8 @@ def test_c1_baseline_is_its_2012_to_2019_history(repo):
     assert "61.5 (index, 2019 = 100)" in desc
     text = _page(repo, "CD1")
     method = text[text.index("## Method"):text.index("## Caveats")]
-    assert "its 2012 to 2019 history" in method and "2010" not in method
+    # No 2010-19 trend baseline (the owner-approved timing line mentions "the mid-2010s", which is fine).
+    assert "its 2012 to 2019 history" in method and "2010 to 2019" not in method and "2010–19" not in method
 
 
 def test_no_baseline_clause_without_a_value(repo):
@@ -642,3 +643,74 @@ def test_indicators_heading_accessible_text_is_plain(repo):
 def test_tooltip_ids_generated_by_rowhead():
     html = pages._rowhead("Lock-in", "Def.")
     assert 'aria-describedby="tip-lock-in"' in html and '#tip-lock-in .keel-tipbody role="tooltip"' in html
+
+
+# ---- review fixes A
+
+def _grouped_series(groups):
+    frame = pd.DataFrame({"date": ["2020-01-01"] * len(groups), "value": [1.0] * len(groups), "group": groups})
+    meta = type("M", (), {"title": "t", "units": "u", "frequency": "monthly", "breaks": []})()
+    return {"so_questions_monthly": (frame, meta)}
+
+
+def test_group_labels_only_for_groups_in_the_plotted_series():
+    ind = type("I", (), {"id": "CD1", "chart_title": None, "name": "n"})()
+    views = [{"label": "V", "kind": "multi", "series": ["so_questions_monthly"], "available": True}]
+    labels = {"diy": "DIY", "travel": "Travel", "rpg": "RPG"}
+    spec = pages.chart_spec(ind, views, _grouped_series(["diy", "rpg"]), [], labels)
+    assert spec["groupLabels"] == {"diy": "DIY", "rpg": "RPG"}
+
+
+def test_group_labels_absent_from_pages_without_groups(repo):
+    pages.build(repo, today=TODAY)
+    assert '"groupLabels": {}' in _page(repo, "ED1")
+    assert "scifi" not in _page(repo, "ED1")
+
+
+def test_retrospective_caveat_uses_the_indicators_own_frequency(repo):
+    pages.build(repo, today=TODAY)
+    assert "rule to every month from" in _page(repo, "CD1")
+    assert "rule to every quarter from" in _page(repo, "ED1")
+    assert "rule to every year from" in _page(repo, "GD1")
+
+
+def test_ed1_profit_share_is_selectable_not_alongside(repo):
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "ED1")
+    assert "The profit share, selectable in the chart, is" in text
+    assert "shown alongside" not in text
+
+
+def test_pages_import_the_chart_module_with_data_table_support(repo):
+    pages.build(repo, today=TODAY)
+    assert 'from "../js/charts.js"' in _page(repo, "ED1")
+    assert "Data table" in (ROOT / "site" / "js" / "charts.js").read_text(encoding="utf-8")
+
+
+def test_cd1_default_view_is_first_available(repo):
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "CD1")
+    assert '"defaultView": "Wikipedia"' in text
+    assert "The Stack Overflow index will appear here once its data download is complete." in text
+    assert '"defaultView": "Level"' in _page(repo, "ED1")
+    assert "will appear here once" not in _page(repo, "ED1")
+
+
+def test_cd1_default_view_is_the_index_once_its_data_exist(repo):
+    _add_c1_index(repo)
+    for sid in ("so_relative_index_loo_min", "so_relative_index_loo_max"):
+        shutil.copy(repo / "data" / "so_relative_index.csv", repo / "data" / f"{sid}.csv")
+        shutil.copy(repo / "data" / "so_relative_index.meta.json", repo / "data" / f"{sid}.meta.json")
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "CD1")
+    assert '"defaultView": "Relative activity index (2019 = 100)"' in text
+    assert "will appear here once" not in text
+
+
+def test_series_breaks_listed_once_naming_every_affected_series(repo):
+    pages.build(repo, today=TODAY)
+    text = _page(repo, "EA2")
+    block = text[text.index("- **Series breaks.**"):text.index("- **Chart markers.**")]
+    lines = [l for l in block.splitlines() if re.match(r"\s+- \d", l)]
+    assert len(lines) == 3
+    assert all(" and " in l.split("): ", 1)[0] for l in lines)

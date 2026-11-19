@@ -93,6 +93,11 @@ CHART_VIEWS: dict[str, list[dict]] = {
         {"label": "Wikipedia", "kind": "level", "series": ["wiki_user_pageviews_en", "wiki_active_editors_en"]},
     ],
 }
+# Shown above the chart while the first view's data are still downloading and another view is the default.
+PRIMARY_PENDING_NOTE = {
+    "CD1": "The Stack Overflow index will appear here once its data download is complete. "
+           "The Wikipedia view is shown meanwhile.",
+}
 # Legend labels for multi-series views (grouped series are labelled by group).
 SERIES_LABELS = {
     "aei_automation_share": "Automation",
@@ -310,14 +315,21 @@ def chart_spec(ind, views, series, markers, group_labels) -> dict:
                 meta = series[sid][1]
                 entry.update(title=meta.title, units=meta.units, frequency=meta.frequency, breaks=meta.breaks)
             spec_series[sid] = entry
+    # Only the labels for groups that appear in a plotted series (CD1's sites); other pages get none.
+    used = set()
+    for sid in spec_series:
+        if sid in series and "group" in series[sid][0].columns:
+            used.update(series[sid][0]["group"].dropna().unique())
+    default = next((v["label"] for v in views if v.get("available")), views[0]["label"])
     return {
         "id": ind.id,
         "chartTitle": ind.chart_title or ind.name,
         "dataBase": "../data/",
         "views": views,
+        "defaultView": default,
         "series": spec_series,
         "markers": markers,
-        "groupLabels": group_labels,
+        "groupLabels": {g: n for g, n in group_labels.items() if g in used},
         "seNote": SE_NOTE,
     }
 
@@ -366,11 +378,16 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
              f"- **AI link: {ind.ai_link.capitalize()}** (draft, to be reviewed in Stage 2), judged on four criteria:"]
     for key, question in AI_LINK_QUESTIONS:
         lines.append(f"    - *{question}* {ind.ai_link_criteria.get(key, 'Not yet assessed.')}")
-    breaks =[(b["date"], meta.title, b["note"]) for _, meta in series.values() for b in meta.breaks]
-    if breaks:
+    grouped: dict[tuple, list[str]] = {}
+    for _, meta in series.values():
+        for b in meta.breaks:
+            titles = grouped.setdefault((b["date"], b["note"]), [])
+            if meta.title not in titles:
+                titles.append(meta.title)
+    if grouped:
         lines.append("- **Series breaks.** The chart does not join the line across a break.")
-        for d, title, note in sorted(breaks):
-            lines.append(f"    - {fmt_date(d)} ({title}): {note}")
+        for (d, note), titles in sorted(grouped.items()):
+            lines.append(f"    - {fmt_date(d)} ({' and '.join(sorted(titles))}): {note}")
     else:
         lines.append("- **Series breaks.** None recorded.")
     if markers:
@@ -432,7 +449,10 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
     fm = yaml.safe_dump({"title": title, "pagetitle": f"{title} · {SITE_NAME}"}, allow_unicode=True,
                         sort_keys=False, width=1000).strip()
     spec = chart_spec(ind, views, series, markers, group_labels)
-    chart = f"**{ind.chart_title or ind.name}**\n\n{chart_block(spec, trend_files)}"
+    note = ""
+    if ind.id in PRIMARY_PENDING_NOTE and not views[0]["available"] and spec["defaultView"] != views[0]["label"]:
+        note = f"*{PRIMARY_PENDING_NOTE[ind.id]}*\n\n"
+    chart = f"**{ind.chart_title or ind.name}**\n\n{note}{chart_block(spec, trend_files)}"
 
     def section(name):
         return f"## {name}\n\n{sections[name]}"
