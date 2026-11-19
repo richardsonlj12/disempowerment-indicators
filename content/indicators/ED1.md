@@ -60,7 +60,8 @@ These indicators show whether the conditions for disempowerment are present. The
 
 ## Data and calculation
 
-- **Source and series.** BLS Productivity and Costs program, [labor share for the nonfarm business sector, level in percent](../sources.qmd#bls_labor_share). FRED, the Federal Reserve Bank of St. Louis's data service, carries only an index version of this series (2017 = 100), so KEEL reads the percent level from the BLS public data service. The profit share uses BEA's [corporate profits after tax (with inventory valuation and capital consumption adjustments)](../sources.qmd#fred_cpatax) and [gross domestic product](../sources.qmd#fred_gdp), both read through FRED.
+- **Source and series.** The labor share is the [labor share for the nonfarm business sector, as a percent](../sources.qmd#bls_labor_share), from the Bureau of Labor Statistics (BLS) Productivity and Costs program, read directly from BLS.
+- **Profit share.** The profit share comes from a different agency, the Bureau of Economic Analysis (BEA). It divides [corporate profits after tax (with inventory valuation and capital consumption adjustments)](../sources.qmd#fred_cpatax) by [gross domestic product](../sources.qmd#fred_gdp), both read through FRED, the Federal Reserve Bank of St. Louis's data service.
 - **Units.** Percent of output.
 - **Frequency.** Quarterly, adjusted to remove regular seasonal swings.
 - **Date range.** From the first quarter of 1947 to the latest published quarter.
