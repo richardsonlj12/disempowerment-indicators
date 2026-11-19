@@ -225,7 +225,7 @@ People can be better off materially while losing influence, and the reverse. Cho
 
 ### Diagnostics, not targets
 
-These indicators are diagnostics. KEEL does not recommend that any policy aim to move one of these numbers. When a measure becomes a target, it stops being a good measure (Goodhart's law). Chooi, Lee and Li give the same warning about disempowerment metrics.
+These indicators are diagnostics. KEEL does not recommend that any policy aim to move one of these numbers. When a measure becomes a target, it stops being a good measure (Goodhart's law). Chooi, Lee and Li give the same warning about disempowerment metrics [(Chooi et al. 2026, 234)](sources.qmd#chooi2026).
 
 ### Critiques we take seriously
 
