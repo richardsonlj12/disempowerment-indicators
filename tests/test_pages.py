@@ -671,7 +671,7 @@ def test_retrospective_caveat_uses_the_indicators_own_frequency(repo):
     pages.build(repo, today=TODAY)
     assert "rule to every month from" in _page(repo, "CD1")
     assert "rule to every quarter from" in _page(repo, "ED1")
-    assert "rule to every year from" in _page(repo, "GD1")
+    assert "rule to every quarter from" in _page(repo, "GD1")  # its quarterly US series drives the reading
 
 
 def test_ed1_profit_share_is_selectable_not_alongside(repo):
