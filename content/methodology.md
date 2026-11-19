@@ -21,11 +21,11 @@ KEEL is built in steps. **Releases** decide which indicators KEEL covers. **Stag
 **Releases.**
 
 - **Release 1 (now):** labor share of income (ED1), firm AI adoption (EA1), how AI is used (EA2), the labor-based share of tax revenue (GD1), human knowledge-commons activity (CD1), the oversight row and the counter-evidence panel.
-- **Release 2:** wealth concentration (EL1), federal AI use cases (GA1), AI-interest political influence (GL1), AI's share of cultural production versus consumption (CD2), and a written definition of lock-in.
+- **Release 2 (planned):** wealth concentration (EL1), federal AI use cases (GA1), AI-interest political influence (GL1), AI's share of cultural production versus consumption (CD2), and a written definition of lock-in.
 
 **Stages.** Each release goes through three stages.
 
-1. **Stage 1, the data site (now).** Charts, sources and explanations, with every reading shown as "Not yet reviewed."
+1. **Stage 1, the data site.** Charts, sources and explanations, with every reading shown as "Not yet reviewed."
 2. **Stage 2, the threshold rule.** A mechanical rule for turning data into readings is written, reviewed, fixed in advance and dated, before any reading is made. This works like pre-registering a study.
 3. **Stage 3, readings and the retrospective.** The fixed rule produces current readings. It is also applied once to every quarter since late 2022, and the result is published as a dated **retrospective**: a look back at how the readings would have changed since ChatGPT's release.
 
@@ -82,17 +82,34 @@ Each indicator is labeled **leading** or **lagging**. A leading indicator is lik
 
 ### Two sets of labels
 
-Adoption-row indicators (EA1 and EA2) use three labels: **Low, Rising, Pervasive**.
+Each indicator gets a reading: a short label describing what its data are doing. The exact rules are written, fixed in advance and dated in Stage 2 (see [Thresholds and the retrospective](#thresholds-and-the-retrospective-coming-in-stages-2-and-3)); the definitions below give the candidate rules.
 
-Displacement-row and lock-in-row indicators (ED1, GD1 and CD1) use five labels, each measured against a baseline:
+**Adoption indicators** ([Firm AI adoption (EA1)](indicators/EA1.qmd), [Automation vs. augmentation (EA2)](indicators/EA2.qmd)): how far AI has spread, judged against each series' own recent path.
 
-- Within baseline
-- Above baseline
-- Below baseline
-- Far above baseline
-- Far below baseline
+| Reading | Meaning |
+|---|---|
+| **Low** | AI use is limited and not growing quickly. |
+| **Rising** | AI use is growing faster than its recent pace. |
+| **Pervasive** | AI use is widespread. |
 
-Both sets also allow "No signal / insufficient data" and "Not yet reviewed." Every reading names its baseline in the line under it. "Above" and "below" describe direction only. Whether a move is a warning sign depends on the indicator, and each page says which way counts.
+The numerical cut-offs for these three labels are set in Stage 2.
+
+**Displacement and lock-in indicators** ([Labor share of income (ED1)](indicators/ED1.qmd), [Labor-based share of tax revenue (GD1)](indicators/GD1.qmd), [Human knowledge-commons activity (CD1)](indicators/CD1.qmd)): the change over the indicator's window, compared with the spread of same-length changes in its baseline period. The standard deviation (σ) measures that spread.
+
+| Reading | Candidate rule |
+|---|---|
+| **Within baseline** | The change is within 1σ of the baseline spread. |
+| **Above baseline** / **Below baseline** | The change is between 1σ and 2σ above or below. |
+| **Far above baseline** / **Far below baseline** | The change is more than 2σ above or below. |
+
+Each indicator's baseline period is stated on its page: 2010 to 2019 for ED1 and GD1, and June 2012 to December 2019 for CD1. "Above" and "below" describe direction only. Whether a move is a warning sign depends on the indicator, and each page's **warning sign** says which way counts. Every reading appears with its **AI link** rating.
+
+**Other states**
+
+| Reading | Meaning |
+|---|---|
+| **No signal / insufficient data** | Not enough data to judge. |
+| **Not yet reviewed** | Data are shown, but the author hasn't confirmed a reading yet. |
 
 ### How readings will work
 
@@ -148,7 +165,7 @@ The rule of thumb:
 
 ### Two kinds of baseline
 
-**Long-running series** (ED1, GD1, CD1) have decades of history and many causes. Their baseline is how the series behaved in **2010 to 2019**, after the 2008 to 2009 recession and before COVID. This page and the indicator pages call it the 2010 to 2019 baseline. The question is whether the series is departing from its baseline, and how fast.
+**Long-running series** (ED1, GD1, CD1) have decades of history and many causes. Their baseline is how the series behaved in **2010 to 2019**, after the 2008 to 2009 recession and before COVID. CD1's index starts in June 2012, so its baseline runs from June 2012 to December 2019. The question is whether the series is departing from its baseline, and how fast.
 
 **Series that measure AI use directly** (EA1, EA2) have only a few years of history and no pre-AI period, and can change quickly. EA1 began near zero. EA2 is a share of AI conversations, so it has no zero point to start from. Their baseline is their **own recent path**: level, rate of change and whether that rate is speeding up, averaged over the last 3, 6 and 12 months, or at the series' own frequency where data are less frequent.
 
