@@ -240,7 +240,7 @@ def test_index_has_scales_note_placeholder_counter_evidence_and_archive(repo):
     text = _index(repo)
     assert "**Rising**" in text and "**Within baseline**" in text
     assert "Labor-based taxes remain about half of OECD tax revenue" in text
-    assert "Written before items were added." in text
+    assert "The inclusion criteria were written before any items were added." in text
     assert "archive.qmd" in text
 
 

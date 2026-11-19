@@ -1,16 +1,20 @@
 # Counter-evidence panel: signals pointing away from disempowerment, held to the same
 # standard as the indicators (spec Sec. 4.6). Only items with verified: true are published.
 inclusion_criteria: >-
-  Written before items were added. An item is included only if (1) it comes from a
-  primary source (the statistical agency, legislature, or authors who produced the figure),
-  opened and checked by us, with a link to that source; (2) it is dated, with the period
-  it covers stated; (3) it is a measured value or a counted event, not an opinion or a
-  press paraphrase; and (4) it points away from disempowerment, either as a policy pushback
-  (governments or institutions acting to retain human control) or as a data signal that moves
-  against the hypothesized mechanism. Material welfare (for example income) is not counted:
-  people can be better off while losing control. Items are not removed because they are small or reverse later; a failed or
-  unverifiable check leaves the item in the file with verified: false and the reason, and
-  it is not published. Inclusion says nothing about whether the signal is caused by AI.
+  The inclusion criteria were written before any items were added. An item is included only
+  if it meets all four: (1) **Primary source.** It comes from a primary source (the
+  statistical agency, legislature or authors who produced the figure), which we opened and
+  checked, with a link. (2) **Dated.** It is dated, with the period it covers stated.
+  (3) **Measured.** It is a measured value or a counted event, not an opinion or a press
+  paraphrase. (4) **Points away.** It points away from disempowerment in one of two ways:
+  policy pushback (governments or institutions acting to keep human control, such as AI laws
+  passed), or data that move the opposite way to what the disempowerment scenario predicts.
+  Material welfare, such as rising incomes, is not counted. Welfare is not agency: people can
+  be better off while losing influence (see [Welfare is not
+  influence](methodology.qmd#welfare-is-not-influence)). **Items are kept even if they are
+  small or later reverse.** An item whose figure cannot be verified stays in the project's
+  records, marked unverified with the reason, and is not published. **No claim that AI caused
+  it.** Inclusion says nothing about whether AI caused the signal.
 items:
   - id: oecd_labor_tax_share
     kind: data_signal
