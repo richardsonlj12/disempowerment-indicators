@@ -1,0 +1,111 @@
+name: Refresh data and deploy
+
+on:
+  schedule:
+    - cron: "0 12 * * 1" # Mondays 12:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+
+# One run at a time: two runs must not race on committing data/.
+concurrency:
+  group: refresh-deploy
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+
+      - name: Refresh every source
+        id: refresh
+        # A failing source must not stop the workflow: the runner isolates sources, writes
+        # data/_health.json and exits 1 if any failed. Failures become issues below.
+        run: |
+          set +e
+          python -m indicators.refresh
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Commit changed data
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "data: weekly refresh $(date -u +%Y-%m-%d)"
+            git push origin HEAD:main
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Open an issue for each failing source
+        if: steps.refresh.outputs.exit_code != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          failed=$(python -c "import json; print('\n'.join(n for n, r in json.load(open('data/_health.json'))['sources'].items() if r.get('status') == 'failed'))")
+          for source in $failed; do
+            title="Data source failing: $source"
+            existing=$(gh issue list --state open --search "\"$title\" in:title" --json title --jq "[.[] | select(.title == \"$title\")] | length")
+            if [ "$existing" = "0" ]; then
+              error=$(python -c "import json,sys; print(json.load(open('data/_health.json'))['sources'][sys.argv[1]].get('error', 'unknown error'))" "$source")
+              gh issue create --title "$title" \
+                --body "The scheduled refresh could not update \`$source\`: $error. See the [workflow run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+            else
+              echo "Open issue already exists for $source."
+            fi
+          done
+
+  build:
+    needs: refresh
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.refresh.outputs.sha }} # includes the data commit the refresh job pushed
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+      - run: pytest
+      - run: python -m indicators.pages
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.11.9
+      - run: quarto render site
+      - run: python scripts/link_check.py site/_site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
