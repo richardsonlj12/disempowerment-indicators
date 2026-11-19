@@ -49,6 +49,7 @@ LINK_REPORT = Path("review") / "sources-link-check.md"
 REQUIRED = {
     "article": ["author", "title", "issued", "publisher"],
     "paper-conference": ["author", "title", "issued", "container-title", "publisher"],
+    "article-journal": ["author", "title", "issued", "container-title", "volume"],
     "report": ["author", "title", "issued"],
     "chapter": ["author", "title", "issued", "container-title", "publisher"],
     "book": ["author", "title", "issued", "publisher"],
@@ -353,6 +354,14 @@ def format_entry(entry: dict, suffixes: dict[str, str] | None = None) -> str:
             container += f", {page_range(entry['page'])}"
         parts.append(_end(container))
         parts.append(_end(_publisher(entry)))
+    elif t == "article-journal":  # CMOS 18: Journal Volume (Issue): pages.
+        parts.append(quoted)
+        container = f"*{_md(entry['container-title'])}* {entry['volume']}"
+        if entry.get("issue"):
+            container += f" ({entry['issue']})"
+        if entry.get("page"):
+            container += f": {page_range(entry['page'])}"
+        parts.append(_end(container))
     elif t == "book":
         parts.append(f"*{title}*.")
         parts.append(_end(_publisher(entry)))

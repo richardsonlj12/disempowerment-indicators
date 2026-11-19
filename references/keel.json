@@ -1234,5 +1234,30 @@
       ]
     },
     "URL": "https://openletter.mousetail.nl"
+  },
+  {
+    "id": "ross2001",
+    "type": "article-journal",
+    "author": [
+      {
+        "family": "Ross",
+        "given": "Michael L."
+      }
+    ],
+    "title": "Does Oil Hinder Democracy?",
+    "container-title": "World Politics",
+    "volume": "53",
+    "issue": "3",
+    "page": "325-361",
+    "issued": {
+      "date-parts": [
+        [
+          2001,
+          4
+        ]
+      ]
+    },
+    "DOI": "10.1353/wp.2001.0011",
+    "URL": "https://www.cambridge.org/core/journals/world-politics/article/abs/does-oil-hinderdemocracy/67665D8D240C8F43CD4A2DCB35894071"
   }
 ]

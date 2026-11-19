@@ -260,6 +260,15 @@ def test_chapter_format_with_pages():
                                    "[https://example.edu/ch8.pdf](https://example.edu/ch8.pdf).")
 
 
+def test_journal_article_format():
+    e = {"id": "ross2001", "type": "article-journal", "author": [_person("Ross", "Michael L.")],
+         "title": "Does Oil Hinder Democracy?", "container-title": "World Politics", "volume": "53",
+         "issue": "3", "page": "325-361", "issued": {"date-parts": [[2001, 4]]}, "DOI": "10.1353/wp.2001.0011"}
+    assert bib.format_entry(e) == (
+        "Ross, Michael L. 2001. “Does Oil Hinder Democracy?” *World Politics* 53 (3): 325–61. "
+        "[https://doi.org/10.1353/wp.2001.0011](https://doi.org/10.1353/wp.2001.0011).")
+
+
 def test_book_format():
     e = {"id": "a2020", "type": "book", "author": [_person("A", "B")], "title": "Book",
          "publisher": "Press", "publisher-place": "City", "issued": {"date-parts": [[2020]]}}
