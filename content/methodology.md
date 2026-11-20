@@ -110,7 +110,7 @@ Each indicator page's summary table shows a reading in separate rows:
 
 1. **Current reading.** What the data are doing, using the labels above. From Stage 3, an interpretation line appears under it: what the movement would mean if AI were driving it, written from the indicator's warning sign.
 2. **AI link.** The AI link rating, in its own row further down the table.
-3. **Latest data.** The magnitude: the number behind the reading, in the indicator's own units, naming the baseline it is measured against.
+3. **Latest data.** The magnitude: the number behind the reading, in the indicator's own units, and what a reading will compare it with.
 
 A reading says what the data did. It does not say why.
 
@@ -145,7 +145,7 @@ EA1 and EA2 are rated strong because they measure AI directly. That is not stron
 
 ### Baselines
 
-**Long-running series** (ED1, GD1, CD1) have decades of history and many causes. Their baseline is how the series behaved in **2010 to 2019**, after the 2008 to 2009 recession and before COVID. CD1's index starts in June 2012, so its baseline runs from June 2012 to December 2019. The question is whether the series is departing from its baseline, and how fast.
+**Long-running series** (ED1, GD1, CD1) have decades of history and many causes. They are judged by how they **change**, not by their level, because their levels drift over decades for reasons that have nothing to do with AI. The question is whether a recent change, over a window such as one, three, or five years, is unusual compared with changes of the same length in a **baseline period**. The candidate baseline period is **2010 to 2019**, after the 2008 to 2009 recession and before COVID. CD1's index starts in June 2012, so its period runs from June 2012 to December 2019. Which period to use is still open: see [The threshold rule](#threshold-rule).
 
 **Series that measure AI use directly** (EA1, EA2) have only a few years of history and no pre-AI period, and can change quickly. EA1 began near zero. EA2 is a share of AI conversations, so it has no zero point to start from. Their baseline is their **own recent path**: level, rate of change, and whether that rate is speeding up, averaged over the last 3, 6, and 12 months, or at the series' own frequency where data are less frequent.
 
