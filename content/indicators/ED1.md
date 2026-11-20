@@ -1,5 +1,5 @@
 ---
-summary: The share of business income paid to workers has been falling for decades, long before generative AI. This page tracks whether that fall speeds up as AI spreads.
+summary: The share of what nonfarm businesses produce that is paid to workers as wages and benefits, and whether its long fall, which began decades before generative AI, speeds up as AI spreads.
 warning_sign: A falling labor share would be consistent with workers losing leverage in the economy. A stable or rising share points the other way, though a steady share can still hide lost leverage.
 data_sources:
   - name: "Bureau of Labor Statistics (BLS), Productivity and Costs: labor share, nonfarm business sector"

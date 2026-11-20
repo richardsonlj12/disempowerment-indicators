@@ -1,5 +1,5 @@
 ---
-summary: People ask far fewer questions on Stack Overflow than they used to, and the fall began before ChatGPT's release on 30 November 2022. This page compares Stack Overflow with four non-programming question-and-answer sites, to see how much of the fall is specific to Stack Overflow.
+summary: New questions on Stack Overflow, compared with four non-programming question-and-answer sites, to see how much of any change in Stack Overflow's activity is specific to it.
 warning_sign: Stack Overflow's activity falling further behind the comparison sites than in its 2012 to 2019 history would be consistent with people turning from human knowledge communities to AI for coding help.
 data_sources:
   - name: Stack Exchange API (new questions per month)

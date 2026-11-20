@@ -1,5 +1,5 @@
 ---
-summary: On average, governments in the OECD (Organisation for Economic Co-operation and Development, a group of mostly wealthy countries) still raise about half of their tax revenue from taxes on people's incomes and social contributions, and that share is slightly above its 2010 level. The US share, which drives the reading, has fallen since 2022.
+summary: "The share of tax revenue that comes from taxes on people's incomes and social contributions: quarterly for the United States, which the reading uses, and annually for the OECD average (the Organisation for Economic Co-operation and Development, a group of mostly wealthy countries)."
 warning_sign: A falling labor-based share would be consistent with the state depending less on taxing workers. A rising or stable share points the other way.
 data_sources:
   - name: "Bureau of Economic Analysis (BEA), national accounts: government receipts, via FRED (Federal Reserve Bank of St. Louis)"

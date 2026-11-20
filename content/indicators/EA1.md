@@ -1,5 +1,5 @@
 ---
-summary: A growing share of US firms say they use AI. This measures adoption, how far AI is entering firms, counting every firm equally. It does not by itself show that anyone has lost leverage.
+summary: The share of US firms that say they used AI in the last two weeks. It measures adoption, how far AI is entering firms, counting every firm equally.
 warning_sign: Rising adoption would show AI spreading through firms. By itself it does not show that people have lost leverage.
 data_sources:
   - name: Census Bureau, Business Trends and Outlook Survey (BTOS)
