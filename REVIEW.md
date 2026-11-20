@@ -102,3 +102,29 @@ Each gate is the owner's decision. Claude may prepare the material and log what 
 | `source-reading-notes.md` | The source-reading gate: what each key source says, what KEEL relies on and the limits on citing it. |
 | `figure-verification.md` | Every figure on the site traced to its primary source, with link, date checked and who checked. |
 | `cd1-comparison-site-selection.md` | The pre-registered rules and screening for the CD1 comparison sites, and the owner's approval. |
+
+## 7. Versions and edits
+
+Decided by the owner, 2026-11-19. The version number counts what has been published. Releases and stages are names from the project plan; each stage ships as a version, and the version keeps counting between stages.
+
+| What goes live | Version |
+|---|---|
+| Release 1, Stage 1 (launch) | v0.1.0 |
+| A batch of wording fixes, or a correction | v0.1.1, v0.1.2 … |
+| Release 1, Stage 2 (reading rules fixed) | v0.2.0 |
+| Release 1, Stage 3 (first readings published) | v1.0.0 |
+| Release 2 (new indicators) | v1.1.0 |
+
+- **0.x means in development, with no readings yet.** v1.0.0 marks Stage 3, when the site first says what the data mean. After 1.0, new capability raises the middle number and fixes raise the last.
+- **The weekly data refresh is not a version.** The bot commits it, and "Data last fetched" on each page records it.
+- **Every push the owner approves is tagged** (for example `v0.1.1`), with short release notes on GitHub that list each change. A tag marks exactly which text and code were live, so it is a safe point to return to. Data commits fall between tags by design.
+- **Where a change is recorded:**
+
+| Change | Version | Git history and release notes | Dated note on the page | Revision log (Methodology) |
+|---|---|---|---|---|
+| Polish: a typo, clearer wording, layout | last number | yes | no | no |
+| Correction: a wrong figure, or a claim that said more than the data | last number | yes | **yes** (section 4) | no |
+| A change to a fixed rule, window or AI link rating | middle number | yes | no | **yes** |
+| New capability: a stage, an indicator, a chart view | middle number (1.0 for Stage 3) | yes | no | no |
+
+- **How an edit goes live:** the owner asks for a change (or edits `content/`); Claude shows it in the local preview; the owner approves; Claude commits, tags and pushes; the site redeploys automatically within minutes. Small edits can be batched into one version.
