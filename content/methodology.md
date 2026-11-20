@@ -20,8 +20,8 @@ A fourth row, **human deferral and oversight**, runs across all three domains. I
 
 **The rows are inspired by [Chooi et al. (2026)](sources.qmd#chooi2026).** Their paper, "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics," proposes three layers that they call exposure, erosion, and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two.
 
-::: {.callout-note collapse="true" title="How KEEL's rows line up with Chooi, Lee and Li"}
-| KEEL's row | Chooi, Lee and Li's term | How they relate |
+::: {.callout-note collapse="true" title="How KEEL's rows line up with Chooi, Lee, and Li"}
+| KEEL's row | Chooi, Lee, and Li's term | How they relate |
 |---|---|---|
 | **Adoption:** AI entering a system (EA1, EA2) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it [(Chooi et al. 2026, 228)](sources.qmd#chooi2026). We agree, and the adoption row's pages say so. |
 | **Displacement:** a whole system depending less on human participation (ED1, GD1, CD1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states, and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
@@ -31,7 +31,7 @@ A fourth row, **human deferral and oversight**, runs across all three domains. I
 
 We also do not use the paper's second axis, level of analysis (individual, institutional, civilizational). Our indicators are national totals. The paper's own warning applies: "disempowerment" at different levels may be different things sharing a name.
 
-**No composite score.** Each indicator gets its own reading, and cells are never averaged. Chooi, Lee and Li give reasons we share:
+**No composite score.** Each indicator gets its own reading, and cells are never averaged. Chooi, Lee, and Li give reasons we share:
 
 - How to weight indicators is not understood.
 - A composite can hide a failure in one domain.
@@ -49,7 +49,7 @@ Concentrated wealth or political influence is not by itself evidence that reduce
 - **Persistence:** a departure from baseline that does not reverse after shocks over a stated number of periods.
 - **Rising switching costs:** a growing capacity of groups that profit from AI to block a return to human decision making.
 
-Rising switching costs is one of the lock-in signs Chooi, Lee and Li list. Persistence is KEEL's own proposal. If no test is adopted, the row will be renamed "Concentration of influence" rather than overclaim. Until then, every lock-in cell reads "No public measure yet."
+Rising switching costs is one of the lock-in signs Chooi, Lee, and Li list. Persistence is KEEL's own proposal. If no test is adopted, the row will be renamed "Concentration of influence" rather than overclaim. Until then, every lock-in cell reads "No public measure yet."
 
 #### Oversight
 
@@ -223,11 +223,11 @@ Every indicator page states two things:
 
 ### Welfare is not influence
 
-People can be better off materially while losing influence, and the reverse. Chooi, Lee and Li make the same distinction between well-being and agency. Every economic page notes it. A rising real income is good news, but it is not evidence that leverage is intact, so it is not counted in the counter-evidence panel.
+People can be better off materially while losing influence, and the reverse. Chooi, Lee, and Li make the same distinction between well-being and agency. Every economic page notes it. A rising real income is good news, but it is not evidence that leverage is intact, so it is not counted in the counter-evidence panel.
 
 ### Diagnostics, not targets
 
-These indicators are diagnostics. KEEL does not recommend that any policy aim to move one of these numbers. When a measure becomes a target, it stops being a good measure (Goodhart's law). Chooi, Lee and Li give the same warning about disempowerment metrics [(Chooi et al. 2026, 234)](sources.qmd#chooi2026).
+These indicators are diagnostics. KEEL does not recommend that any policy aim to move one of these numbers. When a measure becomes a target, it stops being a good measure (Goodhart's law). Chooi, Lee, and Li give the same warning about disempowerment metrics [(Chooi et al. 2026, 234)](sources.qmd#chooi2026).
 
 ### Critiques we take seriously
 
@@ -244,7 +244,7 @@ These indicators are diagnostics. KEEL does not recommend that any policy aim to
 #### The authors' own caveats
 
 - [Kulveit et al. (2025)](sources.qmd#kulveit2025) concede that some outcomes of the scenario are ambiguous. For example, an AI-run state could bring large benefits.
-- Chooi, Lee and Li say that showing what caused a change is hard throughout, that most metrics in this area can only describe and compare, and that leading indicators are hard to validate before the outcomes they predict have happened.
+- Chooi, Lee, and Li say that showing what caused a change is hard throughout, that most metrics in this area can only describe and compare, and that leading indicators are hard to validate before the outcomes they predict have happened.
 
 KEEL's indicators are descriptive in exactly this sense.
 
@@ -254,7 +254,7 @@ KEEL's indicators are descriptive in exactly this sense.
 
 The next candidate is survey data on how far people use AI as a go-between for information and relationships, such as Pew Research Center surveys and the Reuters Institute Digital News Report.
 
-**Individual capability is not measured.** None of KEEL's indicators measures individual capability, what Chooi, Lee and Li call erosion: individuals losing the ability to do a task without AI. This is the largest gap between KEEL and the paper.
+**Individual capability is not measured.** None of KEEL's indicators measures individual capability, what Chooi, Lee, and Li call erosion: individuals losing the ability to do a task without AI. This is the largest gap between KEEL and the paper.
 
 [Back to top](#)
 

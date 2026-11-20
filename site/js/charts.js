@@ -386,15 +386,26 @@ function groupTip(figure) {
   figure.addEventListener("focusin", e => { const t = target(e); if (t) show(t); });
   figure.addEventListener("focusout", () => { tip.hidden = true; });
   figure.addEventListener("keydown", e => { if (e.key === "Escape") tip.hidden = true; });
-  document.addEventListener("pointerdown", e => {
-    const t = figure.contains(e.target) && target(e);
-    if (t) show(t); else tip.hidden = true;
-  });
+  figure.keelShowTip = show;
+  figure.keelHideTip = () => { tip.hidden = true; };
+  // One document listener for all charts, added once: a tap on a label shows its tip (phones have no
+  // hover); a tap anywhere else hides every tip. (Was one listener per redraw.)
+  if (!groupTip.listening) {
+    groupTip.listening = true;
+    document.addEventListener("pointerdown", e => {
+      const t = e.target.closest && e.target.closest("[data-tip]");
+      document.querySelectorAll(".keel-chart-stacked").forEach(f => f.keelHideTip && f.keelHideTip());
+      const fig = t && t.closest(".keel-chart-stacked");
+      if (fig && fig.keelShowTip) fig.keelShowTip(t);
+    });
+  }
 }
 
 function markTip(el, text) {
   el.setAttribute("data-tip", text);
   el.setAttribute("tabindex", "0");
+  // Screen readers hear the definition too, not just "Group A".
+  el.setAttribute("aria-label", text); // the definition starts with the group name
   el.classList.add("keel-grouplabel");
 }
 
@@ -544,7 +555,7 @@ function stackedTable(spec, view, samples, name, groupOf, data) {
   details.append(element("summary", null, "Data table"));
   const scroller = element("div", "keel-datatable-scroll");
   const table = element("table");
-  table.append(element("caption", null, `Values plotted in this chart (${samples.length} samples), percent of classified conversations.`));
+  table.append(element("caption", null, `Values plotted in this chart (${samples.length} samples). Patterns and totals: percent of categorized conversations.${leftOut ? ` ${view.leftOut.label}: percent of all conversations, as Anthropic publishes it.` : ""}`));
   const thead = element("thead");
   const top = element("tr"), sub = element("tr");
   for (const text of ["Sampled", "Group"]) {

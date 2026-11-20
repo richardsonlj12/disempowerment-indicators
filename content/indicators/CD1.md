@@ -30,7 +30,7 @@ This indicator sits in the **Displacement** row for the cultural domain. It is a
 - **Home Improvement:** questions about home repair, renovation, and maintenance, from plumbing and wiring to carpentry.
 - **Travel:** questions about planning trips and getting around, such as visas, routes, lodging, and local customs.
 - **Role-playing Games:** questions about tabletop role-playing games, including rules, game design, and running a group.
-- **Science Fiction & Fantasy:** questions about science fiction and fantasy books, films and shows, including plot, canon, and interpretation.
+- **Science Fiction & Fantasy:** questions about science fiction and fantasy books, films, and shows, including plot, canon, and interpretation.
 
 **The comparison sites were chosen in advance.** The author approved them on 17 November 2026, under criteria fixed before any post-2019 counts for the candidate comparison sites were requested or viewed:
 

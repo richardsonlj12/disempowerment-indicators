@@ -15,7 +15,7 @@ Gradual disempowerment is the scenario in which economies, states, and cultures 
 The Anthropic Economic Index is the nearest public proxy. It sorts conversations with Claude by how people work with the AI:
 
 - **Automation**: the AI is asked to complete a task with little involvement from the person. Anthropic's "directive" and "feedback loop" patterns.
-- **Augmentation**: the person and the AI work on it together. Anthropic's "validation," "task iteration" and "learning" patterns.
+- **Augmentation**: the person and the AI work on it together. Anthropic's "validation," "task iteration," and "learning" patterns.
 
 This indicator sits in the **Adoption** row, as a measure of how much of the work is handed to AI. Firm AI adoption (EA1) asks whether firms use AI at all. EA2 asks, for one product, how much of the work is handed over. It is a **leading** indicator, one that moves early.
 
