@@ -27,7 +27,7 @@ These run without a person. They are listed as they exist today, not as hoped fo
 **Pytest markers.** `pyproject.toml` excludes two markers from the default run, and CI never runs them:
 
 - `live` tests use the network. They include the spot checks against published values (for example the BLS labor share for 2026Q2). Run them by hand with `.venv/bin/pytest -m live` after changing a fetcher and before a release.
-- `release_gate` tests block a release, not development. They check that the feedback form link is filled in, that no `[DRAFT FOR OWNER]` passage remains, and that every Sources link resolves. Run them by hand before a release with `.venv/bin/pytest -m release_gate`. The Sources link test also has the `live` marker, so run both together when needed: `.venv/bin/pytest -m "live and release_gate"`.
+- `release_gate` tests block a release, not development. They check that the feedback form link is filled in, that no `[DRAFT FOR OWNER]` passage remains, that every Sources link resolves, and that every internal link lands with its target just below the top bar on a desktop and a phone screen (`scripts/anchor_check.py`, in Chrome; needs `pip install -e '.[dev,browser]'` and a full build with `quarto render` first; about 6 minutes). Run them by hand before a release with `.venv/bin/pytest -m release_gate`. The Sources link test also has the `live` marker, so run both together when needed: `.venv/bin/pytest -m "live and release_gate"`.
 - Who: the person cutting the release. When: before every release.
 
 **Sources page link check** (`src/indicators/bibliography.py`):

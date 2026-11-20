@@ -11,6 +11,7 @@ dependencies = ["pandas", "requests", "pyyaml", "openpyxl"]
 
 [project.optional-dependencies]
 dev = ["pytest", "responses"]
+browser = ["playwright"]  # release-gate link check only (uses the installed Chrome); not installed by CI
 
 [tool.setuptools.packages.find]
 where = ["src"]
