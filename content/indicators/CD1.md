@@ -12,11 +12,11 @@ coverage: Worldwide (English-language sites) · monthly · index from June 2012;
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). Culture, in this argument, stays tied to people because people make it and pass it on. Public knowledge commons are one place this happens in the open. On Stack Overflow, people ask questions and other people answer them. On Wikipedia, people write and read a shared reference.
+Gradual disempowerment is the scenario in which economies, states, and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). Culture, in this argument, stays tied to people because people make it and pass it on. Public knowledge commons are one place this happens in the open. On Stack Overflow, people ask questions and other people answer them. On Wikipedia, people write and read a shared reference.
 
 If people turn to AI systems in place of these communities, two things follow:
 
-- **Less human-made knowledge.** Fewer new questions, answers and articles are produced by people.
+- **Less human-made knowledge.** Fewer new questions, answers, and articles are produced by people.
 - **Thinner communities.** The communities that maintain and correct that knowledge shrink.
 
 AI systems also learn from these commons, so a smaller commons could leave AI-generated material with a larger role in what people learn.
@@ -27,17 +27,17 @@ This indicator sits in the **Displacement** row for the cultural domain. It is a
 
 **Stack Overflow against comparison sites (drives the reading).** New questions on Stack Overflow, compared with new questions on four non-programming Stack Exchange sites, the **comparison sites**:
 
-- **Home Improvement:** questions about home repair, renovation and maintenance, from plumbing and wiring to carpentry.
-- **Travel:** questions about planning trips and getting around, such as visas, routes, lodging and local customs.
-- **Role-playing Games:** questions about tabletop role-playing games, including rules, game design and running a group.
-- **Science Fiction & Fantasy:** questions about science fiction and fantasy books, films and shows, including plot, canon and interpretation.
+- **Home Improvement:** questions about home repair, renovation, and maintenance, from plumbing and wiring to carpentry.
+- **Travel:** questions about planning trips and getting around, such as visas, routes, lodging, and local customs.
+- **Role-playing Games:** questions about tabletop role-playing games, including rules, game design, and running a group.
+- **Science Fiction & Fantasy:** questions about science fiction and fantasy books, films and shows, including plot, canon, and interpretation.
 
 **The comparison sites were chosen in advance.** The author approved them on 17 November 2026, under criteria fixed before any post-2019 counts for the candidate comparison sites were requested or viewed:
 
 - **Launched before 2015**, to give a long history before generative AI.
 - **At least 400 new questions a month in 2019**, so monthly counts are not too noisy.
-- **Subject matter outside programming, IT, data and math**, whose users are directly exposed to coding assistants.
-- **Mostly experiential, physical-world, creative or community-specific subject matter**, where a text chatbot is a weaker substitute.
+- **Subject matter outside programming, IT, data, and math**, whose users are directly exposed to coding assistants.
+- **Mostly experiential, physical-world, creative, or community-specific subject matter**, where a text chatbot is a weaker substitute.
 - **A "normal", active main site.** "Normal" is Stack Exchange's own term for a site that has left beta. A main site is a question-and-answer site, not a meta site for discussing the site itself.
 
 The author decided to use only these four sites. The full selection record, including the sites considered and rejected, is in the project repository.
@@ -75,14 +75,14 @@ These are shown for context and do not drive the reading.
 
 - **It does not measure human capacity or reliance on AI.** It counts activity: questions asked, pages viewed, editors editing. People may know as much as before and simply ask in a different place. KEEL names this gap on the methodology page.
 - **It does not give the full AI effect.** AI affects the comparison sites too. People can ask a chatbot about wiring a light switch or a rule in a role-playing game. The index therefore measures Stack Overflow's change relative to sites that are less exposed. If AI has also reduced activity on the comparison sites, the index understates the effect on Stack Overflow.
-- **It does not separate AI from other changes specific to Stack Overflow.** Moderation policy, community norms, the maturing of the site (many common questions are already answered) and changes in the programming tools people use can all move Stack Overflow on its own.
+- **It does not separate AI from other changes specific to Stack Overflow.** Moderation policy, community norms, the maturing of the site (many common questions are already answered), and changes in the programming tools people use can all move Stack Overflow on its own.
 
 ## What would change our reading
 
 ### Alternative explanations
 
 - **For Stack Overflow, a decline already under way.** Stack Overflow's long decline, which began years before ChatGPT, may simply be continuing. That is why the reading rests on the comparison with other sites and on whether the index's path changed, not on the fall alone.
-- **For Stack Overflow, changes specific to the site.** These would make the index overstate an AI-related change. Moderation and policy changes, the 2023 moderator strike, the site's maturing (many common questions are already answered) and new non-AI places and tools for programmers' questions can all reduce Stack Overflow's activity without touching the comparison sites. The index would count all of this as Stack Overflow falling behind.
+- **For Stack Overflow, changes specific to the site.** These would make the index overstate an AI-related change. Moderation and policy changes, the 2023 moderator strike, the site's maturing (many common questions are already answered), and new non-AI places and tools for programmers' questions can all reduce Stack Overflow's activity without touching the comparison sites. The index would count all of this as Stack Overflow falling behind.
 - **For Stack Overflow, the line is blurred at both ends.** AI coding tools were spreading before ChatGPT, and AI also reaches the comparison sites. Both would tend to make the index understate an AI effect.
 - **For Wikipedia, people may read it through AI.** Falling human pageviews may mean that people read Wikipedia's content through chatbots and search summaries that draw on it, instead of visiting the site. Fewer pageviews would then mean fewer visits, with the same reliance on human-written knowledge.
 
@@ -112,7 +112,7 @@ These indicators show whether the conditions for disempowerment are present. The
 ## Data and calculation
 
 - **Source and series.** [Stack Exchange API](../sources.qmd#stackexchange_api): the number of new questions created in each calendar month on Stack Overflow and on the four comparison sites (Home Improvement, Travel, Role-playing Games, and Science Fiction & Fantasy). [Wikimedia Analytics API](../sources.qmd#wikimedia_analytics_api): monthly English Wikipedia pageviews by human users, and monthly counts of logged-in editors with five or more edits, leaving out accounts Wikimedia counts as bots.
-- **Units.** Index (2019 average = 100); percent for the change since November 2022; percentage points for the year-over-year gap; questions, pageviews and editors per month for the underlying counts.
+- **Units.** Index (2019 average = 100); percent for the change since November 2022; percentage points for the year-over-year gap; questions, pageviews, and editors per month for the underlying counts.
 - **Frequency.** Monthly. The current month is left out until it is complete.
 - **Date range.** Stack Overflow counts from September 2008. Each comparison site starts at its first full month after its public beta. The index starts in June 2012 and the year-over-year gap in July 2012. Wikipedia pageviews start in July 2015; active editors in January 2010.
 - **Formula in plain words.**

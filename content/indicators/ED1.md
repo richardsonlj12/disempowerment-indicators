@@ -12,7 +12,7 @@ coverage: United States, nonfarm business sector · quarterly · from 1947
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). The argument starts from a simple observation: economies serve people partly because they need people's work. Workers who are needed have bargaining power, which KEEL calls leverage. If AI systems can do more of the work, firms need fewer workers, and that source of leverage weakens.
+Gradual disempowerment is the scenario in which economies, states, and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). The argument starts from a simple observation: economies serve people partly because they need people's work. Workers who are needed have bargaining power, which KEEL calls leverage. If AI systems can do more of the work, firms need fewer workers, and that source of leverage weakens.
 
 The labor share is the most direct public measure of how much of what businesses produce is paid out to the people who work in them. [Chooi et al. (2026, 232)](../sources.qmd#chooi2026) call labor cost share "the most direct financial measure of human economic participation." If AI substitutes for human work at scale, a falling labor share is one place the change should show up.
 
@@ -28,10 +28,10 @@ This is a long-running series. Its baseline is how it behaved in 2010 to 2019, a
 
 ## What it doesn't show
 
-- **It does not measure AI.** The labor share responds to globalization, market concentration, the decline of unions, the mix of industries, the business cycle and more. Chooi, Lee and Li note that labor cost share has been declining since the 1980s for reasons like these.
+- **It does not measure AI.** The labor share responds to globalization, market concentration, the decline of unions, the mix of industries, the business cycle, and more. Chooi, Lee and Li note that labor cost share has been declining since the 1980s for reasons like these.
 - **It does not measure leverage directly.** Bargaining power is the thing the argument is about. The labor share is a stand-in for it.
 - **It does not measure welfare.** People can be materially better off while losing leverage, and the reverse can also happen. A falling labor share in a fast-growing economy can come with rising real wages. A stable share can come with stagnant ones. KEEL tracks influence and dependence, not material welfare.
-- **It covers the nonfarm business sector only.** Government, farms, nonprofit institutions and private households are outside it.
+- **It covers the nonfarm business sector only.** Government, farms, nonprofit institutions, and private households are outside it.
 
 ## What would change our reading
 
@@ -62,7 +62,7 @@ These indicators show whether the conditions for disempowerment are present. The
 - **Units.** Percent of output.
 - **Frequency.** Quarterly, adjusted to remove regular seasonal swings.
 - **Date range.** From the first quarter of 1947 to the latest published quarter.
-- **Formula in plain words.** The labor share is the compensation paid to workers in nonfarm businesses (wages, salaries and benefits, plus an estimate for the self-employed) divided by the current-dollar value of what those businesses produce, as published by BLS. KEEL does not recompute it. The profit share is corporate profits after tax divided by gross domestic product, times 100.
+- **Formula in plain words.** The labor share is the compensation paid to workers in nonfarm businesses (wages, salaries, and benefits, plus an estimate for the self-employed) divided by the current-dollar value of what those businesses produce, as published by BLS. KEEL does not recompute it. The profit share is corporate profits after tax divided by gross domestic product, times 100.
 
 ## Caveats
 

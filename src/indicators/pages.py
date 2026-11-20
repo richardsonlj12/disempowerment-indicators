@@ -513,7 +513,7 @@ def downloads(views, series, change_files) -> str:
         title = series[sid][1].title
         lines.append(f"- [{title}](../data/{sid}.csv) (CSV) · [metadata](../data/{sid}.meta.json) (JSON)")
         if sid in change_files:
-            lines.append(f"- [{title}: changes over 1, 3 and 5 years, with the 2010–19 average and spread of "
+            lines.append(f"- [{title}: changes over 1, 3, and 5 years, with the 2010–19 average and spread of "
                          f"same-length changes](../data/{sid}_changes.csv) (CSV)")
     if any(sid not in series for sid in wanted):
         lines.append("- Some series are still being collected and will be listed here when available.")
@@ -669,7 +669,9 @@ def _rowhead(label: str, definition: str) -> str:
 
 
 def _and(ids: list[str]) -> str:
-    return ids[0] if len(ids) == 1 else ", ".join(ids[:-1]) + " and " + ids[-1]
+    if len(ids) <= 2:
+        return " and ".join(ids)
+    return ", ".join(ids[:-1]) + ", and " + ids[-1]
 
 
 # ------------------------------------------------------------------ build

@@ -5,7 +5,7 @@ pagetitle: About · KEEL
 
 ## Purpose
 
-KEEL (Key Evidence on Eroding Leverage) tracks free public data on whether the conditions for gradual disempowerment are present: the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event. Each indicator page shows the data, how it is calculated, what it does and does not show, and what would change our reading. The [methodology](methodology.qmd) explains how the indicators fit together and how readings will work.
+KEEL (Key Evidence on Eroding Leverage) tracks free public data on whether the conditions for gradual disempowerment are present: the scenario in which economies, states, and cultures stop needing people and so stop serving them, without any single dramatic event. Each indicator page shows the data, how it is calculated, what it does and does not show, and what would change our reading. The [methodology](methodology.qmd) explains how the indicators fit together and how readings will work.
 
 These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.
 
@@ -23,8 +23,8 @@ Each indicator page links to its data as CSV files. Please cite the original sou
 
 We welcome constructive and honest feedback on this project.
 
-- **Report an error** ([GitHub Issues](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md)): for a factual mistake in data, figures or sources. Public; needs a free GitHub account.
-- **Join the discussion** ([GitHub Discussions](https://github.com/richardsonlj12/keel/discussions)): for questions about the method, interpretation or ideas, in an open conversation others can read and add to. Public; needs a free GitHub account.
+- **Report an error** ([GitHub Issues](https://github.com/richardsonlj12/keel/issues/new?template=error-report.md)): for a factual mistake in data, figures, or sources. Public; needs a free GitHub account.
+- **Join the discussion** ([GitHub Discussions](https://github.com/richardsonlj12/keel/discussions)): for questions about the method, interpretation, or ideas, in an open conversation others can read and add to. Public; needs a free GitHub account.
 - **Send private feedback** ([feedback form](https://docs.google.com/forms/d/e/1FAIpQLSdJn9K0revpwU1sWM-WPmqlPtw80JVSuR9lIzcPktXqY7e3Tg/viewform)): for anything else, or if you'd rather not post publicly. No account needed.
 
 ## Disclosure

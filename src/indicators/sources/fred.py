@@ -197,7 +197,7 @@ def fetch(data_dir: Path | str = "data", full: bool = False) -> list[tuple[pd.Da
         notes=(
             f"Formula: ({PERSONAL_TAXES} personal current taxes + {CONTRIBUTIONS} contributions for "
             f"government social insurance) / ({TAX_RECEIPTS} government current tax receipts + "
-            f"{CONTRIBUTIONS}) x 100. All levels, all governments (federal, state and local), "
+            f"{CONTRIBUTIONS}) x 100. All levels, all governments (federal, state, and local), "
             "seasonally adjusted annual rates. Quarters where any input is unpublished are omitted."
         ),
     )

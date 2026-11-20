@@ -10,7 +10,7 @@ coverage: Worldwide (Claude.ai users) · irregular releases · from a December 2
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). The argument turns on decisions and tasks moving from people to AI. Among the metrics worth developing, Kulveit et al. suggest tracking the fraction of major corporate decisions made primarily by AI systems. No public data measures anything like that across society.
+Gradual disempowerment is the scenario in which economies, states, and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). The argument turns on decisions and tasks moving from people to AI. Among the metrics worth developing, Kulveit et al. suggest tracking the fraction of major corporate decisions made primarily by AI systems. No public data measures anything like that across society.
 
 The Anthropic Economic Index is the nearest public proxy. It sorts conversations with Claude by how people work with the AI:
 
@@ -35,7 +35,7 @@ This indicator sits in the **Adoption** row, as a measure of how much of the wor
 
 **Breaks in the data.** Anthropic has changed how it builds and publishes these data several times. The samples between two breaks form a method group, labelled A to D on the chart; compare samples only within a group. The groups are defined under [Method groups](#method-groups).
 
-This series measures AI use directly and has no history before AI. Its baseline is its own recent path, at the frequency the releases allow. Readings will use the labels Low, Rising and Pervasive, and start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
+This series measures AI use directly and has no history before AI. Its baseline is its own recent path, at the frequency the releases allow. Readings will use the labels Low, Rising, and Pervasive, and start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
 
 ## What it doesn't show
 
@@ -83,7 +83,7 @@ These indicators show whether the conditions for disempowerment are present. The
 - **Conflict of interest.** Anthropic publishes the data and has a commercial interest in how its products are perceived. KEEL is built with assistance from Claude. KEEL uses the published data as released and documents every choice it makes in converting it.
 - **Irregular releases.** Releases arrive months apart, and the gaps between them differ. Readings compare releases, whatever the time between them.
 - **Changing file formats.** Each release has been structured differently. Any future change in layout will be added as a break.
-- **Plans covered in January 2026.** Anthropic's January 2026 report describes its sample as Free, Pro and Max conversations [(Appel et al. 2026)](../sources.qmd#appel2026), but the release's data documentation says Free and Pro. KEEL follows the data documentation, so the plan change is marked at the 24 March 2026 release.
+- **Plans covered in January 2026.** Anthropic's January 2026 report describes its sample as Free, Pro, and Max conversations [(Appel et al. 2026)](../sources.qmd#appel2026), but the release's data documentation says Free and Pro. KEEL follows the data documentation, so the plan change is marked at the 24 March 2026 release.
 - **Patterns assigned automatically.** Anthropic sorts conversations into patterns automatically, using its own methods. A change in those methods could move the shares. The breaks list records only the changes the releases document.
 
 ## Method groups

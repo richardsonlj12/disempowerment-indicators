@@ -4,13 +4,13 @@ KEEL measures whether the conditions for gradual disempowerment are present, usi
 
 ## What KEEL measures {#what-keel-measures}
 
-KEEL tracks the scenario that [Kulveit et al. (2025)](sources.qmd#kulveit2025) call **gradual disempowerment**. Economies, states and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance and attention. If AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. KEEL's author has written a short introduction to the argument [(Richardson 2026)](sources.qmd#richardson2026).
+KEEL tracks the scenario that [Kulveit et al. (2025)](sources.qmd#kulveit2025) call **gradual disempowerment**. Economies, states, and cultures stay roughly aligned with human interests partly because they need human participation: people's work, taxes, compliance, and attention. If AI systems replace that participation, the incentive for firms and governments to serve people could weaken gradually, with no single dramatic event. KEEL's author has written a short introduction to the argument [(Richardson 2026)](sources.qmd#richardson2026).
 
-KEEL uses one word for this throughout: **leverage**, the bargaining power people have because systems need their work, taxes or attention.
+KEEL uses one word for this throughout: **leverage**, the bargaining power people have because systems need their work, taxes, or attention.
 
 ### The grid
 
-The scorecard is a grid. Its columns are three **domains**: economic, government and cultural, following [Kulveit et al. (2025)](sources.qmd#kulveit2025). Its rows are three **layers**:
+The scorecard is a grid. Its columns are three **domains**: economic, government, and cultural, following [Kulveit et al. (2025)](sources.qmd#kulveit2025). Its rows are three **layers**:
 
 - **Adoption:** is AI entering the system, and how far?
 - **Displacement:** is the system's dependence on human participation falling, and by how much?
@@ -18,13 +18,13 @@ The scorecard is a grid. Its columns are three **domains**: economic, government
 
 A fourth row, **human deferral and oversight**, runs across all three domains. It asks whether people are deferring to AI's judgment.
 
-**The rows are inspired by [Chooi et al. (2026)](sources.qmd#chooi2026).** Their paper, "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics," proposes three layers that they call exposure, erosion and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two.
+**The rows are inspired by [Chooi et al. (2026)](sources.qmd#chooi2026).** Their paper, "Measuring AI-Induced Disempowerment: A Framework and Proposed Metrics," proposes three layers that they call exposure, erosion, and lock-in. Our grid owes its structure to theirs, but our rows ask different questions, so we use different names for the first two.
 
 ::: {.callout-note collapse="true" title="How KEEL's rows line up with Chooi, Lee and Li"}
 | KEEL's row | Chooi, Lee and Li's term | How they relate |
 |---|---|---|
 | **Adoption:** AI entering a system (EA1, EA2) | Adoption measures, which they treat as outside their three layers | The paper says adoption measures like these are not direct measures of disempowerment but "might serve as instrumental indicators" of it [(Chooi et al. 2026, 228)](sources.qmd#chooi2026). We agree, and the adoption row's pages say so. |
-| **Displacement:** a whole system depending less on human participation (ED1, GD1, CD1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
+| **Displacement:** a whole system depending less on human participation (ED1, GD1, CD1) | **Exposure:** AI already changing outcomes, by distorting human judgment or displacing human participation | Our row covers the displacement half of their exposure layer, measured for whole economies, states, and knowledge communities. This follows Kulveit et al. The paper treats displacement alone, without erosion or lock-in, as adaptation rather than disempowerment. |
 | Not measured | **Erosion:** individuals losing the ability to do a task without AI | None of KEEL's indicators measures individual capability (see [Known gaps](#known-gaps)). |
 | **Lock-in:** reduced dependence becoming hard to restore (empty for now) | **Lock-in:** the institutional infrastructure for human agency dismantled, for example a profession that no longer trains juniors | Close to the paper's meaning. |
 :::
@@ -71,7 +71,7 @@ A **reading** is the short label given to what an indicator's data are doing, su
 
 ### Reading labels
 
-The exact rules are written, fixed in advance and dated in Stage 2 (see [The threshold rule](#threshold-rule)); the definitions below give the candidate rules.
+The exact rules are written, fixed in advance, and dated in Stage 2 (see [The threshold rule](#threshold-rule)); the definitions below give the candidate rules.
 
 #### Adoption indicators
 
@@ -124,7 +124,7 @@ A reading says what the data did. It does not say why.
 
 ### The AI link rating
 
-Every reading appears with an **AI link** rating: strong, moderate or weak. It says how clearly a movement in the series can be connected to AI rather than to other causes. It is a judgment made against four written criteria. The rule of thumb:
+Every reading appears with an **AI link** rating: strong, moderate, or weak. It says how clearly a movement in the series can be connected to AI rather than to other causes. It is a judgment made against four written criteria. The rule of thumb:
 
 - **Strong:** a direct measure of AI, or a comparison group plus timing that fits.
 - **Moderate:** timing fits and there is a plausible mechanism, but no comparison group, or other causes only partly addressed.
@@ -147,7 +147,7 @@ EA1 and EA2 are rated strong because they measure AI directly. That is not stron
 
 **Long-running series** (ED1, GD1, CD1) have decades of history and many causes. Their baseline is how the series behaved in **2010 to 2019**, after the 2008 to 2009 recession and before COVID. CD1's index starts in June 2012, so its baseline runs from June 2012 to December 2019. The question is whether the series is departing from its baseline, and how fast.
 
-**Series that measure AI use directly** (EA1, EA2) have only a few years of history and no pre-AI period, and can change quickly. EA1 began near zero. EA2 is a share of AI conversations, so it has no zero point to start from. Their baseline is their **own recent path**: level, rate of change and whether that rate is speeding up, averaged over the last 3, 6 and 12 months, or at the series' own frequency where data are less frequent.
+**Series that measure AI use directly** (EA1, EA2) have only a few years of history and no pre-AI period, and can change quickly. EA1 began near zero. EA2 is a share of AI conversations, so it has no zero point to start from. Their baseline is their **own recent path**: level, rate of change, and whether that rate is speeding up, averaged over the last 3, 6, and 12 months, or at the series' own frequency where data are less frequent.
 
 ### Comparison groups
 
@@ -175,7 +175,7 @@ EA1's two Census changes are treated differently because they did different thin
 
 [Status: coming in Stage 2]{.keel-badge}
 
-**The rule comes first.** In Stage 2, a mechanical rule for each kind of comparison will be written, reviewed, fixed in advance and dated. The bands for each indicator then follow from the rule. They are not hand-picked after looking at the data. The author and the AI assistant that built KEEL have already seen the 2023 to 2026 data, so fixing hand-picked thresholds would not be enough.
+**The rule comes first.** In Stage 2, a mechanical rule for each kind of comparison will be written, reviewed, fixed in advance, and dated. The bands for each indicator then follow from the rule. They are not hand-picked after looking at the data. The author and the AI assistant that built KEEL have already seen the 2023 to 2026 data, so fixing hand-picked thresholds would not be enough.
 
 **The candidate rule for long-running series** compares the change over an indicator's window with the spread of same-length changes in its baseline period, using the one- and two-standard-deviation bands under [Reading labels](#reading-labels). A matching rule will be written for the adoption labels. The exact rules are a Stage 2 decision.
 
@@ -239,7 +239,7 @@ These indicators are diagnostics. KEEL does not recommend that any policy aim to
 
 **[Beren Millidge (2025)](sources.qmd#millidge2025)** argues that gradual disempowerment might not be so bad. Most people already have little individual influence over large systems. AI governance could be better than human governance. Capital income and transfers could sustain living standards. He calls the outcome highly uncertain. His argument is why every economic page separates welfare from influence: material gains are real, but they answer a different question (see [Welfare is not influence](#welfare-is-not-influence)).
 
-**[P. O. Jedlicka (2026)](sources.qmd#jedlicka2026)** argues that gradual disempowerment scenarios do not explain how societies actually respond, and assume that technology dictates outcomes. In Jedlicka's view they underrate people acting together and social conflict: people organize, push back and change the rules as a technology spreads. This is the main reason for KEEL's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
+**[P. O. Jedlicka (2026)](sources.qmd#jedlicka2026)** argues that gradual disempowerment scenarios do not explain how societies actually respond, and assume that technology dictates outcomes. In Jedlicka's view they underrate people acting together and social conflict: people organize, push back, and change the rules as a technology spreads. This is the main reason for KEEL's rule that signals pointing the other way, including policy pushback, are shown with equal prominence.
 
 #### The authors' own caveats
 
@@ -250,7 +250,7 @@ KEEL's indicators are descriptive in exactly this sense.
 
 ### Known gaps
 
-**The cultural gap.** CD1 measures activity on knowledge sites. It does not measure human capacity, attention or reliance on AI. The cultural column has no adoption indicator yet, and its displacement indicator counts activity, which is several steps removed from people's capacity to shape their culture.
+**The cultural gap.** CD1 measures activity on knowledge sites. It does not measure human capacity, attention, or reliance on AI. The cultural column has no adoption indicator yet, and its displacement indicator counts activity, which is several steps removed from people's capacity to shape their culture.
 
 The next candidate is survey data on how far people use AI as a go-between for information and relationships, such as Pew Research Center surveys and the Reuters Institute Digital News Report.
 
@@ -266,12 +266,12 @@ KEEL is built in steps. **Releases** decide which indicators KEEL covers. **Stag
 
 #### Releases
 
-- **Release 1 (now):** labor share of income (ED1), firm AI adoption (EA1), how AI is used (EA2), the labor-based share of tax revenue (GD1), human knowledge-commons activity (CD1), the oversight row and the counter-evidence panel.
+- **Release 1 (now):** labor share of income (ED1), firm AI adoption (EA1), how AI is used (EA2), the labor-based share of tax revenue (GD1), human knowledge-commons activity (CD1), the oversight row, and the counter-evidence panel.
 - **Release 2 (planned):** four indicators and a written definition of lock-in.
   - **Wealth concentration (EL1).**
   - **Federal AI use cases (GA1).**
   - **AI-interest political influence (GL1):** lobbying by groups that profit from AI.
-  - **AI's share of cultural production versus consumption (CD2):** how much of what is made is AI-generated, against how much of what people actually read, watch or hear.
+  - **AI's share of cultural production versus consumption (CD2):** how much of what is made is AI-generated, against how much of what people actually read, watch, or hear.
 
 EL1 and GL1 are placed in the lock-in row only if a lock-in test is adopted.
 
@@ -280,7 +280,7 @@ EL1 and GL1 are placed in the lock-in row only if a lock-in test is adopted.
 Each release goes through three stages.
 
 1. **Stage 1, the data site.** Charts, sources and explanations, with every reading shown as "Not yet reviewed."
-2. **Stage 2, the threshold rule.** A mechanical rule for turning data into readings is written, reviewed, fixed in advance and dated, before any reading is made. This works like pre-registering a study.
+2. **Stage 2, the threshold rule.** A mechanical rule for turning data into readings is written, reviewed, fixed in advance, and dated, before any reading is made. This works like pre-registering a study.
 3. **Stage 3, readings and the retrospective.** The fixed rule produces current readings. It is also applied once to every quarter since late 2022, and the result is published as a dated **retrospective**: a look back at how the readings would have changed since ChatGPT's release.
 
 ### Retrospective (Stage 3)
@@ -295,7 +295,7 @@ Later versions are planned under four headings: method, harder indicators of AI'
 - **Method.**
   - Readings computed with data as first published, alongside revised data (from the Federal Reserve Bank of St. Louis's ALFRED archive of past data versions).
   - The ED1 industry comparison.
-  - A test on US states of the rentier logic for GD1: states funded by oil, gas and coal taxes, which may answer less to their residents, against states that are not.
+  - A test on US states of the rentier logic for GD1: states funded by oil, gas, and coal taxes, which may answer less to their residents, against states that are not.
   - A measure of deferral for the oversight row, if one becomes available.
 - **Harder indicators of AI's effect on work and research.**
   - Young workers in AI-exposed jobs.

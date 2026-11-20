@@ -153,7 +153,7 @@ NOTES = (
     "Release mappings: "
     "release_2025_02_10 and release_2025_03_27 read automation_vs_augmentation.csv and "
     "automation_vs_augmentation_v2.csv (columns interaction_type, pct); "
-    "release_2025_09_15, release_2026_01_15 and release_2026_03_24 read the raw claude_ai file, rows "
+    "release_2025_09_15, release_2026_01_15, and release_2026_03_24 read the raw claude_ai file, rows "
     "geo_id=GLOBAL, facet=collaboration, level=0, variable=collaboration_pct, cluster_name = the pattern; "
     "release_2026_06_26 reads the claude_ai file, rows geo_id=GLOBAL, category_name=overall, "
     "hierarchy_level=0, metric_ids collaboration_<pattern>_pct, checked against Anthropic's published "

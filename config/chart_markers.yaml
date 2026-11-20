@@ -38,7 +38,7 @@ markers:
       verified_on: 2026-11-17
   EA1:
     - date: 2026-10-19
-      label: "Census question wording changed: term and examples changed, 'AI' relabelled 'Super Intelligence or SI (formerly AI)' and new examples given (from the collection starting 19 October 2026)"
+      label: "Census question wording changed: term and examples changed, 'AI' relabelled 'Super Intelligence or SI (formerly AI)', and new examples given (from the collection starting 19 October 2026)"
       source_url: https://www.census.gov/hfp/btos/downloads/BTOS%20Content%20V5%20Core%20and%20SI%20Instrument%20-%20Cycle%202-Tagged.pdf
       source_key: census2026
       verified: true

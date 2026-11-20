@@ -12,7 +12,7 @@ coverage: United States · quarterly · from 1947; OECD average and United State
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). A state that funds itself by taxing its citizens' work has a reason to keep them productive and to listen to them. A state that funds itself from other sources has less reason to. Political scientists call this the rentier-state pattern: governments funded by resources rather than taxes tend to answer less to their citizens [(Ross 2001)](../sources.qmd#ross2001). It is a common explanation for why governments that live on oil revenue tend to be less accountable.
+Gradual disempowerment is the scenario in which economies, states, and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). A state that funds itself by taxing its citizens' work has a reason to keep them productive and to listen to them. A state that funds itself from other sources has less reason to. Political scientists call this the rentier-state pattern: governments funded by resources rather than taxes tend to answer less to their citizens [(Ross 2001)](../sources.qmd#ross2001). It is a common explanation for why governments that live on oil revenue tend to be less accountable.
 
 Kulveit et al. apply the same logic to AI. If AI shifts income from wages toward capital, and tax revenue follows, the state could come to depend less on its citizens. [Drago and Laine (2025)](../sources.qmd#drago2025) make the same comparison in *The Intelligence Curse*: like a state rich in oil, a state whose income comes from AI rather than from people's work may lose its incentive to care about them. [Chooi et al. (2026, 232)](../sources.qmd#chooi2026) propose a related metric: citizen tax revenue relative to AI-derived corporate profits.
 
@@ -24,23 +24,23 @@ The US quarterly series drives this indicator's reading. It has fallen since 202
 
 ## What it shows
 
-- **United States, quarterly (drives the reading).** The labor-based share of tax revenue, from the Bureau of Economic Analysis (BEA) national accounts, read through FRED, the Federal Reserve Bank of St. Louis's data service. It covers all levels of government (federal, state and local).
+- **United States, quarterly (drives the reading).** The labor-based share of tax revenue, from the Bureau of Economic Analysis (BEA) national accounts, read through FRED, the Federal Reserve Bank of St. Louis's data service. It covers all levels of government (federal, state, and local).
 - **United States and OECD average, annual (context).** Taxes on individual incomes plus social security contributions, as a share of total tax revenue, from OECD Revenue Statistics. The OECD data lag two to three years (the OECD average currently runs to 2023, the US figure to 2024).
 
 This is a long-running series. Its baseline is how it behaved in 2010 to 2019. Readings start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
 
 ## What it doesn't show
 
-- **It does not measure AI.** Tax law, the business cycle, asset prices and an aging population all move this share.
-- **It is labor-based only approximately.** Personal income taxes also fall on interest, dividends and capital gains. A stock-market boom can raise "labor-based" revenue with no change in how much the state depends on workers. Social contributions are tied more closely to wages.
-- **It does not show whether governments respond to citizens.** It measures one source of the state's dependence on people. Elections, courts, protest and a free press are other sources, and none of them is measured here.
+- **It does not measure AI.** Tax law, the business cycle, asset prices, and an aging population all move this share.
+- **It is labor-based only approximately.** Personal income taxes also fall on interest, dividends, and capital gains. A stock-market boom can raise "labor-based" revenue with no change in how much the state depends on workers. Social contributions are tied more closely to wages.
+- **It does not show whether governments respond to citizens.** It measures one source of the state's dependence on people. Elections, courts, protest, and a free press are other sources, and none of them is measured here.
 
 ## What would change our reading
 
 ### Alternative explanations
 
 - **A steady share can hide lost leverage.** A state can keep citizens on side through transfer payments even when it no longer depends on their taxes. This is the rentier pattern of buying off citizens with low taxes and patronage [(Ross 2001)](../sources.qmd#ross2001). So a steady labor-based tax share does not guarantee that citizens keep their leverage.
-- **A falling share can have other causes.** Tax cuts on income, a weak labor market, an aging population or a boom in corporate profits can all lower the share with no change caused by AI. The share could also fall while citizens keep leverage through other channels.
+- **A falling share can have other causes.** Tax cuts on income, a weak labor market, an aging population, or a boom in corporate profits can all lower the share with no change caused by AI. The share could also fall while citizens keep leverage through other channels.
 
 This is the most direct public measure of state dependence we found, not a guarantee.
 
@@ -54,7 +54,7 @@ This is the most direct public measure of state dependence we found, not a guara
 
 **What would point away from disempowerment:** the US share holding inside or above its 2010 to 2019 range, and the OECD share continuing not to fall.
 
-A later version plans a US-states comparison: states that depend heavily on taxes on extracting oil, gas and coal against states that do not. That would test the rentier logic on US data.
+A later version plans a US-states comparison: states that depend heavily on taxes on extracting oil, gas, and coal against states that do not. That would test the rentier logic on US data.
 
 These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.
 

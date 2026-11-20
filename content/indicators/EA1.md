@@ -10,7 +10,7 @@ coverage: United States · every two weeks · from September 2023
 
 ## Why this matters for gradual disempowerment
 
-Gradual disempowerment is the scenario in which economies, states and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). Before AI can reduce the economy's dependence on human work, firms have to adopt it. This indicator tracks that first step: the share of US businesses that report using AI. It sits in the **Adoption** row of the grid, which asks whether AI is entering a system and how far it has gone.
+Gradual disempowerment is the scenario in which economies, states, and cultures stop needing people and so stop serving them, without any single dramatic event [(Kulveit et al. 2025)](../sources.qmd#kulveit2025). Before AI can reduce the economy's dependence on human work, firms have to adopt it. This indicator tracks that first step: the share of US businesses that report using AI. It sits in the **Adoption** row of the grid, which asks whether AI is entering a system and how far it has gone.
 
 Adoption is a precondition for the mechanism Kulveit et al. describe. It is not evidence of the mechanism itself. Rising adoption is equally consistent with AI making workers more productive and more valuable, and with AI replacing them. This indicator cannot tell those apart. It is a **leading** indicator, one that moves early: adoption should move before any effect on labor's share of income or on tax revenue does.
 
@@ -35,7 +35,7 @@ Adoption is a precondition for the mechanism Kulveit et al. describe. It is not 
 - **Through early October 2025**, firms were asked whether they used AI "in producing goods or services."
 - **From the collection that began on 17 November 2025**, they are asked whether they used it "in any of its business functions." The examples given did not change.
 
-Census's testing found that some businesses answered "No" even though they used AI, for example in hiring, accounting, project management or research and development, because those uses were not directly connected to "producing goods or services." The broader question counts more uses as AI use, so the two segments are not comparable. Census saw a shift in the level of the series with the new wording and started a new time series because of it [(U.S. Census Bureau 2025)](../sources.qmd#census2025). The chart shows them as separate segments and does not join them. There are no estimates for the weeks between the last old-wording period and the first new-wording period.
+Census's testing found that some businesses answered "No" even though they used AI, for example in hiring, accounting, project management, or research and development, because those uses were not directly connected to "producing goods or services." The broader question counts more uses as AI use, so the two segments are not comparable. Census saw a shift in the level of the series with the new wording and started a new time series because of it [(U.S. Census Bureau 2025)](../sources.qmd#census2025). The chart shows them as separate segments and does not join them. There are no estimates for the weeks between the last old-wording period and the first new-wording period.
 
 **The wording marker on 19 October 2026.** Beginning with the collection of 19 October 2026, Census changed the term in the question to "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)" and replaced the examples with new ones, such as "SI-powered data analysis" and "generative SI for marketing, product design, or coding" [(U.S. Census Bureau 2026)](../sources.qmd#census2026). Census cites Executive Order 14434 for the change ([U.S. Census Bureau, n.d.](../sources.qmd#census_btos); [Exec. Order No. 14,434](../sources.qmd#eo14434)). Respondents saw the new wording. In that first period:
 
@@ -47,7 +47,7 @@ The same period also started a new version of the questionnaire, so these change
 
 **"Do not know."** A sizeable share of firms answer "Do not know." Across the periods from the November 2025 change through mid-October 2026, that share ranged from 9.1 to 11.2 percent. It was 13.9 percent in the first period asked with the new wording (as published on 17 November 2026). KEEL shows the "Yes" share. A shift between "Do not know" and "Yes" can move the series without any change in actual use.
 
-This series measures AI use directly and has no history before AI. Its baseline is its own recent path: its level, how fast it is changing, and whether that pace is speeding up, averaged over the last 3, 6 and 12 months. Readings will use the labels Low, Rising and Pervasive, and start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
+This series measures AI use directly and has no history before AI. Its baseline is its own recent path: its level, how fast it is changing, and whether that pace is speeding up, averaged over the last 3, 6, and 12 months. Readings will use the labels Low, Rising, and Pervasive, and start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
 
 ## What it doesn't show
 

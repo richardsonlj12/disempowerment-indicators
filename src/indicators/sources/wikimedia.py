@@ -135,7 +135,7 @@ def fetch(data_dir: Path | str = "data", today: date | None = None) -> list[tupl
         notes=(
             "en.wikipedia, editor type user (logged-in editors not counted as bots by bot group or by a "
             "user name containing 'bot'), all page types. Active editors are "
-            "those with 5 or more edits in the month: the sum of the 5..24, 25..99 and 100.. edit "
+            "those with 5 or more edits in the month: the sum of the 5..24, 25..99, and 100.. edit "
             "activity levels."
         ),
     )
