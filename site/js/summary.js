@@ -1,9 +1,7 @@
 // Summary page behaviour: expand a collapsed callout (such as "About the indicators" or
-// "Inclusion criteria") from its link or the URL hash, and let Escape dismiss the open
+// "Inclusion criteria") from the URL hash, and let Escape dismiss the open
 // row-header tooltip (WCAG 1.4.13).
 (function () {
-  var BOX = "about-the-indicators";
-
   function openBox(id) {
     var box = document.getElementById(id);
     if (!box) return null;
@@ -22,10 +20,6 @@
     box.scrollIntoView();
   }
 
-  document.addEventListener("click", function (e) {
-    var link = e.target.closest && e.target.closest(".keel-about-link");
-    if (link) openBox(BOX);
-  });
   window.addEventListener("hashchange", onHash);
   document.addEventListener("DOMContentLoaded", onHash);
 

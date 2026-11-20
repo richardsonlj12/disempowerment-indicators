@@ -674,7 +674,7 @@ def test_no_data_are_telling_us_on_summary(repo):
 def test_about_the_indicators_callout_after_heading(repo):
     pages.build(repo, today=TODAY)
     text = _index(repo)
-    m = re.search(r'^## Indicators \{#indicators\}\n\n\[About the indicators\]\(#about-the-indicators\)\{[^}]*\}\n:::\n\n'
+    m = re.search(r'^## Indicators \{#indicators\}\n\n'
                   r'::: \{#about-the-indicators \.callout-note collapse="true" title="About the indicators"\}\n', text, re.M)
     assert m, text[:1500]
     assert "About the labels" not in text
@@ -697,7 +697,7 @@ def test_summary_opens_with_intro_from_content_file(repo):
     (repo / "content" / "summary-intro.md").write_text("Owner-edited welcome.\n", encoding="utf-8")
     pages.build(repo, today=TODAY)
     generated = (repo / "site" / "_generated" / "summary.md").read_text(encoding="utf-8")
-    assert generated.startswith("Owner-edited welcome.\n\n::: {.keel-heading-row}")
+    assert generated.startswith("Owner-edited welcome.\n\n## Indicators {#indicators}")
 
 
 def test_indicators_heading_accessible_text_is_plain(repo):

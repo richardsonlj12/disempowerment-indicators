@@ -612,8 +612,7 @@ def summary_page(indicators, grid, oversight, readings, latest_text, oversight_i
     out = [intro.strip(), ""]
 
     about = about.strip()
-    out += ["::: {.keel-heading-row}", "## Indicators {#indicators}", "",
-            "[About the indicators](#about-the-indicators){.keel-about-link}", ":::", "",
+    out += ["## Indicators {#indicators}", "",
             "::: {#about-the-indicators .callout-note collapse=\"true\" title=\"About the indicators\"}", about,
             ":::", "", "::::: {.keel-grid}", "::: {.keel-corner}", "&nbsp;", ":::"]
     for d in DOMAINS:
