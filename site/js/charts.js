@@ -303,7 +303,20 @@ export function renderChart(Plot, d3, spec, data, opts) {
   }
   if (shownMarkers.length) {
     marks.push(Plot.ruleX(shownMarkers, {x: "when", stroke: colors[7], strokeOpacity: 0.7}));
-    marks.push(Plot.text(shownMarkers, {x: "when", text: (d, i) => String(i + 1), frameAnchor: "top", dy: 8, dx: 6, fontSize: 11, fontWeight: 700}));
+    // Numbers of markers closer than about 22px step down a row so they do not overlap (owner,
+    // 2026-11-20: ChatGPT's release and Stack Overflow's ban are five days apart on CD1).
+    const plotWidth = Math.max(280, opts.width || 640) - 70, span = +x1 - +x0 || 1;
+    const lastInRow = [];
+    shownMarkers.forEach((m, i) => {
+      m.n = i + 1;
+      let row = 0;
+      while (lastInRow[row] != null && (+m.when - lastInRow[row]) / span * plotWidth < 22) row++;
+      lastInRow[row] = +m.when;
+      m.row = row;
+    });
+    for (const row of new Set(shownMarkers.map(m => m.row))) {
+      marks.push(Plot.text(shownMarkers.filter(m => m.row === row), {x: "when", text: d => String(d.n), frameAnchor: "top", dy: 8 + 14 * row, dx: 6, fontSize: 11, fontWeight: 700}));
+    }
   }
   if (Plot.tip) {
     const change = view.kind === "change";
