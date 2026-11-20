@@ -181,10 +181,13 @@ EA1's two Census changes are treated differently because they did different thin
 
 **Windows are part of the rule.** The window (for example, "change over the latest four quarters") can flip a reading on its own, so it is fixed for each indicator along with the rule.
 
+**The baseline period matters most.** 2010 to 2019 had no recession, so changes in that decade were small and steady. Measured against it, many changes since 2020 look far outside the usual range; measured against a longer period that includes the 2001 and 2008 recessions, the same changes look ordinary. Neither choice is neutral. Same-length changes also overlap (two 5-year changes a quarter apart share most of their quarters), so a baseline holds far fewer independent observations than its count suggests. Until Stage 2 settles this, the charts show the changes without a usual range.
+
 **Sensitivity.** Each indicator page will show what the reading would be under reasonable alternatives:
 
 - other windows
-- another baseline period, such as 2015 to 2019
+- another baseline period: a shorter one, such as 2015 to 2019, or a longer one that includes earlier recessions
+- a baseline built only from changes that do not overlap
 - narrower and wider bands
 
 Where a reading flips under a reasonable alternative, the page will say so.

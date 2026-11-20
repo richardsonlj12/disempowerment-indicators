@@ -69,8 +69,8 @@ PUBLIC_CONFIG = ("indicators.yaml", "readings.yaml", "chart_markers.yaml", "cd1_
                  "curated/counter_evidence.yaml", "curated/oversight.yaml")
 
 # Chart views per indicator. kind: level (one series at a time, selector when several; standard
-# errors as a band), change (the change over 1, 3 or 5 years with the 2010-19 spread of same-length
-# changes as 1 and 2 standard-deviation bands; owner decision 2026-11-19), band (line
+# errors as a band), change (the change over 1, 3 or 5 years; no σ bands until Stage 2 sets the
+# baseline, owner decision 2026-11-19), band (line
 # plus a shaded range from two other series), multi (all series together, groups expanded), stacked
 # (one bar per sample on a time axis, split into groups that add to 100; EA2, owner review 2026-11-19).
 # "also": series offered for download with the view but not drawn.
@@ -467,7 +467,6 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
             key = (marker_keys or {}).get((m["date"], m["label"]))
             cite = f" {cites.cite(key, '../')}" if key else ""
             lines.append(f"    - {fmt_date(m['date'])}: {m['label']}{cite}")
-    lines.append("- **Registry entry.** [indicators.yaml](../config/indicators.yaml) (YAML).")
     return "\n".join(lines)
 
 

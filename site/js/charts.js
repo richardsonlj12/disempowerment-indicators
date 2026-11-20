@@ -249,25 +249,14 @@ export function renderChart(Plot, d3, spec, data, opts) {
     const meta = spec.series[id];
     const label = seriesName(spec, id);
     if (view.kind === "change") {
-      // The change over the chosen window, against the 2010-19 spread of same-length changes as
-      // 1 and 2 standard-deviation bands around their average (methodology: Reading labels).
+      // The change over the chosen window. No σ bands until Stage 2 sets the baseline (owner,
+      // 2026-11-19): the baseline period, not the window, decides how unusual recent changes look.
       const w = view.windows.includes(+opts.window) ? +opts.window : view.windows[0];
-      const years = `${w} year${w === 1 ? "" : "s"}`, yearAdj = `${w}-year`;
+      const years = `${w} year${w === 1 ? "" : "s"}`;
       const all = (data[id + "__changes"] || []).filter(d => d.window_years === w);
       plotted = inRange(all).map(d => ({...d, value: d.change}));
       if (!plotted.length) return message(`No ${years} changes in this timeframe. Choose a longer timeframe.`);
-      const {base_mean: mean, base_sd: sd, base_n: n} = all[0];
-      const [b0, b1] = d3.extent(plotted, d => d.date);
-      if (n >= 2 && sd != null) {
-        for (const [k, opacity] of [[2, 0.12], [1, 0.22]]) {
-          marks.push(Plot.rect([0], {x1: () => b0, x2: () => b1, y1: () => mean - k * sd, y2: () => mean + k * sd, fill: colors[0], fillOpacity: opacity}));
-        }
-        legendItems.push({label: `Within 1σ of 2010–19 ${yearAdj} changes`, color: colors[0], opacity: 0.4, block: true});
-        legendItems.push({label: "Within 2σ", color: colors[0], opacity: 0.2, block: true});
-        notes.push(`Each point is the change from the same date ${years} earlier. Shaded bands: the average ${yearAdj} change in 2010 to 2019 (${fmtValue(mean, meta.units, true)}), plus or minus one and two standard deviations (σ = ${fmtValue(sd, meta.units, true).replace(/^\+/, "")}) of the ${n} such changes with both ends in 2010 to 2019. This is a chart view, not a reading: Stage 2 fixes which window and band count.`);
-      } else {
-        notes.push(`Each point is the change from the same date ${years} earlier. There are too few data from 2010 to 2019 to show the usual range of ${yearAdj} changes.`);
-      }
+      notes.push(`Each point is the change from the same date ${years} earlier. KEEL does not yet mark a usual range of changes: Stage 2 chooses the baseline period it is measured from, because that choice decides how unusual recent changes look.`);
       marks.push(Plot.ruleY([0], {stroke: "currentColor", strokeOpacity: 0.5}));
       marks.push(Plot.lineY(plotted, {x: "date", y: "value", z: "segment", stroke: colors[0], strokeWidth: 2}));
       if (plotted.length < 40) marks.push(Plot.dot(plotted, {x: "date", y: "value", fill: colors[0], r: 3}));
