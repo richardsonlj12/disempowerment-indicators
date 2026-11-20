@@ -887,7 +887,8 @@ def test_build_links_codes_in_methodology_and_indicator_pages(repo):
     meth = (repo / "site" / "_generated" / "methodology.md").read_text(encoding="utf-8")
     assert "[EA1](indicators/EA1.qmd)" in meth and "[ED1](indicators/ED1.qmd)" in meth
     ea2 = _page(repo, "EA2")
-    assert "[EA1](EA1.qmd)" in ea2 and "[EA2](EA2.qmd)" not in ea2
+    # EA2 mentions EA1 only as "Firm AI adoption (EA1)": shown with its name, so not linked.
+    assert "Firm AI adoption (EA1)" in ea2 and "[EA1](EA1.qmd)" not in ea2 and "[EA2](EA2.qmd)" not in ea2
     for text in (meth, ea2):
         assert "[[" not in text and not re.search(r"\[[^\]]*\[[A-Z]{2}\d\]\(", text)
 
@@ -900,3 +901,17 @@ def test_break_note_url_becomes_a_citation():
     assert key == "miller2025" and "http" not in text and text.endswith("old classification.")
     assert pages.cited_note("Note. See: https://example.com/x", cites) == ("Note. See: https://example.com/x", None)
     assert pages.cited_note("No source.", cites) == ("No source.", None)
+
+
+def test_code_shown_with_its_name_is_not_linked():
+    """Owner, 2026-11-20: an abbreviation shown with its indicator's name needs no link."""
+    names = {"ED1": ["labor share of income", "labor share"], "EA2": ["automation vs. augmentation", "how ai is used"]}
+    hrefs = {"ED1": "ED1.qmd", "EA2": "EA2.qmd"}
+    out = pages.link_codes("Labor share of income (ED1) falls. Then ED1 again.", hrefs, names=names)
+    assert out == "Labor share of income (ED1) falls. Then [ED1](ED1.qmd) again."
+    assert pages.link_codes("| ED1 Labor share |", hrefs, names=names) == "| ED1 Labor share |"
+    assert pages.link_codes("indicators (ED1, labor share; EA2)", hrefs, names=names) == \
+        "indicators (ED1, labor share; [EA2](EA2.qmd))"
+    assert pages.link_codes("how AI is used (EA2), is", hrefs, names=names) == "how AI is used (EA2), is"
+    assert pages.link_codes("2025 (EA1; x)", {"EA1": "EA1.qmd"}, names={"EA1": ["firm ai adoption"]}) == \
+        "2025 ([EA1](EA1.qmd); x)"

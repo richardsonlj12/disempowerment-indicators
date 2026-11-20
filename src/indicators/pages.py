@@ -212,11 +212,30 @@ def compare_sentence(ind: reg.Indicator) -> str:
 _PROTECTED = re.compile(r"!?\[[^\]]*\]\([^)]*\)|`[^`]*`|\{[^}]*\}")
 
 
-def link_codes(md: str, hrefs: dict[str, str], self_id: str | None = None) -> str:
+# Other names the site's prose uses for an indicator, besides its registry name; a code shown with
+# any of them needs no link (owner, 2026-11-20).
+CODE_ALIASES = {"ED1": ["labor share"], "EA2": ["how AI is used"], "GD1": ["labor-based tax share"]}
+
+
+def _with_name(text: str, start: int, end: int, names: list[str]) -> bool:
+    """True when the code at text[start:end] is shown with one of its names: "Name (CODE" before it,
+    or "CODE Name" / "CODE, Name" after it."""
+    before = text[:start].lower().rstrip()
+    after = text[end:].lower()
+    if before.endswith("("):
+        if any(before[:-1].rstrip().endswith(n) for n in names):
+            return True
+    return any(after.startswith(sep + n) for n in names for sep in (" ", ", "))
+
+
+def link_codes(md: str, hrefs: dict[str, str], self_id: str | None = None,
+               names: dict[str, list[str]] | None = None) -> str:
     """Link the first mention of each indicator code (EA1, ED1 ...) in every section to that
     indicator's page, where its summary table is (owner, 2026-11-20: readers get lost in the codes).
     A section starts at any heading. Skipped: headings, code fences, a page's own code, codes with no
-    page yet, and mentions inside an existing link, which also count as the section's first."""
+    page yet, a code shown with its indicator's name (names, lower case), and mentions inside an
+    existing link, which also count as the section's first."""
+    names = names or {}
     if not hrefs:
         return md
     code_re = re.compile(r"\b(" + "|".join(map(re.escape, sorted(hrefs, key=len, reverse=True))) + r")\b")
@@ -247,7 +266,7 @@ def link_codes(md: str, hrefs: dict[str, str], self_id: str | None = None) -> st
 
             def repl(m):
                 code = m.group(1)
-                if code == self_id or code in linked:
+                if code == self_id or code in linked or _with_name(m.string, m.start(), m.end(), names.get(code, [])):
                     return code
                 linked.add(code)
                 return f"[{code}]({hrefs[code]})"
@@ -787,9 +806,10 @@ def build(repo_root: Path, today: date | None = None) -> None:
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(config / rel, dest)
     codes = [i.id for i in indicators]
+    code_names = {i.id: [n.lower() for n in [i.name] + CODE_ALIASES.get(i.id, [])] for i in indicators}
     (site / "_generated" / "methodology.md").write_text(
         link_codes((root / "content" / "methodology.md").read_text(encoding="utf-8"),
-                   {c: f"indicators/{c}.qmd" for c in codes}), encoding="utf-8")
+                   {c: f"indicators/{c}.qmd" for c in codes}, names=code_names), encoding="utf-8")
 
     template = (site / "_indicator_template.qmd").read_text(encoding="utf-8")
     latest_text = {}
@@ -806,7 +826,7 @@ def build(repo_root: Path, today: date | None = None) -> None:
                     write_change_csv(series[sid][0], series[sid][1], site / "data", v["windows"])
                     change_files.add(sid)
         front, sections = split_content((root / "content" / "indicators" / f"{ind.id}.md").read_text(encoding="utf-8"))
-        sections = {name: link_codes(text, {c: f"{c}.qmd" for c in codes}, ind.id) for name, text in sections.items()}
+        sections = {name: link_codes(text, {c: f"{c}.qmd" for c in codes}, ind.id, code_names) for name, text in sections.items()}
         markers = reg.markers_for(chart_markers, ind.id)
         page = indicator_page(template, ind, front, sections, reg.current_reading(readings, ind.id),
                               readings.get(ind.id, []), views, series, markers, group_labels, change_files, today,
