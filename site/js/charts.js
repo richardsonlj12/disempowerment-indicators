@@ -348,7 +348,16 @@ export function renderChart(Plot, d3, spec, data, opts) {
   const wrap = element("figure", "keel-chart");
   wrap.append(legend(legendItems), chart);
   const list = element("ul", "keel-chart-notes");
-  shownBreaks.forEach(b => list.append(element("li", null, `Series break, ${fmtDate(b.when)}: ${b.note}`)));
+  shownBreaks.forEach(b => {
+    const li = element("li", null, `Series break, ${fmtDate(b.when)}: ${b.note}`);
+    if (b.cite) {  // the source, cited on the Sources page like the rest of the site
+      const a = element("a", null, b.cite.text);
+      a.href = b.cite.href;
+      li.textContent = li.textContent.replace(/\.$/, " ");
+      li.append(a, ".");
+    }
+    list.append(li);
+  });
   shownMarkers.forEach((m, i) => list.append(element("li", null, `Marker ${i + 1}, ${fmtDate(m.when)}: ${m.label}`)));
   notes.forEach(n => list.append(element("li", null, n)));
   if (list.childElementCount) wrap.append(list);

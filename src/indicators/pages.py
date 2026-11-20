@@ -419,7 +419,21 @@ def notices(ind, views, series, today: date) -> str:
     return "\n\n".join(out)
 
 
-def chart_spec(ind, views, series, markers, group_labels) -> dict:
+# A source URL at the end of a break note, with an optional label ("Announcement: https://...").
+_NOTE_URL = re.compile(r"\.?\s*(?:[A-Z][A-Za-z ]*: )?(https?://\S+?)\.?$")
+
+
+def cited_note(note: str, cites: bibliography.Citations) -> tuple[str, str | None]:
+    """A break note without its trailing source URL, and that source's bibliography key, so the
+    note can cite the Sources page like the rest of the site (owner, 2026-11-20). A URL that is not
+    in the bibliography is left as it is."""
+    m = _NOTE_URL.search(note)
+    if not m or m.group(1) not in cites.by_url:
+        return note, None
+    return note[:m.start()].rstrip(" .") + ".", cites.key_for_url(m.group(1))
+
+
+def chart_spec(ind, views, series, markers, group_labels, cites: bibliography.Citations | None = None) -> dict:
     spec_series = {}
     for v in views:
         left_out = [v["leftOut"]["series"]] if v.get("leftOut") else []
@@ -429,7 +443,13 @@ def chart_spec(ind, views, series, markers, group_labels) -> dict:
             entry = {"available": sid in series, "file": f"{sid}.csv", "label": SERIES_LABELS.get(sid)}
             if sid in series:
                 meta = series[sid][1]
-                entry.update(title=meta.title, units=meta.units, frequency=meta.frequency, breaks=meta.breaks)
+                breaks = []
+                for b in meta.breaks:
+                    text, key = cited_note(b["note"], cites) if cites else (b["note"], None)
+                    breaks.append({**b, "note": text, **({"cite": {
+                        "text": cites.cite(key).split("](")[0][1:],
+                        "href": f"../sources.html#{key}"}} if key else {})})
+                entry.update(title=meta.title, units=meta.units, frequency=meta.frequency, breaks=breaks)
             spec_series[sid] = entry
     # Only the labels for groups that appear in a plotted series (CD1's sites); other pages get none.
     used = set()
@@ -507,7 +527,10 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
                   else "The chart does not join the line across a break.")
         lines.append(f"- **Series breaks.** {joined}")
         for (d, note), titles in sorted(grouped.items()):
-            lines.append(f"    - {fmt_date(d)} ({_and(sorted(titles))}): {note}")
+            text, key = cited_note(note, cites)
+            if key:
+                text = f"{text[:-1]} {cites.cite(key, '../')}."
+            lines.append(f"    - {fmt_date(d)} ({_and(sorted(titles))}): {text}")
     else:
         lines.append("- **Series breaks.** None recorded.")
     if markers:
@@ -591,7 +614,7 @@ def indicator_page(template: str, ind, front, sections, reading, history, views,
     title = f"{ind.name} ({ind.id})"
     fm = yaml.safe_dump({"title": title, "pagetitle": f"{title} · {SITE_NAME}"}, allow_unicode=True,
                         sort_keys=False, width=1000).strip()
-    spec = chart_spec(ind, views, series, markers, group_labels)
+    spec = chart_spec(ind, views, series, markers, group_labels, cites)
     note = ""
     if ind.id in PRIMARY_PENDING_NOTE and not views[0]["available"] and spec["defaultView"] != views[0]["label"]:
         note = f"*{PRIMARY_PENDING_NOTE[ind.id]}*\n\n"

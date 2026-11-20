@@ -11,7 +11,7 @@ import pandas as pd
 import pytest
 import yaml
 
-from indicators import pages
+from indicators import bibliography, pages
 
 ROOT = Path(__file__).resolve().parent.parent
 RELEASE1 = {"ED1", "EA1", "EA2", "GD1", "CD1"}
@@ -890,3 +890,13 @@ def test_build_links_codes_in_methodology_and_indicator_pages(repo):
     assert "[EA1](EA1.qmd)" in ea2 and "[EA2](EA2.qmd)" not in ea2
     for text in (meth, ea2):
         assert "[[" not in text and not re.search(r"\[[^\]]*\[[A-Z]{2}\d\]\(", text)
+
+
+def test_break_note_url_becomes_a_citation():
+    """Owner, 2026-11-20: a break note's source URL is cited on the Sources page, not shown raw."""
+    from indicators.sources import wikimedia
+    cites = bibliography.Citations(bibliography.load(Path(__file__).resolve().parents[1] / bibliography.BIB_PATH))
+    text, key = pages.cited_note(wikimedia.BREAKS[0]["note"], cites)
+    assert key == "miller2025" and "http" not in text and text.endswith("old classification.")
+    assert pages.cited_note("Note. See: https://example.com/x", cites) == ("Note. See: https://example.com/x", None)
+    assert pages.cited_note("No source.", cites) == ("No source.", None)
