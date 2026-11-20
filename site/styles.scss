@@ -490,11 +490,7 @@ body.quarto-dark .keel-datatable-stacked {
 .keel-ref {
   scroll-margin-top: 5rem;
 }
-// Section links on indicator pages landed with about 95px of empty space between the banner and
-// the heading; pull them up so the heading sits just below the banner (measured in Chrome).
-section.level2[id] {
-  scroll-margin-top: -4.75rem;
-}
+// Where linked headings land is set by _anchors.html (the top bar shows or hides as you scroll).
 // The Sources entry a citation points to is marked, so it is easy to find. The bar sits just
 // outside the entry, so the hanging indent and the text do not move.
 .keel-ref {

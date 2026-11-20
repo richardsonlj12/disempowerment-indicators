@@ -1,0 +1,43 @@
+<script>
+// Link targets land just below the top bar (owner, 2026-11-20). Quarto's bar hides on scroll down
+// and shows on scroll up, so whether it covers a linked heading depended on incidental things such
+// as charts loading above it. After a link is followed, this places the heading just below the bar
+// if the bar is showing, or near the top if it is hidden, and repeats while charts load. It stops as
+// soon as the reader scrolls, taps or presses a key, so it never fights them.
+(function () {
+  var readerMoved = false;
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (t) {
+    window.addEventListener(t, function () { readerMoved = true; }, {passive: true});
+  });
+
+  function target() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    var el = id && document.getElementById(id);
+    if (!el) return null;
+    if (el.matches("section")) el = el.querySelector("h1, h2, h3, h4, h5, h6") || el;
+    return el;
+  }
+
+  function place() {
+    if (readerMoved) return;
+    var el = target();
+    if (!el) return;
+    var bar = document.getElementById("quarto-header");
+    var barBottom = bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0;
+    var delta = el.getBoundingClientRect().top - (barBottom + 12);
+    if (Math.abs(delta) < 4) return;
+    // Hold the bar where it is while we scroll, so our own scroll does not show or hide it.
+    var toggle = window.quartoToggleHeadroom;
+    if (toggle) toggle();
+    window.scrollBy(0, delta);
+    if (toggle) requestAnimationFrame(function () { requestAnimationFrame(toggle); });
+  }
+
+  function settle() {
+    readerMoved = false;
+    [0, 300, 1000, 2000, 3500].forEach(function (ms) { setTimeout(place, ms); });
+  }
+  window.addEventListener("load", settle);
+  window.addEventListener("hashchange", function () { setTimeout(settle, 50); });
+})();
+</script>

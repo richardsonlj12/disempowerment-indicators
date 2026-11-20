@@ -51,3 +51,4 @@ format:
     link-external-newwindow: false
     lang: en
     respect-user-color-scheme: true
+    include-after-body: _anchors.html  # link targets land below the top bar (owner, 2026-11-20)
