@@ -44,7 +44,7 @@ This is a long-running series. Its baseline is how it behaved in 2010 to 2019, a
 
 **What would raise our confidence that a change is AI-related:**
 
-- A fall that begins or speeds up after late 2022 and moves away from the baseline by more than the series typically varied in 2010 to 2019 (the exact rule is fixed in Stage 2).
+- A fall that begins or speeds up after late 2022 and is a change larger than same-length changes in 2010 to 2019 (more than 2σ; the exact rule is fixed in Stage 2).
 - A faster fall in industries where AI can do much of the work than in industries where it can do little. KEEL plans this comparison for Release 2, using BEA industry data with published AI-exposure scores.
 
 **What would lower it:**

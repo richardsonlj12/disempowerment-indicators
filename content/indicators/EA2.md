@@ -21,7 +21,7 @@ This indicator sits in the **Adoption** row, as a measure of how much of the wor
 
 ## What it shows
 
-- **How Claude.ai conversations that fit one of the five patterns split among them**, worldwide. The chart shows one bar per sample, placed at the date the conversations were sampled, not the date of the release. The two automation patterns are stacked at the bottom of each bar and the three augmentation patterns above them, so the number above each bar is the automation share.
+- **How Claude.ai conversations that fit one of the five patterns split among them**, worldwide. The chart shows one bar per sample, placed at the date the conversations were sampled, not the date of the release. The two automation patterns are stacked at the bottom of each bar and the three augmentation patterns above them, so the dot on each bar, with its value printed beside it, marks the automation share.
 - **The data come from the Anthropic Economic Index releases on Hugging Face.** These appear at irregular intervals. Each release is converted to the same five shares, and every change in how a release is built is recorded as a break in the data (below).
 - **How many conversations each release analyzed.** Anthropic's reports give these sample sizes for its Claude.ai analyses:
   - 10 February 2025: 1 million conversations [(Handa et al. 2025, app. E)](../sources.qmd#handa2025).
@@ -83,7 +83,7 @@ These indicators show whether the conditions for disempowerment are present. The
 - **Conflict of interest.** Anthropic publishes the data and has a commercial interest in how its products are perceived. KEEL is built with assistance from Claude. KEEL uses the published data as released and documents every choice it makes in converting it.
 - **Irregular releases.** Releases arrive months apart, and the gaps between them differ. Readings compare releases, whatever the time between them.
 - **Changing file formats.** Each release has been structured differently. Any future change in layout will be added as a break.
-- **Plans covered in January 2026.** Anthropic's January 2026 report describes its sample as Free, Pro, and Max conversations [(Appel et al. 2026)](../sources.qmd#appel2026), but the release's data documentation says Free and Pro. KEEL follows the data documentation, so the plan change is marked at the 24 March 2026 release.
+- **Plans covered in January 2026.** Anthropic's January 2026 report describes its sample as Free, Pro, and Max conversations [(Appel et al. 2026)](../sources.qmd#appel2026), but the release's data documentation says Free and Pro. KEEL follows the data documentation, so the plan change is marked at the 24 March 2026 release (its 5 to 12 February 2026 sample).
 - **Patterns assigned automatically.** Anthropic sorts conversations into patterns automatically, using its own methods. A change in those methods could move the shares. The breaks list records only the changes the releases document.
 
 ## Method groups

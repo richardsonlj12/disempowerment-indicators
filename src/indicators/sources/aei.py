@@ -144,7 +144,7 @@ BREAKS = [
 
 NOTES = (
     "Percent of categorized Claude.ai conversations, those that fit one of the five patterns (Anthropic's labels \"none\" and \"not classified\" excluded, so the two "
-    "shares sum to 100), global, one row per sample, dated by the first day of the sample window (column period "
+    "shares sum to 100), global, one row per sample, dated by the first day of the sample window (the Feb-Mar 2025 sample, the 11 days after Claude 3.7 Sonnet's launch, has no published dates and is dated 1 February to 31 March 2025, Anthropic's month-level label; column period "
     "names the window, sample_end its last day, release the release date). The series aei_patterns gives the five "
     "pattern shares on the same denominator. The series aei_uncategorized_share gives the conversations labelled "
     "none or not classified as Anthropic publishes them (not rescaled; the first release's six summary rows add to only 84.2 percent); they are left out of every other series. Mapping (Anthropic's categorisation in the 2025-09-15 "

@@ -36,16 +36,16 @@ TIMING = {
     "lagging": "Lagging: likely to move only after a change is well under way",
 }
 COMPARISON = {
-    "structural": "A long-running series, compared with {baseline}.",
+    "structural": "A long-running series; its recent changes are compared with {baseline}.",
     "ai_native": "A series that measures AI use directly and has no period before AI, compared with {baseline}.",
 }
 # What each indicator is read against. CD1's index starts in June 2012 (2019 = 100), so it has no
 # 2010 to 2019 baseline.
 # Long-running series are read by the distribution-of-changes method (owner decision, 2026-11-19):
 # the change over a window against the spread of same-length changes in the baseline period.
-BASELINE_TEXT = {"ED1": "how it changed in 2010 to 2019", "GD1": "how it changed in 2010 to 2019",
-                 "CD1": "its 2012 to 2019 history"}
-DEFAULT_BASELINE = {"structural": "how it changed in 2010 to 2019", "ai_native": "its own recent path"}
+BASELINE_TEXT = {"ED1": "same-length changes in 2010 to 2019", "GD1": "same-length changes in 2010 to 2019",
+                 "CD1": "same-length changes in June 2012 to December 2019"}
+DEFAULT_BASELINE = {"structural": "same-length changes in 2010 to 2019", "ai_native": "its own recent path"}
 AI_LINK_QUESTIONS = (
     ("directness", "Does it measure AI itself?"),
     ("comparison_group", "Is there a comparison group?"),
@@ -106,7 +106,8 @@ CHART_VIEWS: dict[str, list[dict]] = {
              "2024-12-16": "The first release's table is incomplete. In the December 2024 file, the five "
                            "patterns and “none” add up to 84.2 percent. Anthropic does not say what the "
                            "rest is. KEEL's figures for that sample, like Anthropic's own published chart, use "
-                           "only the five patterns, so they are unaffected; the “Not categorized” figure "
+                           "only the five patterns, so they are unaffected if the missing rows lie outside the five "
+                           "patterns; the “Not categorized” figure "
                            "for that sample is as published and may be understated.",
          },
          # One per segment (method group); text checked against Anthropic's data documentation, 2026-11-19.
@@ -199,6 +200,13 @@ def baseline_text(ind: reg.Indicator) -> str:
     return BASELINE_TEXT.get(ind.id, DEFAULT_BASELINE[ind.comparison])
 
 
+def compare_sentence(ind: reg.Indicator) -> str:
+    """What a reading will compare the latest value with (owner, 2026-11-19): a long-running series is
+    read by its change, an AI-native one against its own recent path."""
+    what = "its change" if ind.comparison == "structural" else "it"
+    return f"Readings will compare {what} with {baseline_text(ind)}."
+
+
 def split_content(text: str) -> tuple[dict, dict[str, str]]:
     """Front matter and the level-2 sections of a content page, by heading. The sections must be
     exactly SECTIONS, with no text before the first one."""
@@ -275,7 +283,7 @@ def reading_parts(ind: reg.Indicator, reading: reg.Reading, series: dict) -> tup
     label and any interpretation go in the Current reading row. The AI link has its own row."""
     label = f"**{reg.STATE_LABELS[reading.state]}**"
     value = latest_value_text(ind, series)
-    magnitude = reading.magnitude or (value if value == NO_VALUE else f"{value}, against {baseline_text(ind)}")
+    magnitude = reading.magnitude or (value if value == NO_VALUE else f"{value}. {compare_sentence(ind)}")
     return label, magnitude, reading.interpretation or None
 
 
@@ -295,8 +303,8 @@ def summary_table(ind, front, reading, series, cites: bibliography.Citations) ->
         latest_data = _cell(magnitude)
     else:  # series name / value against the baseline / when KEEL last fetched it (owner, 2026-11-19)
         meta = primary[1]
-        value = reading.magnitude or (f"{fmt_value(latest[0], meta.units)} ({_when(latest, meta)}), "
-                                      f"against {baseline_text(ind)}")
+        value = reading.magnitude or (f"{fmt_value(latest[0], meta.units)} ({_when(latest, meta)}). "
+                                      f"{compare_sentence(ind)}")
         latest_data = "<br>".join(_cell(x) for x in (meta.title, value, f"Data last fetched {fmt_date(meta.fetched_at)}"))
     sources = "<br>".join(_data_link(_cell(s["name"]), s["url"], cites, "../") for s in front["data_sources"])
     timing_value, timing_text = (s[:1].upper() + s[1:] for s in TIMING[ind.timing].split(": ", 1))

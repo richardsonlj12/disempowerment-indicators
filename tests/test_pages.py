@@ -168,7 +168,7 @@ def test_latest_data_row_is_series_then_value_then_fetch_date(repo):
     assert table[6][0] == "Latest data"
     name, value, fetched = _value(table[6][1]).split("<br>")
     assert name == "Labor share of income, nonfarm business sector"
-    assert value.endswith("against how it changed in 2010 to 2019") and "percent" in value
+    assert value.endswith("Readings will compare its change with same-length changes in 2010 to 2019.") and "percent" in value
     assert re.fullmatch(r"Data last fetched \d{1,2} [A-Z][a-z]+ \d{4}", fetched)
     assert "own recent path" in dict(_table(_page(repo, "EA1")))["Latest data"]
 
@@ -490,12 +490,12 @@ def test_c1_baseline_is_its_2012_to_2019_history(repo):
     _add_c1_index(repo)
     pages.build(repo, today=TODAY)
     desc = _value(dict(_table(_page(repo, "CD1")))["Latest data"]).split("<br>")[1]
-    assert desc.endswith("against its 2012 to 2019 history")
+    assert desc.endswith("compare its change with same-length changes in June 2012 to December 2019.")
     assert "61.5 (index, 2019 = 100)" in desc
     text = _page(repo, "CD1")
     method = text[text.index("## Method"):text.index("## Caveats")]
     # No 2010-19 trend baseline (the owner-approved timing line mentions "the mid-2010s", which is fine).
-    assert "its 2012 to 2019 history" in method and "2010 to 2019" not in method and "2010–19" not in method
+    assert "June 2012 to December 2019" in method and "2010 to 2019" not in method and "2010–19" not in method
 
 
 def test_no_baseline_clause_without_a_value(repo):

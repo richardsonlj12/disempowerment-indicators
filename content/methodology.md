@@ -91,9 +91,9 @@ The numerical cut-offs for these three labels are set in Stage 2.
 
 | Reading | Candidate rule |
 |---|---|
-| **Within baseline** | The change is within 1σ of the baseline spread. |
-| **Above baseline** / **Below baseline** | The change is between 1σ and 2σ above or below. |
-| **Far above baseline** / **Far below baseline** | The change is more than 2σ above or below. |
+| **Within baseline** | The change is within 1σ of the average baseline change. |
+| **Above baseline** / **Below baseline** | The change is between 1σ and 2σ above or below the average baseline change. |
+| **Far above baseline** / **Far below baseline** | The change is more than 2σ above or below the average baseline change. |
 
 Each indicator's baseline period is stated on its page: 2010 to 2019 for ED1 and GD1, and June 2012 to December 2019 for CD1. "Above" and "below" describe direction only. Whether a move is a warning sign depends on the indicator, and each page's **warning sign** says which way counts. Every reading appears with its **AI link** rating.
 
@@ -120,7 +120,7 @@ A reading says what the data did. It does not say why.
 |---|---|
 | **Current reading** | **Below baseline**<br>*If AI-driven, consistent with workers losing leverage* |
 | **AI link** | **Weak** |
-| **Latest data** | [x] points below its 2010 to 2019 baseline, over the latest [n] quarters |
+| **Latest data** | [x]-point change over the latest [n] quarters, [k]σ below the average 2010 to 2019 change |
 
 ### The AI link rating
 
