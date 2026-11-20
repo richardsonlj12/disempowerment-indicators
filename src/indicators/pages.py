@@ -598,11 +598,11 @@ def _caveat_lines(items: list[dict], indent: str) -> list[str]:
 
 
 def summary_page(indicators, grid, oversight, readings, latest_text, oversight_items, counter_header,
-                 counter_items, about, cites: bibliography.Citations) -> str:
+                 counter_items, about, cites: bibliography.Citations, intro: str) -> str:
     by_id = {i.id: i for i in indicators}
     cells = {(c.layer, c.domain): c for c in grid}
-    out = ["These indicators show whether the conditions for disempowerment are present. "
-           "They do not show whether it is happening. [How the indicators work](methodology.qmd).", ""]
+    # Opening paragraph: owner's welcome text (2026-11-19), in content/ so it can be edited directly.
+    out = [intro.strip(), ""]
 
     about = about.strip()
     out += ["::: {.keel-heading-row}", "## Indicators {#indicators}", "",
@@ -733,7 +733,8 @@ def build(repo_root: Path, today: date | None = None) -> None:
     summary = summary_page(indicators, grid, oversight, readings, latest_text,
                            [i for i in published(oversight_items) if i["id"] == oversight.get("citation_ref")],
                            counter_header, published(counter_items),
-                           (root / "content" / "summary-about-indicators.md").read_text(encoding="utf-8"), cites)
+                           (root / "content" / "summary-about-indicators.md").read_text(encoding="utf-8"), cites,
+                           (root / "content" / "summary-intro.md").read_text(encoding="utf-8"))
     (site / "_generated" / "summary.md").write_text(summary, encoding="utf-8")
     bibliography.write_sources_page(root)
 

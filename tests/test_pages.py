@@ -692,6 +692,14 @@ def test_about_box_text_comes_from_content_file(repo):
     assert 'title="About the indicators"}\nOwner-edited box text.\n:::' in _index(repo)
 
 
+def test_summary_opens_with_intro_from_content_file(repo):
+    """Owner, 2026-11-19: the welcome paragraph is content the owner edits directly."""
+    (repo / "content" / "summary-intro.md").write_text("Owner-edited welcome.\n", encoding="utf-8")
+    pages.build(repo, today=TODAY)
+    generated = (repo / "site" / "_generated" / "summary.md").read_text(encoding="utf-8")
+    assert generated.startswith("Owner-edited welcome.\n\n::: {.keel-heading-row}")
+
+
 def test_indicators_heading_accessible_text_is_plain(repo):
     pages.build(repo, today=TODAY)
     heading = next(l for l in _index(repo).splitlines() if l.startswith("## Indicators"))
