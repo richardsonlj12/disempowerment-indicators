@@ -207,6 +207,55 @@ def compare_sentence(ind: reg.Indicator) -> str:
     return f"Readings will compare {what} with {baseline_text(ind)}."
 
 
+# Markdown spans left alone when linking indicator codes: links (text and target), inline code,
+# and attribute blocks such as {#id .class}.
+_PROTECTED = re.compile(r"!?\[[^\]]*\]\([^)]*\)|`[^`]*`|\{[^}]*\}")
+
+
+def link_codes(md: str, hrefs: dict[str, str], self_id: str | None = None) -> str:
+    """Link the first mention of each indicator code (EA1, ED1 ...) in every section to that
+    indicator's page, where its summary table is (owner, 2026-11-20: readers get lost in the codes).
+    A section starts at any heading. Skipped: headings, code fences, a page's own code, codes with no
+    page yet, and mentions inside an existing link, which also count as the section's first."""
+    if not hrefs:
+        return md
+    code_re = re.compile(r"\b(" + "|".join(map(re.escape, sorted(hrefs, key=len, reverse=True))) + r")\b")
+    out, linked, fenced = [], set(), False
+    for line in md.split("\n"):
+        if line.lstrip().startswith("```"):
+            fenced = not fenced
+        if fenced or line.lstrip().startswith("```"):
+            out.append(line)
+            continue
+        if re.match(r"#{1,6} ", line):
+            linked = set()
+            out.append(line)
+            continue
+        pieces, pos = [], 0
+        for m in _PROTECTED.finditer(line):
+            pieces.append((line[pos:m.start()], False))
+            pieces.append((m.group(0), True))
+            pos = m.end()
+        pieces.append((line[pos:], False))
+        new = []
+        for text, protected in pieces:
+            if protected:
+                if text.startswith("["):  # an existing link counts as the first mention; code and attributes do not
+                    linked.update(code_re.findall(text))
+                new.append(text)
+                continue
+
+            def repl(m):
+                code = m.group(1)
+                if code == self_id or code in linked:
+                    return code
+                linked.add(code)
+                return f"[{code}]({hrefs[code]})"
+            new.append(code_re.sub(repl, text))
+        out.append("".join(new))
+    return "\n".join(out)
+
+
 def split_content(text: str) -> tuple[dict, dict[str, str]]:
     """Front matter and the level-2 sections of a content page, by heading. The sections must be
     exactly SECTIONS, with no text before the first one."""
@@ -714,7 +763,10 @@ def build(repo_root: Path, today: date | None = None) -> None:
         dest = site / "config" / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(config / rel, dest)
-    shutil.copy2(root / "content" / "methodology.md", site / "_generated" / "methodology.md")
+    codes = [i.id for i in indicators]
+    (site / "_generated" / "methodology.md").write_text(
+        link_codes((root / "content" / "methodology.md").read_text(encoding="utf-8"),
+                   {c: f"indicators/{c}.qmd" for c in codes}), encoding="utf-8")
 
     template = (site / "_indicator_template.qmd").read_text(encoding="utf-8")
     latest_text = {}
@@ -731,6 +783,7 @@ def build(repo_root: Path, today: date | None = None) -> None:
                     write_change_csv(series[sid][0], series[sid][1], site / "data", v["windows"])
                     change_files.add(sid)
         front, sections = split_content((root / "content" / "indicators" / f"{ind.id}.md").read_text(encoding="utf-8"))
+        sections = {name: link_codes(text, {c: f"{c}.qmd" for c in codes}, ind.id) for name, text in sections.items()}
         markers = reg.markers_for(chart_markers, ind.id)
         page = indicator_page(template, ind, front, sections, reg.current_reading(readings, ind.id),
                               readings.get(ind.id, []), views, series, markers, group_labels, change_files, today,

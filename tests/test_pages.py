@@ -851,3 +851,42 @@ def test_oversight_row_shows_new_metric_and_caveat(repo):
     assert ("*The researchers deliberately strengthened the agent's lean, so this shows influence under a strong "
             "nudge. The pre-registered effect on analysts' final recommendations was not statistically significant. "
             "The 11 of 61 analysts who chose not to use the agent are excluded.*") in block
+
+
+# --- Indicator codes linked on first mention per section (owner, 2026-11-20) ---
+
+HREFS = {c: f"indicators/{c}.qmd" for c in ("EA1", "EA2", "ED1", "GD1", "CD1")}
+
+
+def test_link_codes_first_mention_per_section():
+    md = "Intro EA1 and EA1 again.\n\n## Next\n\nEA1 here, ED1 too, ED1 twice.\n\n### Sub\n\nEA1."
+    out = pages.link_codes(md, HREFS)
+    assert out.count("[EA1](indicators/EA1.qmd)") == 3
+    assert out.count("[ED1](indicators/ED1.qmd)") == 1
+    assert "Intro [EA1](indicators/EA1.qmd) and EA1 again." in out
+    assert "## Next" in out and "### Sub" in out
+
+
+def test_link_codes_skips_self_unknown_headings_code_attrs_and_fences():
+    md = ("## About EA1 {#ea1-note}\n\nEA2 itself, CD2 later, `EA1` code, [x]{.keel EA1}.\n\n"
+          "```\nEA1 in a fence\n```\nThen EA1.")
+    out = pages.link_codes(md, HREFS, self_id="EA2")
+    assert out.startswith("## About EA1 {#ea1-note}")
+    assert "[EA2]" not in out and "[CD2]" not in out
+    assert "`EA1`" in out and "{.keel EA1}" in out and "EA1 in a fence" in out
+    assert out.endswith("Then [EA1](indicators/EA1.qmd).")
+
+
+def test_link_codes_existing_link_counts_as_first_and_possessive():
+    out = pages.link_codes("The [CD1 page](indicators/CD1.qmd) and CD1 again. GD1's base.", HREFS)
+    assert out == "The [CD1 page](indicators/CD1.qmd) and CD1 again. [GD1](indicators/GD1.qmd)'s base."
+
+
+def test_build_links_codes_in_methodology_and_indicator_pages(repo):
+    pages.build(repo, today=TODAY)
+    meth = (repo / "site" / "_generated" / "methodology.md").read_text(encoding="utf-8")
+    assert "[EA1](indicators/EA1.qmd)" in meth and "[ED1](indicators/ED1.qmd)" in meth
+    ea2 = _page(repo, "EA2")
+    assert "[EA1](EA1.qmd)" in ea2 and "[EA2](EA2.qmd)" not in ea2
+    for text in (meth, ea2):
+        assert "[[" not in text and not re.search(r"\[[^\]]*\[[A-Z]{2}\d\]\(", text)

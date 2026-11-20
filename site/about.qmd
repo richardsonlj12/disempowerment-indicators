@@ -29,4 +29,4 @@ We welcome constructive and honest feedback on this project.
 
 ## Disclosure
 
-KEEL is built with assistance from Claude (Anthropic). One indicator (EA2) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.
+KEEL is built with assistance from Claude (Anthropic). One indicator ([EA2](indicators/EA2.qmd)) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.
