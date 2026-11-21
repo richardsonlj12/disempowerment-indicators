@@ -150,6 +150,15 @@ export function fmtValue(value, units, change = false) {
   const index = /^index \((.*)\)$/.exec(units);
   return index ? `${signed} (index, ${index[1]})` : `${signed} ${units}`;
 }
+// A value shown under a name (hover tip, data-table column) that already states its units, e.g.
+// "... (index, 2019 = 100)": the bare number, so the units are not repeated (owner, 2026-11-20).
+export function fmtValueUnder(value, units, name, change = false) {
+  const text = fmtValue(value, units, change);
+  if (change || !name || units === "percent") return text;
+  const index = /^index \((.*)\)$/.exec(units);
+  const named = index ? name.includes(index[1]) : name.includes(units);
+  return named ? fmtValue(value, "", false).trim() : text;
+}
 
 const TABLE_MAX_ROWS = 120;
 
@@ -165,7 +174,7 @@ function dataTable(spec, plotted, view, ids, singleLabel) {
     const meta = spec.series[d.id || ids[0]];
     const key = +d.date;
     if (!rows.has(key)) rows.set(key, {date: d.date, frequency: meta.frequency, cells: new Map()});
-    rows.get(key).cells.set(label, fmtValue(d.value, meta.units, change));
+    rows.get(key).cells.set(label, fmtValueUnder(d.value, meta.units, label, change));
   }
   const all = [...rows.values()].sort((a, b) => a.date - b.date);
   const shown = all.slice(-TABLE_MAX_ROWS);
@@ -324,7 +333,7 @@ export function renderChart(Plot, d3, spec, data, opts) {
       const meta = spec.series[d.id || ids[0]];
       const name = d.label || seriesName(spec, ids[0]);
       const what = change ? `change over ${d.window_years} year${d.window_years === 1 ? "" : "s"} to ` : "";
-      return `${name}\n${what}${fmtPeriod(d.date, meta.frequency)}: ${fmtValue(d.value, meta.units, change)}`;
+      return `${name}\n${what}${fmtPeriod(d.date, meta.frequency)}: ${fmtValueUnder(d.value, meta.units, name, change)}`;
     };
     marks.push(Plot.tip(plotted, Plot.pointerX({x: "date", y: "value", title: tipText, stroke: view.kind === "multi" ? "label" : undefined})));
   }
