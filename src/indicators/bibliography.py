@@ -79,6 +79,7 @@ OWNER_BROWSER_CHECKED: dict[str, str] = {
     "https://www.bls.gov/opub/ted/2026/labor-share-at-its-lowest-level-52-8-percent-in-second-quarter-2026.htm":
         "2026-11-18",
     "https://meta.stackoverflow.com/questions/421831/policy-generative-ai-e-g-chatgpt-is-banned": "2026-11-18",
+    "https://www.cbo.gov/publication/58848": "2026-11-20",  # owner confirmed (checklist b9)
 }
 BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
               "Chrome/130.0 Safari/537.36")
