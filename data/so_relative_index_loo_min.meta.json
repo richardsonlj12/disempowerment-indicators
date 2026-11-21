@@ -1,0 +1,38 @@
+{
+  "series_id": "so_relative_index_loo_min",
+  "indicator_id": "CD1",
+  "title": "Relative-activity index, leave-one-out minimum",
+  "units": "index (2019 = 100)",
+  "frequency": "monthly",
+  "source_name": "Stack Exchange API",
+  "source_url": "https://api.stackexchange.com/docs/questions",
+  "license": "CC BY-SA",
+  "fetched_at": "2026-11-21T04:01:41Z",
+  "data_through": "2026-10-01",
+  "max_lag_days": 60,
+  "breaks": [],
+  "annotations": [
+    {
+      "date": "2021-06-29",
+      "label": "GitHub Copilot technical preview announced"
+    },
+    {
+      "date": "2022-06-21",
+      "label": "GitHub Copilot generally available to all developers"
+    },
+    {
+      "date": "2022-11-30",
+      "label": "ChatGPT released to the public"
+    },
+    {
+      "date": "2022-12-05",
+      "label": "Stack Overflow bans AI-generated answers"
+    },
+    {
+      "date": "2023-06-05",
+      "label": "Stack Overflow moderators begin a strike over AI-content policy"
+    }
+  ],
+  "notes": "Lower edge of the leave-one-out band around so_relative_index. Relative-activity index, not a causal estimate. Computed from 12-month rolling totals of so_questions_monthly and se_comparison_questions_monthly, labelled by the last month of each window: R = ln(Stack Overflow total) minus the mean of ln(total) across the four primary comparison sites, only for months where all four sites have a full 12 months. Values are expressed relative to the 2019 average (index 2019 = 100), so the pre-AI level is the reference. The companion series so_change_since_chatgpt is measured from the November 2022 window (2022-11). AI also affects the comparison sites, so this is Stack Overflow's activity relative to them, not the absolute AI effect.",
+  "role": "context"
+}

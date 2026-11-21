@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20",
+  "updated": "2026-11-21",
   "sources": {
     "fred": {
       "status": "ok",
@@ -22,9 +22,8 @@
       "data_through": "2026-10-01"
     },
     "stackexchange": {
-      "status": "failed",
-      "error": "SourceError: https://api.stackexchange.com/2.3/questions returned 400: {\"error_id\":502,\"error_message\":\"too many requests from this IP, more requests available in 86312 seconds\",\"error_name\":\"throttle_violation\"}",
-      "since": "2026-11-18"
+      "status": "ok",
+      "data_through": "2026-10-01"
     }
   }
 }
