@@ -184,6 +184,14 @@ def fmt_value(value: float, units: str) -> str:
     return f"{number} {units}"
 
 
+def fmt_value_under_title(value: float, units: str, title: str) -> str:
+    """A value shown right after its series title: the bare number when the title already names the
+    units, e.g. "(index, 2019 = 100)", so they are not repeated (owner, 2026-11-20)."""
+    text = fmt_value(value, units)
+    number, _, unit_text = text.partition(" ")
+    return number if unit_text and unit_text in title else text
+
+
 def _cell(text: str) -> str:
     """Make text safe inside a pipe-table cell."""
     return " ".join(str(text).split()).replace("|", "\\|")
@@ -342,7 +350,7 @@ def latest_value_parts(ind: reg.Indicator, series: dict) -> list[str]:
     if latest is None:
         return [NO_VALUE]
     meta = primary[1]
-    return [meta.title, fmt_value(latest[0], meta.units), _when(latest, meta)]
+    return [meta.title, fmt_value_under_title(latest[0], meta.units, meta.title), _when(latest, meta)]
 
 
 def reading_parts(ind: reg.Indicator, reading: reg.Reading, series: dict) -> tuple[str, str, str | None]:
@@ -371,7 +379,7 @@ def summary_table(ind, front, reading, series, cites: bibliography.Citations) ->
         latest_data = _cell(magnitude)
     else:  # series name / value against the baseline / when KEEL last fetched it (owner, 2026-11-19)
         meta = primary[1]
-        value = reading.magnitude or (f"{fmt_value(latest[0], meta.units)} ({_when(latest, meta)}). "
+        value = reading.magnitude or (f"{fmt_value_under_title(latest[0], meta.units, meta.title)} ({_when(latest, meta)}). "
                                       f"{compare_sentence(ind)}")
         latest_data = "<br>".join(_cell(x) for x in (meta.title, value, f"Data last fetched {fmt_date(meta.fetched_at)}"))
     sources = "<br>".join(_data_link(_cell(s["name"]), s["url"], cites, "../") for s in front["data_sources"])
@@ -578,7 +586,7 @@ def latest_data_bullet(ind, series) -> str:
     latest, prev = rows.iloc[-1], (rows.iloc[-2] if len(rows) > 1 else None)
     when = lambda r: (r["period"] if "period" in rows.columns and r["period"]
                       else fmt_period(r["date"].date().isoformat(), meta.frequency))
-    text = f"- **Latest data.** {meta.title}: {fmt_value(float(latest['value']), meta.units)} ({when(latest)})"
+    text = f"- **Latest data.** {meta.title}: {fmt_value_under_title(float(latest['value']), meta.units, meta.title)} ({when(latest)})"
     if "se" in rows.columns and pd.notna(latest["se"]):
         text += f", standard error {float(latest['se']):.1f} points"
     if prev is not None:

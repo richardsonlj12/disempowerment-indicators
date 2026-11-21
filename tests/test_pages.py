@@ -491,14 +491,22 @@ def test_c1_baseline_is_its_2012_to_2019_history(repo):
     pages.build(repo, today=TODAY)
     desc = _value(dict(_table(_page(repo, "CD1")))["Latest data"]).split("<br>")[1]
     assert desc.endswith("compare its change with same-length changes in June 2012 to December 2019.")
-    assert "61.5 (index, 2019 = 100)" in desc
+    assert desc.startswith("61.5 (September 2026).")  # units already in the series title (owner, 2026-11-20)
     text = _page(repo, "CD1")
     method = text[text.index("## Method"):text.index("## Caveats")]
     # No 2010-19 trend baseline (the owner-approved timing line mentions "the mid-2010s", which is fine).
     assert "June 2012 to December 2019" in method and "2010 to 2019" not in method and "2010–19" not in method
 
 
+def _drop_c1_index(repo):
+    """Remove the Stack Exchange outputs, as before the backfill finished."""
+    for pattern in ("so_*", "se_*"):
+        for f in (repo / "data").glob(pattern):
+            f.unlink()
+
+
 def test_no_baseline_clause_without_a_value(repo):
+    _drop_c1_index(repo)
     pages.build(repo, today=TODAY)
     line = _value(dict(_table(_page(repo, "CD1")))["Latest data"])
     assert line == "Latest value not yet available (data still being collected)"
@@ -754,6 +762,7 @@ def test_pages_import_the_chart_module_with_data_table_support(repo):
 
 
 def test_cd1_default_view_is_first_available(repo):
+    _drop_c1_index(repo)
     pages.build(repo, today=TODAY)
     text = _page(repo, "CD1")
     assert '"defaultView": "Wikipedia"' in text
@@ -915,3 +924,10 @@ def test_code_shown_with_its_name_is_not_linked():
     assert pages.link_codes("how AI is used (EA2), is", hrefs, names=names) == "how AI is used (EA2), is"
     assert pages.link_codes("2025 (EA1; x)", {"EA1": "EA1.qmd"}, names={"EA1": ["firm ai adoption"]}) == \
         "2025 ([EA1](EA1.qmd); x)"
+
+
+def test_value_under_title_drops_units_the_title_already_names():
+    from indicators.pages import fmt_value_under_title
+    title = "Stack Overflow activity relative to comparison sites (index, 2019 = 100)"
+    assert fmt_value_under_title(12.599, "index (2019 = 100)", title) == "12.6"
+    assert fmt_value_under_title(53.0, "percent", "Labor share of income, nonfarm business sector") == "53.0 percent"
