@@ -38,7 +38,7 @@ indicators:
     ai_link_criteria:  # DRAFT — owner review in Stage 2
       directness: Measures AI use by firms directly.
       comparison_group: Not applicable; the series is about AI itself.
-      timing: Question wording changed in November 2025, so the series has a break that must be annotated.
+      timing: Begins after generative AI was available (September 2023), so timing is not a test here. A change in the question's wording in November 2025 is recorded as a break.
       confounders: Strong here means only that AI is measured directly; it does not show disempowerment.
     timing: leading
     comparison: ai_native
