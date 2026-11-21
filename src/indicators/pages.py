@@ -554,10 +554,14 @@ def method_section(ind, series, markers, cites: bibliography.Citations, marker_k
         lines.append("- **Series breaks.** None recorded.")
     if markers:
         lines.append("- **Chart markers.** Dated events marked on the chart without splitting the line.")
+        # A marker dated before any of the indicator's data cannot be drawn; say so (final review, 2026-11-20).
+        starts = [str(frame["date"].min())[:10] for frame, _ in series.values() if len(frame)]
+        first = min(starts) if starts else None
         for m in markers:
             key = (marker_keys or {}).get((m["date"], m["label"]))
             cite = f" {cites.cite(key, '../')}" if key else ""
-            lines.append(f"    - {fmt_date(m['date'])}: {m['label']}{cite}")
+            before = " (before the data begin, so not drawn)" if first and str(m["date"]) < first else ""
+            lines.append(f"    - {fmt_date(m['date'])}: {m['label']}{cite}{before}")
     return "\n".join(lines)
 
 
@@ -612,7 +616,8 @@ def downloads(views, series, change_files) -> str:
         lines.append(f"- [{title}](../data/{sid}.csv) (CSV) · [metadata](../data/{sid}.meta.json) (JSON)")
         if sid in change_files:
             lines.append(f"- [{title}: changes over 1, 3, and 5 years, with the 2010–19 average and spread of "
-                         f"same-length changes](../data/{sid}_changes.csv) (CSV)")
+                         f"same-length changes](../data/{sid}_changes.csv) (CSV; candidate baseline, not yet "
+                         "used for readings)")
     if any(sid not in series for sid in wanted):
         lines.append("- Some series are still being collected and will be listed here when available.")
     return "\n".join(lines)
