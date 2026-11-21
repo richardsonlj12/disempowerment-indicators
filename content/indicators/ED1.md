@@ -24,11 +24,11 @@ This indicator sits in the **Displacement** row: it asks whether the economy's d
 - **Labor share of income, nonfarm business sector.** Published quarterly by the Bureau of Labor Statistics (BLS), adjusted to remove regular seasonal swings. The chart shows the full history from 1947.
 - **Profit share, for context.** Corporate profits after tax as a share of gross domestic product, from the Bureau of Economic Analysis (BEA). It uses a different top and bottom of the fraction, so it is a rough counterpart to the labor share and does not add up to 100 with it. The labor share alone drives this indicator's reading.
 
-This is a long-running series. Its baseline is how it behaved in 2010 to 2019, after the 2008 to 2009 recession and before COVID. The question for a reading is whether the series is departing from that baseline, and how fast. Readings start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
+This is a long-running series, so a reading looks at how it changes, not its level: the change over a fixed window is compared with same-length changes in a baseline period (candidate: 2010 to 2019, after the 2008 to 2009 recession and before COVID; see the methodology page). Readings start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
 
 ## What it doesn't show
 
-- **It does not measure AI.** The labor share responds to globalization, market concentration, the decline of unions, the mix of industries, the business cycle, and more. Chooi, Lee and Li note that labor cost share has been declining since the 1980s for reasons like these.
+- **It does not measure AI.** The labor share responds to globalization, market concentration, the decline of unions, the mix of industries, the business cycle, and more. Chooi, Lee, and Li note that labor cost share has been declining since the 1980s for reasons like these.
 - **It does not measure leverage directly.** Bargaining power is the thing the argument is about. The labor share is a stand-in for it.
 - **It does not measure welfare.** People can be materially better off while losing leverage, and the reverse can also happen. A falling labor share in a fast-growing economy can come with rising real wages. A stable share can come with stagnant ones. KEEL tracks influence and dependence, not material welfare.
 - **It covers the nonfarm business sector only.** Government, farms, nonprofit institutions, and private households are outside it.

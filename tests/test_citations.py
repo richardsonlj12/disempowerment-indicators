@@ -124,5 +124,7 @@ def test_methodology_sources_section_points_to_the_sources_page():
     assert "[Sources](sources.qmd)" in section
     assert "\n- [" not in section, "the list of sources is replaced by the Sources page"
     assert "KEEL is built with assistance from Claude (Anthropic)." in section
-    assert "Every entry was checked against the original publication before it was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure))." in section
+    # The disclosure is stated once, with its link (final review, 2026-11-20).
+    assert section.count("KEEL is built with assistance from Claude") == 1
+    assert "research authored at Anthropic. See [Disclosure](about.qmd#disclosure)." in section
     assert "about.qmd#report-an-error-or-give-feedback" in section

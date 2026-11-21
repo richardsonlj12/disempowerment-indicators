@@ -17,7 +17,7 @@ KEEL is developed and maintained by [Jeremy Richardson, Ph.D.](https://www.linke
 
 Richardson, J. (2026). *KEEL: Indicators of Gradual Human Disempowerment*. https://richardsonlj12.github.io/keel/ (accessed [date]).
 
-Each indicator page links to its data as CSV files. Please cite the original source of any series as well; each page describes its data under "Data and calculation" and lists sources and licenses under "Method".
+Each indicator page links to its data as CSV files. Please cite the original source of any series as well; each page describes its data, sources, and licenses under "Data and calculation".
 
 ## Report an error or give feedback
 

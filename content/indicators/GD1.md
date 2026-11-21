@@ -20,14 +20,14 @@ This indicator is the most direct public measure we found of that state-dependen
 
 **What the data say now.** Across OECD countries, the labor-based share of tax revenue was 48.53 percent in 2010, peaked at 50.54 percent in 2020, and was 49.20 percent in 2023, the latest year with an OECD average.
 
-The US quarterly series drives this indicator's reading. It has fallen since 2022: it averaged 66.85 percent in 2022, a year when federal individual income tax receipts were the highest share of GDP since 1913, partly because of large capital gains realized in 2021 and 2022 [(Congressional Budget Office 2023, 21–24)](../sources.qmd#cbo2023), and was 63.21 percent in the second quarter of 2026 (data as of 17 November 2026). That is inside the range it moved through in 2010 to 2019 (62.30 to 66.88 percent). The reading itself is not yet reviewed.
+The US quarterly series drives this indicator's reading. It has fallen since 2022: it averaged 66.85 percent in 2022, a year when federal individual income tax receipts were the highest share of GDP since 1913, partly because of large capital gains realized in 2021 and 2022 [(Congressional Budget Office 2023, 21–24)](../sources.qmd#cbo2023), and was 63.21 percent in the second quarter of 2026 (data as of 17 November 2026). Over the latest five years the US share has fallen 2.7 points. In 2010 to 2019 its five-year changes were mostly rises, as the share recovered from the 2008 to 2009 recession, so how unusual this fall is depends on the baseline period, which Stage 2 fixes. The reading itself is not yet reviewed.
 
 ## What it shows
 
 - **United States, quarterly (drives the reading).** The labor-based share of tax revenue, from the Bureau of Economic Analysis (BEA) national accounts, read through FRED, the Federal Reserve Bank of St. Louis's data service. It covers all levels of government (federal, state, and local).
 - **United States and OECD average, annual (context).** Taxes on individual incomes plus social security contributions, as a share of total tax revenue, from OECD Revenue Statistics. The OECD data lag two to three years (the OECD average currently runs to 2023, the US figure to 2024).
 
-This is a long-running series. Its baseline is how it behaved in 2010 to 2019. Readings start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
+This is a long-running series, so a reading looks at how it changes, not its level: the change over a fixed window is compared with same-length changes in a baseline period (candidate: 2010 to 2019; see the methodology page). Readings start once the rules are fixed (see the methodology page). Until then the reading shows "Not yet reviewed."
 
 ## What it doesn't show
 
@@ -48,11 +48,11 @@ This is the most direct public measure of state dependence we found, not a guara
 
 **What would move the reading toward disempowerment:**
 
-- A sustained fall in the US share beyond its 2010 to 2019 range.
+- A fall in the US share over the indicator's window that is larger than same-length changes in its baseline period (the exact rule is fixed in Stage 2).
 - A fall that occurs while corporate and capital-income tax receipts grow faster than wage-based receipts.
 - The same fall showing up in the OECD data once those data arrive.
 
-**What would point away from disempowerment:** the US share holding inside or above its 2010 to 2019 range, and the OECD share continuing not to fall.
+**What would point away from disempowerment:** US changes within or above the usual range of same-length changes in the baseline period, and the OECD share continuing not to fall.
 
 A later version plans a US-states comparison: states that depend heavily on taxes on extracting oil, gas, and coal against states that do not. That would test the rentier logic on US data.
 

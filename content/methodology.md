@@ -181,7 +181,7 @@ EA1's two Census changes are treated differently because they did different thin
 
 **Windows are part of the rule.** The window (for example, "change over the latest four quarters") can flip a reading on its own, so it is fixed for each indicator along with the rule.
 
-**The baseline period matters most.** 2010 to 2019 had no recession, so changes in that decade were small and steady. Measured against it, many changes since 2020 look far outside the usual range; measured against a longer period that includes the 2001 and 2008 recessions, the same changes look ordinary. Neither choice is neutral. Same-length changes also overlap (two 5-year changes a quarter apart share most of their quarters), so a baseline holds far fewer independent observations than its count suggests. Until Stage 2 settles this, the charts show the changes without a usual range.
+**The baseline period matters most.** 2010 to 2019 had no recession, so changes in that decade were small and steady. Measured against it, many changes since 2020 look far outside the usual range; measured against a longer period that includes the 2001 and 2008 recessions, the same changes look ordinary (for ED1 and GD1; CD1's index starts in 2012). Neither choice is neutral. Same-length changes also overlap (two 5-year changes a quarter apart share most of their quarters), so a baseline holds far fewer independent observations than its count suggests. Until Stage 2 settles this, the charts show the changes without a usual range.
 
 **Sensitivity.** Each indicator page will show what the reading would be under reasonable alternatives:
 
@@ -321,11 +321,11 @@ Later versions are planned under four headings: method, harder indicators of AI'
 
 ## Sources and disclosure {#sources}
 
-Every work and dataset cited on KEEL is listed, with links, on the [Sources](sources.qmd) page. Every entry was checked against the original publication before it was added. KEEL is built with assistance from Claude (see [Disclosure](about.qmd#disclosure)).
+Every work and dataset cited on KEEL is listed, with links, on the [Sources](sources.qmd) page. Every entry was checked against the original publication before it was added.
 
 Every figure KEEL publishes is checked against its primary source before publication.
 
-KEEL is built with assistance from Claude (Anthropic). One indicator (EA2) uses data published by Anthropic, and the oversight row cites research authored at Anthropic.
+KEEL is built with assistance from Claude (Anthropic). One indicator (EA2) uses data published by Anthropic, and the oversight row cites research authored at Anthropic. See [Disclosure](about.qmd#disclosure).
 
 These indicators show whether the conditions for disempowerment are present. They do not show whether it is happening.
 

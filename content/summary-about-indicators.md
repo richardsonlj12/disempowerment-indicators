@@ -8,13 +8,13 @@ Each indicator gets a reading, a short label describing what its data are doing.
 | **Rising** | AI use is growing faster than its recent pace. |
 | **Pervasive** | AI use is widespread. |
 
-**Displacement and lock-in indicators:** compared with each indicator's baseline (its pre-AI history; the baseline is named on each indicator's page).
+**Displacement and lock-in indicators:** the change over each indicator's window, compared with same-length changes in its baseline period (named on each indicator's page).
 
 | Reading | Meaning |
 |---|---|
-| **Within baseline** | Moving within its usual range. |
-| **Above baseline** / **Below baseline** | Outside its usual range. |
-| **Far above baseline** / **Far below baseline** | Well outside its usual range. |
+| **Within baseline** | Its recent change is within the usual range of changes. |
+| **Above baseline** / **Below baseline** | Its recent change is outside the usual range. |
+| **Far above baseline** / **Far below baseline** | Its recent change is well outside the usual range. |
 
 Whether a movement points toward or away from disempowerment depends on the indicator. Each page's **warning sign** says which direction matters, and every reading appears with its **AI link** rating.
 
